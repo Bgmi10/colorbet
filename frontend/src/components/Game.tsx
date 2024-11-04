@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GameTimer } from './GameTimer';
 import { motion } from 'framer-motion';
+import { GameRecord } from './GameRecord';
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);
@@ -11,9 +12,9 @@ const GameComponent = () => {
   const [isbetting, setIsbetting] = useState(true);
   const [revealLeftCard, setRevealLeftCard] = useState(false);
   const [revealRightCard, setRevealRightCard] = useState(false);
+  const [gamerecord, setGameRecord] = useState(null);
 
-  console.log(game)
-
+  
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:5050');
   
@@ -26,6 +27,10 @@ const GameComponent = () => {
 
       if(data?.type === "currentgame" || data?.type === "gameResult"){
         setGame(data)
+    }
+
+    if(data?.type === "findgame" ) {
+      setGameRecord(data);
     }
     };
   
@@ -61,6 +66,7 @@ const GameComponent = () => {
   return (
     <div>
       <GameTimer game={game} isbettingopen={isbetting} />
+      <GameRecord  data={gamerecord}/>
      (
         <div className="flex justify-center gap-20 p-6">
           <div className="flex  items-center">
@@ -78,7 +84,7 @@ const GameComponent = () => {
                 src={game?.gameState?.cardAImg}
                 alt="Card A Front"
               />}
-              {/* Golden Glow with Running Particles */}
+             
               {game?.gameState?.winner === 'A' && (
                 <motion.div
                   className="absolute inset-0 rounded-lg border-2 border-yellow-500"

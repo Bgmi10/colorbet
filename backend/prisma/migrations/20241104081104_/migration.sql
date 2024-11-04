@@ -14,6 +14,7 @@ CREATE TABLE "Game" (
     "cardB" TEXT NOT NULL,
     "winner" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );

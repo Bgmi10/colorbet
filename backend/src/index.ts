@@ -49,13 +49,24 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     ws.send(
       JSON.stringify({
         type: 'currentgame',
-        gamestate: currentGameState,
+        gameState: currentGameState,
         period: currentPeriod,
       })
     );
   }
 
-  // Handle messages (e.g., placing bets)
+  // Send the latest 30 games to the client
+  try {
+    const games = await prisma.game.findMany({
+      orderBy: { updatedAt: 'desc' },
+      take: 30
+    });
+    ws.send(JSON.stringify({ type: 'findgame', success: true, message: games }));
+  } catch (e) {
+    console.log(e);
+    ws.send(JSON.stringify({ type: 'findgame', success: false, message: 'Error while finding games' }));
+  }
+
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
     
@@ -66,14 +77,14 @@ wss.on('connection', async (ws: WebSocketWithId) => {
       if (user && user.balance >= amount) {
         try {
           // Place the bet in the database
-        //   await prisma.bet.create({
-        //     data: {
-        //       amount,
-        //       chosenSide,
-        //       user: { connect: { id: userId } },
-        //       game: currentGameState ? { connect: { id: currentGameState.id } } : undefined
-        //     }
-        //   });
+          // await prisma.bet.create({
+          //   data: {
+          //     amount,
+          //     chosenSide,
+          //     user: { connect: { id: userId } },
+          //     game: currentGameState ? { connect: { id: currentGameState.id } } : undefined
+          //   }
+          // });
 
           // Deduct the user's balance
           await prisma.user.update({

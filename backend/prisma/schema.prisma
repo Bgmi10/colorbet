@@ -21,6 +21,7 @@ model Game {
   winner      String   // 'A' or 'B'
   createdAt   DateTime @default(now())
   bets        Bet[]    // One-to-many relation with Bet
+  updatedAt   DateTime @updatedAt
 }
 
 model Bet {
