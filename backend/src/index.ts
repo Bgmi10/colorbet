@@ -1,8 +1,8 @@
 import express from 'express';
 import WebSocket from 'ws';
-import { prisma } from '../prisma/prisma';  // Ensure prisma is configured correctly
-import { generateRandomCard, checkWinner, resolveBets } from '../game/GameLogic';
-import { WebSocketWithId, GameState } from '../types/types';  // Assume proper types are defined
+import { prisma } from '../prisma/prisma';
+import { generateRandomCard, checkWinner } from '../game/GameLogic';
+import { WebSocketWithId, GameState } from '../types/types';
 
 const app = express();
 const port = 3005;
@@ -11,8 +11,12 @@ const wss = new WebSocket.Server({ port: 5050 });
 let clients: WebSocketWithId[] = [];
 let currentGameState: GameState | null = null;
 let currentPeriod = 0;
-let interval: NodeJS.Timeout | null = null;
+let countdownInterval: any = null;
+let timeLeft = 15; // The countdown timer (in seconds)
+let isGameInProgress = false; // Track if a game is in progress
+let isBettingOpen = true; // Manage betting phase
 
+// Broadcast message to all clients
 const broadcast = (message: any) => {
   clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
@@ -21,41 +25,22 @@ const broadcast = (message: any) => {
   });
 };
 
-// WebSocket connection
 wss.on('connection', async (ws: WebSocketWithId) => {
   clients.push(ws);
   console.log('New client connected');
 
-  // Retrieve the latest ongoing game from the database if no game state exists in memory
-  if (!currentGameState) {
-    const latestGame = await prisma.game.findFirst({
-      orderBy: { createdAt: 'desc' }  // Find the most recent game
-    });
-
-    if (latestGame) {
-      currentGameState = {
-        id: latestGame.id,
-        cardA: latestGame.cardA.split('_')[0],  // Assume cardA is stored as "rank_suit"
-        cardAImg: `https://colorwiz.cyou/images/poker/poker_${latestGame.cardA.split('_')[1]}.png`,
-        cardB: latestGame.cardB.split('_')[0],
-        cardBImg: `https://colorwiz.cyou/images/poker/poker_${latestGame.cardB.split('_')[1]}.png`,
-        winner: latestGame.winner,
-      };
-    }
-  }
-
   // Send current game state to the newly connected client
   if (currentGameState) {
-    ws.send(
-      JSON.stringify({
-        type: 'currentgame',
-        gameState: currentGameState,
-        period: currentPeriod,
-      })
-    );
+    ws.send(JSON.stringify({
+      type: 'currentgame',
+      gameState: currentGameState,
+      period: currentPeriod,
+      timeleft: timeLeft,
+      bettingOpen: isBettingOpen,
+    }));
   }
 
-  // Send the latest 30 games to the client
+  // Fetch the last 30 games and send to the client
   try {
     const games = await prisma.game.findMany({
       orderBy: { updatedAt: 'desc' },
@@ -69,29 +54,17 @@ wss.on('connection', async (ws: WebSocketWithId) => {
 
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
-    
-    if (message.type === 'placeBet') {
+
+    if (message.type === 'placeBet' && isBettingOpen) { // Only allow bets when betting is open
       const { userId, amount, chosenSide } = message;
       const user = await prisma.user.findUnique({ where: { id: userId } });
 
       if (user && user.balance >= amount) {
         try {
-          // Place the bet in the database
-          // await prisma.bet.create({
-          //   data: {
-          //     amount,
-          //     chosenSide,
-          //     user: { connect: { id: userId } },
-          //     game: currentGameState ? { connect: { id: currentGameState.id } } : undefined
-          //   }
-          // });
-
-          // Deduct the user's balance
           await prisma.user.update({
             where: { id: userId },
             data: { balance: user.balance - amount },
           });
-
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
         } catch (e) {
           console.error('Error placing bet:', e);
@@ -103,52 +76,69 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     }
   });
 
-  // Handle client disconnection
   ws.on('close', () => {
     clients = clients.filter(c => c !== ws);
     console.log('Client disconnected');
   });
 });
 
-// Game start logic
 const startGame = () => {
-  interval = setInterval(async () => {
-    currentPeriod += 1;
+  if (isGameInProgress) return;
 
-    // Generate new cards and determine the winner
-    const cardAData = generateRandomCard();
-    const cardBData = generateRandomCard();
-    const winner = checkWinner(cardAData, cardBData);
+  isGameInProgress = true;
+  isBettingOpen = true; // Betting is open for 15 seconds
+  currentPeriod += 1;
+  timeLeft = 15; // Reset countdown for betting phase
 
-    // Store the game result in the database
-    const game = await prisma.game.create({
-      data: { cardA: `${cardAData.rank}_${cardAData.suit}`, cardB: `${cardBData.rank}_${cardBData.suit}`, winner },
-    });
+  // Broadcast the start of the game with betting open
+  broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
 
-    // Store the current game state in memory
-    currentGameState = {
-      id: game.id,
-      cardA: cardAData.rank,
-      cardAImg: cardAData.img,
-      cardB: cardBData.rank,
-      cardBImg: cardBData.img,
-      winner,
-    };
-
-    // Resolve bets for the current game
-    await resolveBets(game.id, winner);
-
-    // Broadcast the game result to all clients
-    broadcast({
-      type: 'gameResult',
-      gameState: currentGameState,
-      period: currentPeriod,
-      timeleft: 15,  // Assuming a 15-second countdown for the next game round
-    });
-  }, 15000);  // Set the interval for each game round
+  // Start the countdown for the betting phase
+  countdownInterval = setInterval(() => {
+    if (timeLeft > 0 && isBettingOpen) {
+      timeLeft -= 1;
+      broadcast({ type: 'timer', timeleft: timeLeft });
+    } else if (timeLeft === 0 && isBettingOpen) {
+      // Close betting and start the game phase
+      isBettingOpen = false;
+      broadcast({ type: 'bettingClosed' });
+      clearInterval(countdownInterval); // Clear the betting phase countdown
+      startGamePhase(); // Move to game phase after betting ends
+    }
+  }, 1000);
 };
 
-// Start the game
+const startGamePhase = async () => {
+  // Generate random cards and determine the winner
+  const cardAData = generateRandomCard();
+  const cardBData = generateRandomCard();
+  const winner = checkWinner(cardAData, cardBData);
+
+  // Create a new game in the database
+  const game = await prisma.game.create({
+    data: { cardA: `${cardAData.rank}_${cardAData.suit}`, cardB: `${cardBData.rank}_${cardBData.suit}`, winner },
+  });
+
+  currentGameState = {
+    id: game.id,
+    cardA: cardAData.rank,
+    cardAImg: cardAData.img,
+    cardB: cardBData.rank,
+    cardBImg: cardBData.img,
+    winner,
+  };
+
+  // Broadcast the result of the game
+  broadcast({ type: 'gameResult', gameState: currentGameState, period: currentPeriod, timeleft: 0 });
+
+  // Countdown for the cooldown period before starting the next game
+  setTimeout(() => {
+    isGameInProgress = false; // Allow the next game to start after the cooldown
+    startGame(); // Start the next game after cooldown
+  }, 15000); // Cooldown period of 15 seconds before next game
+};
+
+// Start the game cycle
 startGame();
 
 app.listen(port, () => {
@@ -157,7 +147,7 @@ app.listen(port, () => {
 
 // Handle clean shutdown
 process.on('SIGINT', () => {
-  if (interval) clearInterval(interval);
+  if (countdownInterval) clearInterval(countdownInterval);
   console.log('Shutting down gracefully...');
   process.exit();
 });

@@ -13,6 +13,7 @@ const GameComponent = () => {
   const [revealLeftCard, setRevealLeftCard] = useState(false);
   const [revealRightCard, setRevealRightCard] = useState(false);
   const [gamerecord, setGameRecord] = useState(null);
+  const [timer , setTimer] = useState(0);
 
   
   useEffect(() => {
@@ -24,6 +25,10 @@ const GameComponent = () => {
   
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
+      if(data?.type === "timer" || data?.type === "gameStarted") {
+           setTimer(data?.timeleft)
+      }
 
       if(data?.type === "currentgame" || data?.type === "gameResult"){
         setGame(data)
@@ -65,9 +70,8 @@ const GameComponent = () => {
  
   return (
     <div>
-      <GameTimer game={game} isbettingopen={isbetting} />
+      <GameTimer Timer={timer} isbettingopen={isbetting} />
       <GameRecord  data={gamerecord}/>
-     (
         <div className="flex justify-center gap-20 p-6">
           <div className="flex  items-center">
             <img src="https://colorwiz.cyou/images/luckyhit_black_avatar.png" alt="User A" />
