@@ -14,10 +14,12 @@ const GameComponent = () => {
   const [revealRightCard, setRevealRightCard] = useState(false);
   const [gamerecord, setGameRecord] = useState(null);
   const [timer , setTimer] = useState(0);
+  const [pockerbackimageurl , setPockerBackImageUrl] = useState('');
 
-  
+
+
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:5050');
+    const ws = new WebSocket('ws://localhost:5050' ||'wss://localhost:5050' ); // this is going to be come from prod | local
   
     ws.onopen = () => {
       console.log("Connected to the WebSocket server");
@@ -29,6 +31,10 @@ const GameComponent = () => {
       if(data?.type === "timer" || data?.type === "gameStarted") {
            setTimer(data?.timeleft)
       }
+
+      if(data?.type === "pokerback") {
+        setPockerBackImageUrl(data?.imageurl)
+      } 
 
       if(data?.type === "currentgame" || data?.type === "gameResult"){
         setGame(data)
@@ -73,23 +79,21 @@ const GameComponent = () => {
       <GameTimer Timer={timer} isbettingopen={isbetting} />
       <GameRecord  data={gamerecord}/>
         <div className="flex justify-center gap-20 p-6">
+            <span>RED</span>
           <div className="flex  items-center">
+         
             <img src="https://colorwiz.cyou/images/luckyhit_black_avatar.png" alt="User A" />
             <motion.div className='relative'>
-               { game?.gameState?.cardAImg === undefined ?  <motion.img
-                src="https://colorwiz.cyou/images/poker/poker_back.png"
-                alt="Card A Back"
-                initial={{ rotateY: 0, opacity: 1 }}
-                animate={revealLeftCard ? { rotateY: 180, opacity: 0 } : {}}
-                transition={{ duration: 0.5 }}
-                style={{ position: 'absolute', backfaceVisibility: 'hidden' }}
+               { pockerbackimageurl ?  <motion.img
+                src={pockerbackimageurl}
+                
               /> : 
               <motion.img
                 src={game?.gameState?.cardAImg}
                 alt="Card A Front"
               />}
              
-              {game?.gameState?.winner === 'A' && (
+              { !pockerbackimageurl && game?.gameState?.winner === 'A' && (
                 <motion.div
                   className="absolute inset-0 rounded-lg border-2 border-yellow-500"
                   initial="initial"
@@ -104,23 +108,19 @@ const GameComponent = () => {
           <div className="flex items-center  justify-center">
             <img src="https://colorwiz.cyou/images/luckyhit_vs.png" className="h-16" alt="VS" />
           </div>
-
+              <span>BLACK</span>
           <div className="flex">
-           
+          
             <motion.div className="relative">
-              {game?.gameState?.cardBImg === undefined ?  <motion.img
-                src="https://colorwiz.cyou/images/poker/poker_back.png"
-                alt="Card B Back"
-                initial={{ rotateY: 0, opacity: 1 }}
-                animate={revealRightCard ? { rotateY: 180, opacity: 0 } : {}}
-                transition={{ duration: 0.5 }}
-                style={{ position: 'absolute', backfaceVisibility: 'hidden' }}
-              />: 
+              {pockerbackimageurl ?  
+               <motion.img
+                src={pockerbackimageurl}
+              /> : 
               <motion.img
                 src={game?.gameState?.cardBImg}
                 alt="Card B Front"
               />}
-              {game?.gameState?.winner === 'B' && (
+              { !pockerbackimageurl  && game?.gameState?.winner === 'B' && (
                 <motion.div
                   className="absolute inset-0 rounded-lg border-2 border-yellow-500"
                   initial="initial"
@@ -134,8 +134,7 @@ const GameComponent = () => {
             <img src="https://colorwiz.cyou/images/luckyhit_red_avatar.png" alt="User B" />
           </div>
         </div>
-      )
-
+    
       <div className="flex justify-center items-center mt-4">
         <input
           type="number"

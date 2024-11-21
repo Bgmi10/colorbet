@@ -16,6 +16,8 @@ let timeLeft = 15; // The countdown timer (in seconds)
 let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
+console.log(timeLeft)
+
 // Broadcast message to all clients
 const broadcast = (message: any) => {
   clients.forEach(client => {
@@ -53,6 +55,7 @@ wss.on('connection', async (ws: WebSocketWithId) => {
   }
 
   ws.on('message', async (data: WebSocket.Data) => {
+    // receiving data from the client 
     const message = JSON.parse(data.toString());
 
     if (message.type === 'placeBet' && isBettingOpen) { // Only allow bets when betting is open
@@ -98,8 +101,11 @@ const startGame = () => {
     if (timeLeft > 0 && isBettingOpen) {
       timeLeft -= 1;
       broadcast({ type: 'timer', timeleft: timeLeft });
+      broadcast({type : "pokerback" , imageurl : "https://colorwiz.cyou/images/poker/poker_back.png"});
+     // broadcast({ type: 'gameResult', gameState: "", period: "", timeleft: 0 });
     } else if (timeLeft === 0 && isBettingOpen) {
       // Close betting and start the game phase
+      broadcast({type : "pokerback" , imageurl : ""})
       isBettingOpen = false;
       broadcast({ type: 'bettingClosed' });
       clearInterval(countdownInterval); // Clear the betting phase countdown
