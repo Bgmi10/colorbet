@@ -8,10 +8,13 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  balance    Float    @default(0)
-  bets       Bet[]    // One-to-many relation with Bet
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  balance     Float    @default(0)
+  bets        Bet[]    // One-to-many relation with Bet
+  email       String   @unique
+  password    String   
+  phonenumber String   @unique 
 }
 
 model Game {

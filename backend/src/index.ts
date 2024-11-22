@@ -16,8 +16,6 @@ let timeLeft = 15; // The countdown timer (in seconds)
 let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
-console.log(timeLeft)
-
 // Broadcast message to all clients
 const broadcast = (message: any) => {
   clients.forEach(client => {
