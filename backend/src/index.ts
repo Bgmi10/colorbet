@@ -1,10 +1,16 @@
 import express from 'express';
 import WebSocket from 'ws';
 import { prisma } from '../prisma/prisma';
+import cookieParser from 'cookie-parser';
+//@ts-ignore
 import { generateRandomCard, checkWinner } from '../game/GameLogic';
 import { WebSocketWithId, GameState } from '../types/types';
+import AuthRouter from './routes/Auth';
+import Demo from './routes/Demo';
 
 const app = express();
+app.use(cookieParser());
+app.use(express.json());
 const port = 3005;
 
 const wss = new WebSocket.Server({ port: 5050 });
@@ -15,6 +21,9 @@ let countdownInterval: any = null;
 let timeLeft = 15; // The countdown timer (in seconds)
 let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
+
+app.use('/api/auth' , AuthRouter);
+app.use(Demo);
 
 // Broadcast message to all clients
 const broadcast = (message: any) => {

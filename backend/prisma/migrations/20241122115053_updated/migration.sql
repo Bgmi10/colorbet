@@ -3,6 +3,9 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "memberId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -33,7 +36,10 @@ CREATE TABLE "Bet" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_memberId_key" ON "User"("memberId");
 
 -- AddForeignKey
 ALTER TABLE "Bet" ADD CONSTRAINT "Bet_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
