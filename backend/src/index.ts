@@ -7,8 +7,10 @@ import { generateRandomCard, checkWinner } from '../game/GameLogic';
 import { WebSocketWithId, GameState } from '../types/types';
 import AuthRouter from './routes/Auth';
 import Demo from './routes/Demo';
+import cors from 'cors'
 
 const app = express();
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 const port = 3005;

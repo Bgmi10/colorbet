@@ -1,23 +1,28 @@
 import { prisma } from "../../prisma/prisma";
-import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import  bcrypt  from 'bcrypt';
-import express from 'express';
-
+import express, {Request , Response} from 'express';
+import { validEmail } from "../utils/constants";
 
 const AuthRouter = express.Router();
 
 //@ts-ignore
-
-AuthRouter.post('/signin' ,  async (req , res ) => {
+AuthRouter.post('/signin' ,  async (req: Request, res: Response) => {
 
     const { email, password, name } = req.body;
  
-    if(!email || !password || !name ) {
+    if(!email || !password || !name) {
 
         return res.status(400).json({message : "bad request all fields are required"})
         
     }
+
+    
+
+    if(!validEmail(email)){
+        return res.status(401).json({ message : 'email format error' });
+    }
+    
 
     const upperCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); 
     const lowerCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)); 
@@ -39,7 +44,7 @@ AuthRouter.post('/signin' ,  async (req , res ) => {
        const memberId = generateRandomUsername(randomUsernameLength);
         
     const hashedpassword = await bcrypt.hash("password",10).then(res => res); 
-    //@ts-ignore
+
     const user  = await prisma.user.findUnique({
         where : {email}
     })
@@ -50,9 +55,7 @@ AuthRouter.post('/signin' ,  async (req , res ) => {
 
 
     try {
-       
         await prisma.user.create({
-            //@ts-ignore
             data : {
                   username : name,
                   memberId,
@@ -60,11 +63,11 @@ AuthRouter.post('/signin' ,  async (req , res ) => {
                   email
             }
         })
-        //@ts-ignore
-        const token = jwt.sign({name : name} , process.env.JWT_SECRET , {
+    
+        const token = jwt.sign({name : name} , process.env.JWT_SECRET as string, {
             expiresIn : '10h'
         });
-        //@ts-ignore
+    
         res.cookie('token' , { token});
         res.status(200).json({message : "user created sucessfully"})
    
@@ -77,8 +80,8 @@ AuthRouter.post('/signin' ,  async (req , res ) => {
     
 })
 
-//@ts-ignore
-AuthRouter.post('/login' , async (req , res) => {
+//@ts-ignoreo
+AuthRouter.post('/login' , async (req: Request, res: Response) => {
 
     const {email , password} = req.body;
 
@@ -88,6 +91,9 @@ AuthRouter.post('/login' , async (req , res) => {
         })
     }
     
+    if(!validEmail(email)){
+        return res.status(401).json({ message : 'email format error' });
+    }
 
     try {
        const user =  await prisma.user.findUnique({
@@ -95,21 +101,18 @@ AuthRouter.post('/login' , async (req , res) => {
         });
 
         if(!user){
-            return res.status(404).json({ message : "invalid credentials" })
+            return res.status(404).json({ message : "User not found!" })
         }
-        //@ts-ignore  
-        const hashpass = await bcrypt.compare(password , user?.password);
+
+        const hashpass = bcrypt.compare(password , user?.password);
 
         if(!hashpass) {
             return res.status(401).json({message : 'invalid credentials'}); 
         }
-        //@ts-ignore
-        const token = jwt.sign({name : user?.username} , process.env.JWT_SECRET ,  { expiresIn : '4h' });
+        
+        const token = jwt.sign({name : user?.username} , process.env.JWT_SECRET as string ,  { expiresIn : '4h' });
         res.cookie('token' ,{token});
         res.status(200).json({ message : 'user verfied' });
-        //@ts-ignore
-     
-
     }
     catch(e){
         console.log(e);
@@ -117,9 +120,8 @@ AuthRouter.post('/login' , async (req , res) => {
 });
 
 //@ts-ignore
+AuthRouter.post('/logout' , (req : Request, res : Response) => {
 
-AuthRouter.post('/logout' , (req, res) => {
-    //@ts-ignore
      res.cookie('token' , '' ,{ expires : new Date(0)} );
      return res.status(200).json({message : 'logout success'});
 

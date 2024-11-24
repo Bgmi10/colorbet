@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { GameTimer } from './GameTimer';
 import { motion } from 'framer-motion';
 import { GameRecord } from './GameRecord';
+import axios from 'axios';
+import { base } from 'framer-motion/client';
+import { baseurl } from '../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);
@@ -15,6 +19,7 @@ const GameComponent = () => {
   const [gamerecord, setGameRecord] = useState(null);
   const [timer , setTimer] = useState(0);
   const [pockerbackimageurl , setPockerBackImageUrl] = useState('');
+  const navigate = useNavigate();
 
 
 
@@ -75,7 +80,12 @@ const GameComponent = () => {
 
  
   return (
+   <> 
     <div>
+       <span onClick={ async () => await axios.post(baseurl + '/api/auth/logout').then(res => res.status=== 200 && navigate('/login'))} className=''>Logout</span> 
+    </div>
+    <div>
+
       <GameTimer Timer={timer} isbettingopen={isbetting} />
       <GameRecord  data={gamerecord}/>
         <div className="flex justify-center gap-20 p-6">
@@ -163,6 +173,7 @@ const GameComponent = () => {
 
       {result && <p className="text-center mt-4">{result}</p>}
     </div>
+    </>
   );
 };
 
