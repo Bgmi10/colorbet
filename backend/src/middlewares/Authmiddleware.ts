@@ -9,8 +9,8 @@ const Authmiddleware = (req , res , next ) => {
         return
     }
     
-    //@ts-ignore
-    const istoken = jwt.verify(token.token , process.env.JWT_SECRET);
+    
+    const istoken = jwt.verify(token.token , process.env.JWT_SECRET as string);
 
     if(istoken){
        next();

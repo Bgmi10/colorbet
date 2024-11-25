@@ -2,6 +2,7 @@ import express from 'express';
 import WebSocket from 'ws';
 import { prisma } from '../prisma/prisma';
 import cookieParser from 'cookie-parser';
+import rateLimit from 'express-rate-limit';
 //@ts-ignore
 import { generateRandomCard, checkWinner } from '../game/GameLogic';
 import { WebSocketWithId, GameState } from '../types/types';
@@ -15,6 +16,14 @@ app.use(cookieParser());
 app.use(express.json());
 const port = 3005;
 
+const limiter = rateLimit({
+  windowMs : 10 * 60 * 1000,
+  limit : 100,
+  standardHeaders : 'draft-7',
+  legacyHeaders : false,
+  message : "too many request try after 10 minutes"
+})
+
 const wss = new WebSocket.Server({ port: 5050 });
 let clients: WebSocketWithId[] = [];
 let currentGameState: GameState | null = null;
@@ -24,7 +33,7 @@ let timeLeft = 15; // The countdown timer (in seconds)
 let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
-app.use('/api/auth' , AuthRouter);
+app.use('/api/auth' , limiter ,  AuthRouter);
 app.use(Demo);
 
 // Broadcast message to all clients
