@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import  bcrypt  from 'bcrypt';
 import express, {Request , Response} from 'express';
 import { validEmail } from "../utils/constants";
+import otpCheck from "../middlewares/otpCheck";
+import verifyOtp from "../middlewares/verifyOtp";
 
 const AuthRouter = express.Router();
 
@@ -17,20 +19,15 @@ AuthRouter.post('/signin' ,  async (req: Request, res: Response) => {
         
     }
 
-    
-
     if(!validEmail(email)){
         return res.status(401).json({ message : 'email format error' });
     }
     
-
     const upperCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); 
     const lowerCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)); 
     const digits = Array.from({ length: 9 }, (_, i) => (i + 1).toString()); // 1-9
     const fullList = [...upperCaseLetters, ...lowerCaseLetters, ...digits];
     
-   
-
     function generateRandomUsername(length : any) {
         let username = '';
         for (let i = 0; i < length; i++) {
@@ -127,5 +124,37 @@ AuthRouter.post('/logout' , (req : Request, res : Response) => {
 
 });
 
+//@ts-ignore
+AuthRouter.post('/generate-otp', otpCheck, (req, res) => {
+    return res.status(200).json({ message : "otp sent" });
+})
+
+//@ts-ignore
+AuthRouter.post('/forgetpassword', verifyOtp, async (req, res) => {
+    const { email , newpassword } = req.body;
+
+    try {
+       
+        const hashnewpassword = await bcrypt.hash(newpassword , 10);
+
+        await prisma.user.update({
+             where : {
+                email 
+             },
+             data : {
+                password : hashnewpassword
+             }
+        })
+
+        res.status(200).json({ message : "passoword changed sucessfully"});
+
+        await prisma.otp.delete({ where : {email} })
+
+
+    }
+    catch(e){
+        console.log(e);
+    }
+})
 export default AuthRouter;
 

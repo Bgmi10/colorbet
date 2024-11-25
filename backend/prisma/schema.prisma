@@ -39,3 +39,10 @@ model Bet {
   createdAt DateTime  @default(now())
 }
 
+model Otp {
+  id          Int       @id  @default(autoincrement())
+  email       String    @unique
+  otpHash     String
+  expiresIn   DateTime
+  createdIn   DateTime  @default(now())  
+}
