@@ -33,7 +33,7 @@ let timeLeft = 15; // The countdown timer (in seconds)
 let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
-app.use('/api/auth' , limiter ,  AuthRouter);
+app.use('/api/auth', limiter, AuthRouter);
 app.use(Demo);
 
 // Broadcast message to all clients

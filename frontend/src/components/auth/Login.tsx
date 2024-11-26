@@ -19,9 +19,8 @@ export default function Login() {
   };
 
   useEffect(() => {
-      const value =  ref.current.focus()
-      console.log(value)
-  },[])
+      ref?.current?.focus()
+  },[ref])
 
   const handleSubmit = async () => {
     if (!form.email || !form.password) {
@@ -52,6 +51,7 @@ export default function Login() {
       setErr(e.response.data.message);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -93,7 +93,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-6 p-3 text-white rounded-lg bg-amber-500 font-serifs transition-all ${loading ? "cursor-not-allowed opacity-50" : "hover:bg-yellow-600"}`}
+            className={`w-full mt-6 p-3 text-white rounded-lg bg-amber-500 font-serif transition-all ${loading ? "cursor-not-allowed opacity-50" : "hover:bg-yellow-600"}`}
             aria-busy={loading}
             aria-live="polite"
           >
@@ -104,10 +104,14 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        <p className="text-center text-gray-500 text-sm mt-4">
+      
+        <p className="text-center text-gray-500 text-sm mt-3">
           Don’t have an account? <Link to="/signin" className="text-yellow-400">Sign up</Link>
         </p>
+      <div className="flex justify-center mt-1">
+       <Link to={'/forget-password'}> <span className="font-normal cursor-pointer text-gray-500">forget password ?</span> </Link>
+      </div>
+        
       </div>
     </div>
   );

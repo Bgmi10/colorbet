@@ -122,10 +122,12 @@ export default function SignIn() {
             )}
           </button>
         </form>
-
+      <div>
         <p className="text-center text-gray-500 text-sm mt-4">
           Already have an account? <Link to="/login" className="text-yellow-400">Log in</Link>
         </p>
+       
+      </div>
       </div>
     </div>
   );
