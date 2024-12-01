@@ -16,17 +16,20 @@ async function verifyOtp (req, res, next) {
         });
 
         if(!user){
-            return res.status(404).json({ message : "OTP not found or has expired"});
+             res.status(404).json({ message : "OTP not found or has expired"});
+             return;
         }
       
         if (new Date() > user.expiresIn) {
-            return res.status(400).json({ message: "OTP has expired" });
+            res.status(400).json({ message: "OTP has expired" });
+            return;
           }
 
         const compareotp = await bcrypt.compare(otp , user?.otpHash);
       
         if(!compareotp){
-            return res.status(401).json({ message : "Invalid Otp" });
+            res.status(401).json({ message : "Invalid Otp" });
+            return;
         }
 
         next();

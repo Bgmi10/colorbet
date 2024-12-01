@@ -26,7 +26,7 @@ async function otpCheck (req, res, next){
     // here store the otp in db for tempropry and delete it after verifed
 
     const hashotp = await bcrypt.hash(generate_otp , 10);
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    const expiresAt = new Date(Date.now() +  60 * 1000);
 
     try { 
         await prisma.otp.upsert({

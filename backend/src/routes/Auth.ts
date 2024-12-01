@@ -1,26 +1,33 @@
 import { prisma } from "../../prisma/prisma";
 import jwt from 'jsonwebtoken';
 import  bcrypt  from 'bcrypt';
-import express, {Request , Response} from 'express';
+import express from 'express';
 import { validEmail } from "../utils/constants";
 import otpCheck from "../middlewares/otpCheck";
 import verifyOtp from "../middlewares/verifyOtp";
+import Signinotp from "../middlewares/Signinotp";
+import verifysigninotp from "../middlewares/verifysigninotp";
 
 const AuthRouter = express.Router();
 
-//@ts-ignore
-AuthRouter.post('/signin' ,  async (req: Request, res: Response) => {
+AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response) => {
+
+    res.status(200).json({ message : "otp sent to your email. please verify it" });
+    
+});
+
+AuthRouter.post('/signin', verifysigninotp , async (req: express.Request, res: express.Response) => {
 
     const { email, password, name } = req.body;
  
     if(!email || !password || !name) {
-
-        return res.status(400).json({message : "bad request all fields are required"})
-        
+      res.status(400).json({message : "bad request all fields are required"});
+      return;
     }
 
     if(!validEmail(email)){
-        return res.status(401).json({ message : 'email format error' });
+        res.status(401).json({ message : 'email format error' });
+        return;
     }
     
     const upperCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); 
@@ -47,7 +54,8 @@ AuthRouter.post('/signin' ,  async (req: Request, res: Response) => {
     })
 
     if(user?.email === email){
-        return res.status(401).json({message : 'user with this email is already exist try to login'})
+       res.status(401).json({message : 'user with this email is already exist try to login'});
+       return;
     }
 
 
@@ -77,19 +85,21 @@ AuthRouter.post('/signin' ,  async (req: Request, res: Response) => {
     
 })
 
-//@ts-ignoreo
-AuthRouter.post('/login' , async (req: Request, res: Response) => {
+
+AuthRouter.post('/login' , async (req: express.Request, res: express.Response) => {
 
     const {email , password} = req.body;
 
     if(!email || !password){
-        return res.status(400).json({
+         res.status(400).json({
             message : 'invaild request'
-        })
+        });
+        return;
     }
     
     if(!validEmail(email)){
-        return res.status(401).json({ message : 'email format error' });
+       res.status(401).json({ message : 'email format error' });
+       return;
     }
 
     try {
@@ -98,13 +108,15 @@ AuthRouter.post('/login' , async (req: Request, res: Response) => {
         });
 
         if(!user){
-            return res.status(404).json({ message : "User not found!" })
+          res.status(404).json({ message : "User not found!" });
+          return;
         }
 
         const hashpass = bcrypt.compare(password , user?.password);
 
         if(!hashpass) {
-            return res.status(401).json({message : 'invalid credentials'}); 
+          res.status(401).json({message : 'invalid credentials'}); 
+          return;
         }
         
         const token = jwt.sign({name : user?.username} , process.env.JWT_SECRET as string ,  { expiresIn : '4h' });
@@ -116,21 +128,20 @@ AuthRouter.post('/login' , async (req: Request, res: Response) => {
     }
 });
 
-//@ts-ignore
-AuthRouter.post('/logout' , (req : Request, res : Response) => {
+
+AuthRouter.post('/logout' , (req : express.Request, res : express.Response) => {
 
      res.cookie('token' , '' ,{ expires : new Date(0)} );
-     return res.status(200).json({message : 'logout success'});
-
+     res.status(200).json({message : 'logout success'});
 });
 
-//@ts-ignore
-AuthRouter.post('/generate-otp', otpCheck, (req, res) => {
-    return res.status(200).json({ message : "otp sent" });
+
+AuthRouter.post('/generate-forget-otp', otpCheck, (req: express.Request, res: express.Response) => {
+     res.status(200).json({ message : "otp sent" });
 })
 
-//@ts-ignore
-AuthRouter.post('/forgetpassword', verifyOtp, async (req, res) => {
+
+AuthRouter.post('/forgetpassword', verifyOtp, async (req: express.Request, res: express.Response) => {
     const { email , newpassword } = req.body;
 
     try {
