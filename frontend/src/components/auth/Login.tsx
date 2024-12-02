@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { baseurl, validEmail } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,14 +12,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const ref = useRef();
 
-  const handlechange = (e) => {
+  const handlechange = (e : React.EventHandler) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErr('');
   };
 
   useEffect(() => {
-      ref?.current?.focus()
+      ref?.current?.focus();
   },[ref])
 
   const handleSubmit = async () => {

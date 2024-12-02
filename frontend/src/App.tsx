@@ -4,22 +4,21 @@ import Login from "./components/auth/Login"
 import Notfound from "./Notfound"
 import SignIn from "./components/auth/SignIn"
 import ForgetPassword from "./components/auth/ForgetPassword"
+import OtpVerify from "./components/OtpVerify"
 
 function App() {
   return (
     <>
-      <div>
-        <Router>
-               <Routes>
-                      <Route element={ <GameComponent /> } path="/game" />
-                      <Route element={ <Login /> } path="/login" />
-                      <Route element={ <SignIn /> } path="/signin" />
-                      <Route element={ <Notfound /> } path="*" />
-                      <Route element={ <ForgetPassword /> } path="/forget-password" />
-
-               </Routes>
-        </Router>
-      </div>
+       <Router>
+        <Routes>
+         <Route element={ <GameComponent /> } path="/game" />
+         <Route element={ <Login /> } path="/login" />
+         <Route element={ <SignIn /> } path="/signin" />
+         <Route element={ <Notfound /> } path="*" />
+         <Route element={ <ForgetPassword /> } path="/forget-password" />
+         <Route element={ <OtpVerify /> } path="/otp-verify" />
+        </Routes>
+       </Router>
     </>
   )
 }

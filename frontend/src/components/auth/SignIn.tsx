@@ -12,10 +12,14 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const nameInputRef = useRef(null); 
-
+  
   useEffect(() => {
     nameInputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('user-form', JSON.stringify(form));
+  },[form])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,15 +40,17 @@ export default function SignIn() {
 
     try {
       setLoading(true);
-      const res = await axios.post(baseurl + "/api/auth/signin", {
+      const res = await axios.post(baseurl + "/api/auth/generate-signin-otp", {
         name: form?.name,
         email: form?.email,
         password: form?.password,
       });
-
-      if (res.status === 200) {
-        navigate('/game');
-      }
+      setErr(res?.data?.message);
+      navigate('/otp-verify')
+   
+      // if (res.status === 200) { 
+      //   navigate('/game');
+      // }
 
       setLoading(false);
     } catch (e) {
@@ -100,7 +106,28 @@ export default function SignIn() {
             />
           </div>
 
-          {err && (
+          {
+            err === "otp sent to your email. please verify it" && (
+              <div className="mt-4 flex space-x-2">
+                {Array(6)
+                  .fill(0)
+                  .map((_, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      maxLength="1"
+                      name={`otp-${index}`}
+                      onChange={handleChange}
+                      className="w-12 h-12 text-center text-2xl bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+                      aria-label={`otp-${index}`}
+                      required
+                    />
+                  ))}
+              </div>
+             )
+          }
+
+          {err && ( 
             <p className="text-red-500 text-sm mt-2" role="alert" aria-live="assertive">
               {err}
             </p>

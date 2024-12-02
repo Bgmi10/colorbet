@@ -11,7 +11,11 @@ import Demo from './routes/Demo';
 import cors from 'cors'
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin : "http://localhost:5173",
+  methods : ['GET','POST','PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(cookieParser());
 app.use(express.json());
 const port = 3005;

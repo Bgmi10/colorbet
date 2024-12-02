@@ -6,8 +6,12 @@ const verifysigninotp = async(req: express.Request, res: express.Response, next:
 
     const { otp, email } = req.body;
     
-    if(!otp || !email) {
-        res.status(400).json({ message : "otp and email is required"});
+    if( !email) {
+        res.status(400).json({ message : "email is required"});
+        return;
+    }
+    if(!otp) {
+        res.status(400).json({ message : "otp is required"});
         return;
     }
 

@@ -7,16 +7,25 @@ import otpCheck from "../middlewares/otpCheck";
 import verifyOtp from "../middlewares/verifyOtp";
 import Signinotp from "../middlewares/Signinotp";
 import verifysigninotp from "../middlewares/verifysigninotp";
+import { userSchema } from "../utils/zod";
 
 const AuthRouter = express.Router();
 
-AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response) => {
+//@ts-ignore
+AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
 
     res.status(200).json({ message : "otp sent to your email. please verify it" });
     
 });
 
-AuthRouter.post('/signin', verifysigninotp , async (req: express.Request, res: express.Response) => {
+AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: express.Response) => {
+
+    const validation = userSchema.safeParse(req.body);
+
+    if(!validation){
+        res.status(400).json({ message : "invalid request" });
+        return;
+    }
 
     const { email, password, name } = req.body;
  
