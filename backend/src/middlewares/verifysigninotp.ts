@@ -23,20 +23,30 @@ const verifysigninotp = async(req: express.Request, res: express.Response, next:
         });
 
         if(!user){
-           res.status(404).json({ message : "user not found"});
+           res.status(404).json({ message : "resend the otp" });
            return;
         }
 
         if(user?.expiresIn < new Date()){
             //@ts-ignore
-            const expires = Math.floor(new Date() - new Date(user?.expiresIn) / 1000);
-            res.status(401).json({ message : `otp expired ${expires} sec ago` });   
+            const expires = Math.floor((new Date() - new Date(user?.expiresIn)) / 1000);
+
+            const seconds = expires / 1000;
+            const formatTime = (seconds : number) => {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+              };
+             const expiresin =  formatTime(seconds)
+            res.status(401).json({ message : `otp expired ${expiresin}` });   
 
             await prisma.otp.delete({
                 where : {email}
             })
             return; 
         }
+
+      
 
         const hashedotp = await bcrypt.compare(otp, user?.otpHash);
 

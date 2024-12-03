@@ -1,161 +1,132 @@
-import { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { baseurl, validEmail } from "../../utils/constants";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
+import {  validEmail } from "../../utils/constants";
 
 export default function SignIn() {
-    
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [err, setErr] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const nameInputRef = useRef(null); 
-  
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     nameInputRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('user-form', JSON.stringify(form));
-  },[form])
+    localStorage.setItem("user-form", JSON.stringify(form));
+  }, [form]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    setErr('');
+    setError("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     if (!form.name || !form.email || !form.password) {
-      return setErr("All fields are required to sign up.");
+      return setError("All fields are required to sign up.");
     }
 
-    if (!validEmail(form?.email)) {
-      return setErr("Please enter a valid email address.");
+    if (!validEmail(form.email)) {
+      return setError("Please enter a valid email address.");
     }
 
-    try {
-      setLoading(true);
-      const res = await axios.post(baseurl + "/api/auth/generate-signin-otp", {
-        name: form?.name,
-        email: form?.email,
-        password: form?.password,
-      });
-      setErr(res?.data?.message);
-      navigate('/otp-verify')
-   
-      // if (res.status === 200) { 
-      //   navigate('/game');
-      // }
-
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-      setErr(e.response?.data?.message || "Sign up failed.");
-    }
+    navigate('/otp-verify');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full"
+      >
         <h2 className="text-3xl font-semibold text-yellow-500 text-center">
           Create an Account
         </h2>
         <p className="text-gray-300 text-center mt-2">Sign up to get started</p>
 
-        <form onSubmit={handleSubmit} aria-labelledby="signup-form" className="mt-6">
-          <div className="mt-6">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
             <input
               type="text"
               ref={nameInputRef}
               name="name"
-              placeholder="Name"
+              value={form.name}
               onChange={handleChange}
+              placeholder="Name"
               className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
-              aria-label="Name"
               required
             />
           </div>
 
-          <div className="mt-4">
+          <div>
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              value={form.email}
               onChange={handleChange}
+              placeholder="Email"
               className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
-              aria-label="Email"
               required
             />
           </div>
 
-          <div className="mt-4">
+          <div>
             <input
               type="password"
               name="password"
-              placeholder="Password"
+              value={form.password}
               onChange={handleChange}
+              placeholder="Password"
               className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
-              aria-label="Password"
               required
             />
           </div>
 
-          {
-            err === "otp sent to your email. please verify it" && (
-              <div className="mt-4 flex space-x-2">
-                {Array(6)
-                  .fill(0)
-                  .map((_, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      maxLength="1"
-                      name={`otp-${index}`}
-                      onChange={handleChange}
-                      className="w-12 h-12 text-center text-2xl bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
-                      aria-label={`otp-${index}`}
-                      required
-                    />
-                  ))}
-              </div>
-             )
-          }
-
-          {err && ( 
-            <p className="text-red-500 text-sm mt-2" role="alert" aria-live="assertive">
-              {err}
-            </p>
+          {error && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-500 text-sm"
+              role="alert"
+            >
+              {error}
+            </motion.p>
           )}
 
           <button
-            type="submit" 
+            type="submit"
             disabled={loading}
-            className={`w-full mt-6 p-3 text-white rounded-lg bg-amber-500 font-serif transition-all ${
-              loading ? "cursor-not-allowed opacity-50" : "hover:bg-yellow-600"
+            className={`w-full p-3 text-white rounded-lg font-medium transition-all ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-yellow-500 hover:bg-yellow-600"
             }`}
-            aria-busy={loading} 
-            aria-live="polite"
           >
             {loading ? (
-              <FontAwesomeIcon icon={faSpinner} spin aria-hidden="true" />
+              <FontAwesomeIcon icon={faSpinner} spin />
             ) : (
               "Sign Up"
             )}
           </button>
         </form>
-      <div>
-        <p className="text-center text-gray-500 text-sm mt-4">
-          Already have an account? <Link to="/login" className="text-yellow-400">Log in</Link>
+
+        <p className="text-center text-gray-400 mt-6">
+          Already have an account?{" "}
+          <Link to="/login" className="text-yellow-400 hover:underline">
+            Log in
+          </Link>
         </p>
-       
-      </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
