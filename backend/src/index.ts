@@ -17,6 +17,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const port = 3005;
 

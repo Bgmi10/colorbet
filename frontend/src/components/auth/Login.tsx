@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from 'framer-motion';
 import axios from "axios";
 import { baseurl, validEmail } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
@@ -45,7 +46,7 @@ export default function Login() {
 
       setLoading(false);
 
-    } catch (e) {
+    } catch (e){
       console.error(e);
       setLoading(false);
       setErr(e.response.data.message);
@@ -55,7 +56,12 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
+      <motion.div 
+       initial = {{ opacity : 0, y: -20}}
+       animate = {{opacity : 10, y : 0 }}
+       transition = {{ duration : 0.5 }}
+       className="bg-gray-800 m-20 rounded-xl w-full max-w-md p-10"
+      >
         <h1 id="login-heading" className="text-3xl font-semibold text-yellow-500 text-center">Welcome to Colorwiz</h1>
         <p className="text-gray-300 text-center mt-2">Please log in to continue</p>
 
@@ -105,14 +111,13 @@ export default function Login() {
           </button>
         </form>
       
-        <p className="text-center text-gray-500 text-sm mt-3">
-          Don’t have an account? <Link to="/signin" className="text-yellow-400">Sign up</Link>
+        <p className="text-center text-gray-500 text-sm mt-5">
+          Don’t have an account ? <Link to="/signin" className="text-yellow-400 font-serif hover:underline">Sign up</Link>
         </p>
-      <div className="flex justify-center mt-1">
+      <p className="text-center text-gray-500 text-sm mt-3">
        <Link to={'/forget-password'}> <span className="font-normal cursor-pointer text-gray-500">forget password ?</span> </Link>
-      </div>
-        
-      </div>
+      </p>
+      </motion.div>
     </div>
   );
 }

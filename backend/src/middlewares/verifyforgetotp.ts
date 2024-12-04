@@ -2,7 +2,7 @@ import { prisma } from "../../prisma/prisma";
 import bcrypt from 'bcrypt';
 
 //@ts-ignore
-async function verifyOtp (req, res, next) {
+async function verifyforgetotp (req, res, next) {
 
     const { otp , email } = req.body;
 
@@ -36,11 +36,11 @@ async function verifyOtp (req, res, next) {
 
     }
     catch(e){
-       // console.log(e);
+        console.log(e);
         res.status(500).json({ message : "internal server error" })
     }
     
 
 }
 
-export default verifyOtp;
+export default verifyforgetotp;

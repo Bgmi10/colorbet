@@ -37,7 +37,7 @@ export default function SignIn() {
       return setError("Please enter a valid email address.");
     }
 
-    navigate('/otp-verify');
+    navigate('/otp-signin-verify');
   };
 
   return (
@@ -46,7 +46,7 @@ export default function SignIn() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full"
+        className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-md w-full"
       >
         <h2 className="text-3xl font-semibold text-yellow-500 text-center">
           Create an Account
@@ -105,10 +105,10 @@ export default function SignIn() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full p-3 text-white rounded-lg font-medium transition-all ${
+            className={`w-full p-3 text-white rounded-lg font-serif transition-all ${
               loading
                 ? "bg-gray-500 cursor-not-allowed"
-                : "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-amber-500 hover:bg-amber-600"
             }`}
           >
             {loading ? (
@@ -119,9 +119,9 @@ export default function SignIn() {
           </button>
         </form>
 
-        <p className="text-center text-gray-400 mt-6">
+        <p className="text-center text-gray-500 text-sm mt-5">
           Already have an account?{" "}
-          <Link to="/login" className="text-yellow-400 hover:underline">
+          <Link to="/login" className="text-yellow-400 font-serif hover:underline">
             Log in
           </Link>
         </p>

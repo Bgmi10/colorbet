@@ -4,7 +4,8 @@ import Login from "./components/auth/Login"
 import Notfound from "./Notfound"
 import SignIn from "./components/auth/SignIn"
 import ForgetPassword from "./components/auth/ForgetPassword"
-import OtpVerify from "./components/OtpVerify"
+import OtpSigninverify from "./components/auth/OtpSigninverify"
+import OtpForgetVerify from "./components/auth/Otpforgetverify"
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
          <Route element={ <SignIn /> } path="/signin" />
          <Route element={ <Notfound /> } path="*" />
          <Route element={ <ForgetPassword /> } path="/forget-password" />
-         <Route element={ <OtpVerify /> } path="/otp-verify" />
+         <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
+         <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
         </Routes>
        </Router>
     </>

@@ -1,70 +1,121 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
-import { baseurl, validEmail } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react"
+import { motion } from 'framer-motion'
+import { Link, useNavigate } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { validEmail } from "../../utils/constants"
 
-export default function ForgetPassword () {
 
-    const [form , setForm] = useState({ email : "" , newpassword : "" , otp  : ""});
-    const [timer, setTimer] = useState(60);
-    const [err, setErr] = useState('');
-    
-    const handlechange = (e) => {
-       const {name, value} = e.target;
-       setForm(prev => ({...prev, [name] : value}));
-       setErr('');
+export default function ForgetPassword() {
+  const [form, setForm] = useState(() => {
+    const data = localStorage.getItem('user-forget-password-form');
+    return data ? JSON.parse(data) : null   
+  });
+  const [err, setErr] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem('user-forget-password-form', JSON.stringify(form));
+  }, [form]);
+
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    setErr('');
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!form.email || !form.newpassword) {
+      setErr('All fields are required');
+      setLoading(false);
+      return;
     }
- 
-    const handletimer = async () => {
-       try {
-           const res = await axios.post('/generate-otp' , {email : form?.email});
-           setErr(res.message);
-       }
-       catch(e){
-           setErr(e.response.data.message);
-           console.log(e);
-       }
-    }  
-  
-    const handleSubmit = async () => {
-
-        if(!form?.email){
-            return setErr('email is required field');
-        }
-
-        if(!validEmail(form?.email)){
-            return setErr('please provide a valid email.');
-        }
-
-        try{ 
-          const res = await axios.post(err === 'otp sent sucessfully check your email' ? baseurl + '/api/auth/forgetpassword' : baseurl +'/api/auth/generate-otp' , { email : form?.email , otp : form?.otp , newpassword : form?.newpassword});
-          const json = await res.data;
-          setErr(json.message);          
-        }
-        catch(e){
-            console.log(e);
-            setErr(e.response.data.message);
-        }
+    if (!validEmail(form.email)) {
+      setErr('Email is not valid')
+      setLoading(false)
+      return
     }
 
+    // Simulating API call
+    setTimeout(() => {
+      setLoading(false)
+      navigate('/otp-forget-verify')
+    }, 1000)
+  }
 
-    return (
-        <>
-        <div className="align-middle h-screen">
-          <div className="flex justify-center">
-              <input type='text' placeholder="email" className="border p-3 rounded-sm" name="email" onChange={handlechange} value={form?.email} />
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gray-800 m-4 rounded-xl w-full max-w-md p-8"
+      >
+        <h1 id="forget-password-heading" className="text-3xl font-semibold text-yellow-500 text-center">Reset Password</h1>
+        <p className="text-gray-300 text-center mt-2">Enter your email and new password</p>
+
+        <form onSubmit={handleSubmit} aria-labelledby="forget-password-heading">
+          <div className="mt-6">
+            <label htmlFor="email" className="sr-only">Email</label>
+            <input
+              ref={emailRef}
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              aria-label="Email"
+              required
+            />
           </div>
-          <div className="flex justify-center mt-5"> <input  type='text' name="newpassword" value={form?.newpassword} placeholder="new password" className="border p-3 rounded-sm" onChange={handlechange} /></div>
-          <div className="flex justify-center mt-5 ml-14">
-             <input type='number' placeholder="verify otp" value={form?.otp} name="otp" className="border p-3 rounded-sm" onChange={handlechange} /> 
-             <button className="px-4 bg-gray-500 text-white" onClick={handletimer} disabled={timer < 60 }>{timer === 60 ? "otp" : `wait ${timer}s`}</button>
-           </div>
-           <div><span className="text-red-500 font-medium">{ err === 'User not found try to signin' ? <><p>user not found signin</p><Link className="underline text-blue-300" to={'/signin'}>Signin</Link> </> : err}</span></div>
-          <div className="flex justify-center mt-3 ">
-          <button className=" bg-blue-400 p-3 w-40 text-white" onClick={handleSubmit}>Continue</button>
+          <div className="mt-4">
+            <label htmlFor="newpassword" className="sr-only">New Password</label>
+            <input
+              type="password"
+              id="newpassword"
+              name="newpassword"
+              placeholder="New Password"
+              value={form.newpassword}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              aria-label="New Password"
+              required
+            />
           </div>
-          </div>
-             
-        </>
-    )
+
+          {err && <p className="text-red-500 text-sm mt-2" role="alert">{err}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full mt-6 p-3 text-white rounded-lg bg-amber-500 font-serif transition-all ${loading ? "cursor-not-allowed opacity-50" : "hover:bg-yellow-600"}`}
+            aria-busy={loading}
+            aria-live="polite"
+          >
+            {loading ? (
+              <FontAwesomeIcon icon={faSpinner} spin aria-hidden="true" /> 
+            ) : (
+              "Change Password"
+            )}
+          </button>
+        </form>
+      
+        <p className="text-center text-gray-500 text-sm mt-5">
+          Remember your password? <Link to="/login" className="text-yellow-400">Login</Link>
+        </p>
+      </motion.div>
+    </div>
+  )
 }
+

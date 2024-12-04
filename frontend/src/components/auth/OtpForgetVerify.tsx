@@ -4,9 +4,9 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { baseurl } from "../utils/constants";
+import { baseurl } from "../../utils/constants";
 
-export default function OtpVerify() {
+export default function OtpSigninverify() {
   const [userInput, setUserInput] = useState(new Array(6).fill(""));
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
@@ -15,29 +15,10 @@ export default function OtpVerify() {
   const [redirectCounter, setRedirectCounter] = useState(15);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const controls = useAnimation();
 
-  const user = JSON.parse(localStorage.getItem("user-form") || "{}");
-
-//   useEffect(() => {
-//     // Check if the user came from the sign-up page
-//     if (!user.email || !location.state?.fromSignUp) {
-//       navigate('/login', { replace: true });
-//       return;
-//     }
-
-//     if (inputRefs.current[0]) {
-//       inputRefs.current[0].focus();
-//     }
-//     checkTimerStatus();
-
-//     // Cleanup function
-//     return () => {
-//       localStorage.removeItem("otpTimestamp");
-//     };
-//   }, [navigate, location.state, user.email]);
+  const user = JSON.parse(localStorage.getItem("user-forget-password-form") || "{}");
 
   useEffect(() => {
     const storedTimestamp = localStorage.getItem("otpTimestamp");
@@ -126,15 +107,14 @@ export default function OtpVerify() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post(baseurl + "/api/auth/signin", {
-        name: user.name,
+      const res = await axios.post(baseurl + "/api/auth/forgetpassword", {
         email: user.email,
-        password: user.password,
+        newpassword: user.newpassword,
         otp,
       });
 
       if (res.status === 200) {
-        navigate("/game", { replace: true });
+        navigate("/login", { replace: true });
       } else {
         throw new Error(res.data?.message || "Invalid OTP");
       }
@@ -154,7 +134,7 @@ export default function OtpVerify() {
   const handleResendOtp = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${baseurl}/api/auth/generate-signin-otp`, {
+      const res = await axios.post(`${baseurl}/api/auth/generate-forget-otp`, {
         email: user?.email,
       });
       setError(res.data?.message || "OTP resent successfully");
@@ -168,23 +148,6 @@ export default function OtpVerify() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (error === "user with this email is already exist try to login") {
-      const redirectInterval = setInterval(() => {
-        setRedirectCounter((prev) => {
-          if (prev <= 1) {
-            clearInterval(redirectInterval);
-            navigate('/login', { replace: true });
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(redirectInterval);
-    }
-  }, [error, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
@@ -209,26 +172,21 @@ export default function OtpVerify() {
             />
           ))}
         </motion.div>
-        {error && error !== "otp sent to your email. please verify it" && (
+        {error && error !== "otp sent sucessfully check your email" && (
           <p className="text-red-500 text-sm text-center mb-4" role="alert">
             {error}
           </p>
         )}
-        {error === "otp sent to your email. please verify it" && (
+        {error === "otp sent sucessfully check your email" && (
           <p className="text-green-500 text-sm text-center mb-4" role="alert">
             {error}
-          </p>
-        )}
-        {error === "user with this email is already exist try to login" && (
-          <p className="text-yellow-500 text-sm text-center mb-4" role="alert">
-            Redirecting to login page in {redirectCounter} seconds
           </p>
         )}
         <div className="text-center">
           {canResend ? (
             <button
               onClick={handleResendOtp}
-              className="px-4 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white transition-colors duration-200"
+              className="px-4 py-2 rounded-md bg-amber-500 hover:bg-amber-600 text-white transition-colors duration-200"
               disabled={loading}
             >
               {loading ? <FontAwesomeIcon icon={faSpinner} spin /> : "Send OTP"}

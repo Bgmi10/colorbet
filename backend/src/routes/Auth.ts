@@ -3,15 +3,14 @@ import jwt from 'jsonwebtoken';
 import  bcrypt  from 'bcrypt';
 import express from 'express';
 import { validEmail } from "../utils/constants";
-import otpCheck from "../middlewares/otpCheck";
-import verifyOtp from "../middlewares/verifyOtp";
 import Signinotp from "../middlewares/Signinotp";
 import verifysigninotp from "../middlewares/verifysigninotp";
 import { userSchema } from "../utils/zod";
+import forgetotp from "../middlewares/forgetotp";
+import verifyforgetotp from "../middlewares/verifyforgetotp";
 
 const AuthRouter = express.Router();
 
-//@ts-ignore
 AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
 
     res.status(200).json({ message : "otp sent to your email. please verify it" });
@@ -121,7 +120,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
           return;
         }
 
-        const hashpass = bcrypt.compare(password , user?.password);
+        const hashpass =  await bcrypt.compare(password , user?.password);
 
         if(!hashpass) {
           res.status(401).json({message : 'invalid credentials'}); 
@@ -145,32 +144,30 @@ AuthRouter.post('/logout' , (req : express.Request, res : express.Response) => {
 });
 
 
-AuthRouter.post('/generate-forget-otp', otpCheck, (req: express.Request, res: express.Response) => {
+AuthRouter.post('/generate-forget-otp', forgetotp, (req: express.Request, res: express.Response) => {
      res.status(200).json({ message : "otp sent" });
 })
 
 
-AuthRouter.post('/forgetpassword', verifyOtp, async (req: express.Request, res: express.Response) => {
+AuthRouter.post('/forgetpassword', verifyforgetotp, async (req: express.Request, res: express.Response) => {
     const { email , newpassword } = req.body;
 
     try {
        
         const hashnewpassword = await bcrypt.hash(newpassword , 10);
 
-        await prisma.user.update({
+         await prisma.user.update({
              where : {
                 email 
              },
              data : {
                 password : hashnewpassword
              }
-        })
+        });
 
-        res.status(200).json({ message : "passoword changed sucessfully"});
+        res.status(200).json({ message : "password changed sucessfully"});
 
-        await prisma.otp.delete({ where : {email} })
-
-
+        await prisma.otp.delete({ where : {email} });
     }
     catch(e){
         console.log(e);
