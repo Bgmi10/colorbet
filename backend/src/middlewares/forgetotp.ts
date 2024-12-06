@@ -1,4 +1,5 @@
 import { prisma } from "../../prisma/prisma";
+import sendOtp from "../config/awsSes";
 import { validEmail } from "../utils/constants";
 import  bcrypt  from 'bcrypt';
 
@@ -43,7 +44,7 @@ async function forgetotp (req, res, next){
         })
 
         res.status(200).json({ message : "otp sent sucessfully check your email" });
-        console.log(generate_otp);
+        sendOtp(email, parseInt(generate_otp), 'forgetpasswordotp')
         next();
         // ideally we should a email to this specific user to perform otp based reset
     }

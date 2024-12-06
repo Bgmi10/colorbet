@@ -1,6 +1,7 @@
 import express from 'express';
 import { prisma } from '../../prisma/prisma';
 import bcrypt from 'bcrypt'
+import sendOtp from '../config/awsSes';
 
 const Signinotp = async (req : express.Request, res : express.Response, next: express.NextFunction) => {
 
@@ -27,7 +28,7 @@ const Signinotp = async (req : express.Request, res : express.Response, next: ex
                 expiresIn
              }
         })
-
+        sendOtp(email,parseInt(otp),'signup');
         next();
         // ideally here we should make a email call and send the otp to email
       }
