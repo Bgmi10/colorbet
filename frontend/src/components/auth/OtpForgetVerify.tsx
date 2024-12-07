@@ -199,7 +199,7 @@ export default function OtpSigninverify() {
         </div>
         {loading && !canResend && (
           <div className="text-center mt-4">
-            <FontAwesomeIcon icon={faSpinner} spin className="text-yellow-500 text-2xl" />
+            <FontAwesomeIcon icon={faSpinner} spin className="text-amber-500 text-2xl" />
           </div>
         )}
       </div>

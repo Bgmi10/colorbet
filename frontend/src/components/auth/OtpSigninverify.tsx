@@ -20,24 +20,6 @@ export default function OtpSigninverify() {
 
   const user = JSON.parse(localStorage.getItem("user-form") || "{}");
 
-//   useEffect(() => {
-//     // Check if the user came from the sign-up page
-//     if (!user.email || !location.state?.fromSignUp) {
-//       navigate('/login', { replace: true });
-//       return;
-//     }
-
-//     if (inputRefs.current[0]) {
-//       inputRefs.current[0].focus();
-//     }
-//     checkTimerStatus();
-
-//     // Cleanup function
-//     return () => {
-//       localStorage.removeItem("otpTimestamp");
-//     };
-//   }, [navigate, location.state, user.email]);
-
   useEffect(() => {
     const storedTimestamp = localStorage.getItem("otpTimestamp");
     const currentTime = Date.now();
@@ -133,6 +115,7 @@ export default function OtpSigninverify() {
       });
 
       if (res.status === 200) {
+        localStorage.setItem('User', JSON.stringify(res.data));
         navigate("/game", { replace: true });
       } else {
         throw new Error(res.data?.message || "Invalid OTP");

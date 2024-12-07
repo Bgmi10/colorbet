@@ -1,11 +1,11 @@
 import { BrowserRouter as Router , Routes , Route } from "react-router-dom"
-import GameComponent from "./components/Game"
-import Login from "./components/auth/Login"
-import Notfound from "./Notfound"
-import SignIn from "./components/auth/SignIn"
-import ForgetPassword from "./components/auth/ForgetPassword"
-import OtpSigninverify from "./components/auth/OtpSigninverify"
-import OtpForgetVerify from "./components/auth/Otpforgetverify"
+import GameComponent from "./components/Game";
+import Login from "./components/auth/Login";
+import Notfound from "./Notfound";
+import SignIn from "./components/auth/SignIn";
+import ForgetPassword from "./components/auth/ForgetPassword";
+import OtpSigninverify from "./components/auth/OtpSigninverify";
+import OtpForgetVerify from "./components/auth/OtpForgetVerify";
 
 function App() {
   return (

@@ -41,11 +41,10 @@ export default function Login() {
       });
 
       if(res.status === 200){
-         navigate('/game');
+        localStorage.setItem('User', JSON.stringify(res.data));
+        navigate('/game');
       }
-
       setLoading(false);
-
     } catch (e){
       console.error(e);
       setLoading(false);

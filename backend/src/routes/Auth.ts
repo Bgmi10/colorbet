@@ -29,7 +29,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     const { email, password, name } = req.body;
  
     if(!email || !password || !name) {
-      res.status(400).json({message : "bad request all fields are required"});
+      res.status(400).json({ message : "bad request all fields are required" });
       return;
     }
 
@@ -40,7 +40,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     
     const upperCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); 
     const lowerCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)); 
-    const digits = Array.from({ length: 9 }, (_, i) => (i + 1).toString()); // 1-9
+    const digits = Array.from({ length: 9 }, (_, i) => (i + 1).toString()); 
     const fullList = [...upperCaseLetters, ...lowerCaseLetters, ...digits];
     
     function generateRandomUsername(length : any) {
@@ -52,17 +52,17 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
        return username;
    }
 
-       const randomUsernameLength = Math.floor(Math.random() * 5) + 8; // Length between 8 and 12
+       const randomUsernameLength = Math.floor(Math.random() * 5) + 8; 
        const memberId = generateRandomUsername(randomUsernameLength);
         
     const hashedpassword = await bcrypt.hash("password",10).then(res => res); 
 
     const user  = await prisma.user.findUnique({
-        where : {email}
+        where : { email }
     })
 
     if(user?.email === email){
-       res.status(401).json({message : 'user with this email is already exist try to login'});
+       res.status(401).json({ message: 'user with this email is already exist try to login' });
        return;
     }
 
@@ -77,12 +77,12 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             }
         })
     
-        const token = jwt.sign({name : name} , process.env.JWT_SECRET as string, {
+        const token = jwt.sign({ name: name } , process.env.JWT_SECRET as string, {
             expiresIn : '10h'
         });
     
-        res.cookie('token' , { token});
-        res.status(200).json({message : "user created sucessfully"})
+        res.cookie('token', { token });
+        res.status(200).json({ message: "user created sucessfully", User: user, token: token })
    
        
     }
@@ -96,7 +96,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
 
 AuthRouter.post('/login' , async (req: express.Request, res: express.Response) => {
 
-    const {email , password} = req.body;
+    const { email, password } = req.body;
 
     if(!email || !password){
          res.status(400).json({
@@ -112,7 +112,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 
     try {
        const user =  await prisma.user.findUnique({
-            where : {email}
+            where : { email }
         });
 
         if(!user){
@@ -120,16 +120,16 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
           return;
         }
 
-        const hashpass =  await bcrypt.compare(password , user?.password);
+        const hashpass = await bcrypt.compare(password, user?.password);
 
         if(!hashpass) {
-          res.status(401).json({message : 'invalid credentials'}); 
+          res.status(401).json({ message : 'invalid credentials' }); 
           return;
         }
         
-        const token = jwt.sign({name : user?.username} , process.env.JWT_SECRET as string ,  { expiresIn : '4h' });
-        res.cookie('token' ,{token});
-        res.status(200).json({ message : 'user verfied' });
+        const token = jwt.sign({ name: user?.username }, process.env.JWT_SECRET as string, { expiresIn: '4h' });
+        res.cookie('token', {token});
+        res.status(200).json({ message: "user authenticated", user: user, token: token });
     }
     catch(e){
         console.log(e);
@@ -137,15 +137,18 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 });
 
 
-AuthRouter.post('/logout' , (req : express.Request, res : express.Response) => {
+AuthRouter.post('/logout', (req : express.Request, res : express.Response) => {
 
-     res.cookie('token' , '' ,{ expires : new Date(0)} );
-     res.status(200).json({message : 'logout success'});
+     res.cookie('token', '', { expires : new Date(0) });
+     res.status(200).json({ message : 'logout success' });
+
 });
 
 
 AuthRouter.post('/generate-forget-otp', forgetotp, (req: express.Request, res: express.Response) => {
+
      res.status(200).json({ message : "otp sent" });
+
 })
 
 
@@ -157,17 +160,17 @@ AuthRouter.post('/forgetpassword', verifyforgetotp, async (req: express.Request,
         const hashnewpassword = await bcrypt.hash(newpassword , 10);
 
          await prisma.user.update({
-             where : {
-                email 
-             },
-             data : {
-                password : hashnewpassword
-             }
+            where : {
+               email 
+            },
+            data : {
+               password : hashnewpassword
+            }
         });
 
-        res.status(200).json({ message : "password changed sucessfully"});
+        res.status(200).json({ message : "password changed sucessfully" });
 
-        await prisma.otp.delete({ where : {email} });
+        await prisma.otp.delete({ where : { email } });
     }
     catch(e){
         console.log(e);

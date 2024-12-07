@@ -23,6 +23,7 @@ async function forgetotp (req, res, next){
     }
 
     const generate_otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(generate_otp)
     const hashotp = await bcrypt.hash(generate_otp, 10);
     const expiresAt = new Date(Date.now() +  60 * 1000);
 
