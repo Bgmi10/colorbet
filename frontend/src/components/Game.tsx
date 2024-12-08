@@ -3,7 +3,6 @@ import { GameTimer } from './GameTimer';
 import { motion } from 'framer-motion';
 import { GameRecord } from './GameRecord';
 import axios from 'axios';
-import { base } from 'framer-motion/client';
 import { baseurl } from '../utils/constants';
 import { useNavigate } from 'react-router-dom';
 
@@ -82,7 +81,9 @@ const GameComponent = () => {
   return (
    <> 
     <div>
-       <span onClick={ async () => await axios.post(baseurl + '/api/auth/logout').then(res => res.status=== 200 && navigate('/login'))} className=''>Logout</span> 
+       <span onClick={ async () => { await axios.post(baseurl + '/api/auth/logout').then(res => res.status=== 200 && navigate('/login')) 
+       localStorage.clear()
+      }} className=''>Logout</span> 
     </div>
     <div>
 

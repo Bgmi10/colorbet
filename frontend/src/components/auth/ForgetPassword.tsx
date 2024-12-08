@@ -16,7 +16,7 @@ export default function ForgetPassword() {
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  useEffect(() => { 
     localStorage.setItem('user-forget-password-form', JSON.stringify(form));
   }, [form]);
 
@@ -34,12 +34,12 @@ export default function ForgetPassword() {
     e.preventDefault();
     setLoading(true);
 
-    if (!form.email || !form.newpassword) {
+    if (!form?.email || !form?.newpassword) {
       setErr('All fields are required');
       setLoading(false);
       return;
     }
-    if (!validEmail(form.email)) {
+    if (!validEmail(form?.email)) {
       setErr('Email is not valid')
       setLoading(false)
       return
@@ -72,7 +72,7 @@ export default function ForgetPassword() {
               id="email"
               name="email"
               placeholder="Email"
-              value={form.email}
+              value={form?.email}
               onChange={handleChange}
               className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="Email"
@@ -86,7 +86,7 @@ export default function ForgetPassword() {
               id="newpassword"
               name="newpassword"
               placeholder="New Password"
-              value={form.newpassword}
+              value={form?.newpassword}
               onChange={handleChange}
               className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="New Password"

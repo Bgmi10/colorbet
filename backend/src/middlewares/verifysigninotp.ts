@@ -1,9 +1,17 @@
 import express from 'express';
 import { prisma } from '../../prisma/prisma';
 import bcrypt from 'bcrypt'
+import { email_and_otp_schema } from '../utils/zod';
 
 const verifysigninotp = async(req: express.Request, res: express.Response, next: express.NextFunction) => {
+    
+    const isvalidreq = email_and_otp_schema.safeParse(req.body);
 
+    if(!isvalidreq.success){
+      res.status(400).json({ message: "Invalid request" });
+      return;
+    }
+    
     const { otp, email } = req.body;
     
     if( !email) {
@@ -23,35 +31,37 @@ const verifysigninotp = async(req: express.Request, res: express.Response, next:
         });
 
         if(!user){
-           res.status(404).json({ message : "resend the otp" });
+           res.status(404).json({ message: "resend the otp" });
            return;
         }
 
         if(user?.expiresIn < new Date()){
-            //@ts-ignore
-            const expires = Math.floor((new Date() - new Date(user?.expiresIn)) / 1000);
+            const expiresIn = new Date(user?.expiresIn).getTime();
+            const currentTime = new Date().getTime();
 
-            const seconds = expires / 1000;
-            const formatTime = (seconds : number) => {
+            if(!isNaN(expiresIn)){
+                const expires = Math.floor((currentTime - expiresIn) / 1000);
+
+              const formatTime = (seconds: number) => {
                 const minutes = Math.floor(seconds / 60);
                 const remainingSeconds = seconds % 60;
                 return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
               };
-             const expiresin =  formatTime(seconds)
-            res.status(401).json({ message : `otp expired ${expiresin}` });   
 
+             const expiresin =  formatTime(expires);
+             res.status(401).json({ message: `otp expired ${expiresin}` });
+            }
+    
             await prisma.otp.delete({
                 where : {email}
             })
             return; 
         }
 
-      
-
         const hashedotp = await bcrypt.compare(otp, user?.otpHash);
 
         if(!hashedotp){
-            res.status(401).json({ message : "Incorrect otp" });
+            res.status(401).json({ message: "Incorrect otp" });
             return;
         }
 

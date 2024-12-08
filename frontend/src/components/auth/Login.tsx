@@ -11,7 +11,7 @@ export default function Login() {
   const [err, setErr] = useState("");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const ref = useRef();
+  const ref = useRef<any>();
 
   const handlechange = (e : React.EventHandler) => {
     const { name, value } = e.target;
@@ -45,7 +45,7 @@ export default function Login() {
         navigate('/game');
       }
       setLoading(false);
-    } catch (e){
+    } catch (e: any){
       console.error(e);
       setLoading(false);
       setErr(e.response.data.message);

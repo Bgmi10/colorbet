@@ -115,6 +115,7 @@ export default function OtpSigninverify() {
 
       if (res.status === 200) {
         navigate("/login", { replace: true });
+        localStorage.removeItem('user-forget-password-form');
       } else {
         throw new Error(res.data?.message || "Invalid OTP");
       }

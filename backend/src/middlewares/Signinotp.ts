@@ -2,11 +2,19 @@ import express from 'express';
 import { prisma } from '../../prisma/prisma';
 import bcrypt from 'bcrypt'
 import sendOtp from '../config/awsSes';
+import { emailSchema } from '../utils/zod';
 
 const Signinotp = async (req : express.Request, res : express.Response, next: express.NextFunction) => {
 
+    const isvalidreq = emailSchema.safeParse(req.body);
+
+    if(!isvalidreq.success){
+      res.status(400).json({ message: "invalid request" });
+      return;
+    }
+
     const { email } = req.body;
-    const otp = Math.floor(Math.random() * 900000).toString();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
     const expiresIn = new Date(Date.now() +  60 * 1000);
 
@@ -30,7 +38,6 @@ const Signinotp = async (req : express.Request, res : express.Response, next: ex
         })
         sendOtp(email,parseInt(otp),'signup');
         next();
-        // ideally here we should make a email call and send the otp to email
       }
       catch(e){
         console.log(e);
