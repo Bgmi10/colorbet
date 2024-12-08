@@ -22,7 +22,7 @@ jobs:
         node-version: '20'  
 
     - name: Install dependencies
-      run: npm install
+      run: cd frontend && npm install
 
     - name: Build frontend
       run: cd frontend && npm run build
