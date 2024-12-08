@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { baseurl } from "../../utils/constants";
@@ -12,7 +12,6 @@ export default function OtpSigninverify() {
   const [timer, setTimer] = useState(60);
   const [canEnterOtp, setCanEnterOtp] = useState(false);
   const [canResend, setCanResend] = useState(false);
-  const [redirectCounter, setRedirectCounter] = useState(15);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -116,6 +115,7 @@ export default function OtpSigninverify() {
       if (res.status === 200) {
         navigate("/login", { replace: true });
         localStorage.removeItem('user-forget-password-form');
+        localStorage.removeItem('otpTimestamp');
       } else {
         throw new Error(res.data?.message || "Invalid OTP");
       }

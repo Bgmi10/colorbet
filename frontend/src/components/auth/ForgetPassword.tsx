@@ -7,7 +7,7 @@ import { validEmail } from "../../utils/constants"
 
 
 export default function ForgetPassword() {
-  const [form, setForm] = useState(() => {
+  const [form, setForm] = useState<any | null>(() => {
     const data = localStorage.getItem('user-forget-password-form');
     return data ? JSON.parse(data) : null   
   });
@@ -26,7 +26,7 @@ export default function ForgetPassword() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev: any) => ({ ...prev, [name]: value }));
     setErr('');
   }
 

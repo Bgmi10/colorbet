@@ -13,7 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>();
 
-  const handlechange = (e : React.EventHandler) => {
+  const handlechange = (e : React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErr('');
