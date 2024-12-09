@@ -5,6 +5,7 @@ import { baseurl, validEmail } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import CryptoJs from "crypto-js";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -12,6 +13,8 @@ export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>();
+  const secretKey = import.meta.env.VITE_APP_SECRET_KEY as string;
+  console.log(secretKey);
 
   const handlechange = (e : React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,7 +44,15 @@ export default function Login() {
       });
 
       if(res.status === 200){
-        localStorage.setItem('User', JSON.stringify(res.data));
+        const encryptedData = (data: any) => {
+          return CryptoJs.AES.encrypt(data, secretKey).toString();
+        }
+        const userName = encryptedData(res.data.userName);
+        const userEmail = encryptedData(res.data.userEmail);
+
+        localStorage.setItem('UserName', userName);
+        localStorage.setItem('UserEmail', userEmail);
+        
         navigate('/game');
       }
       setLoading(false);

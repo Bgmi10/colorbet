@@ -8,8 +8,10 @@ import verifysigninotp from "../middlewares/verifysigninotp";
 import { signinSchema, loginSchema, forget_passoword_schema } from "../utils/zod";
 import forgetotp from "../middlewares/forgetotp";
 import verifyforgetotp from "../middlewares/verifyforgetotp";
+import Authmiddleware from "../middlewares/Authmiddleware";
 
 const AuthRouter = express.Router();
+const isProd = false;
 
 AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
 
@@ -84,7 +86,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             expiresIn: '10h'
         });
     
-        res.cookie('token', { token }, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000) });
+        res.cookie('token', { token }, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), secure: isProd ? true : false, httpOnly: true, sameSite: "strict" });
         res.status(200).json({ message: "user created sucessfully", userName: user.username, userEmail: user.email })
     }
     catch(e){
@@ -117,23 +119,23 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 
     try {
        const user =  await prisma.user.findUnique({
-            where : { email }
+            where: { email }
         });
 
         if(!user){
-          res.status(404).json({ message : "User not found!" });
+          res.status(404).json({ message: "User not found!" });
           return;
         }
 
         const hashpass = await bcrypt.compare(password, user.password);
 
         if(!hashpass) {
-          res.status(401).json({ message : 'invalid credentials' }); 
+          res.status(401).json({ message: 'invalid credentials' }); 
           return;
         }
         
         const token = jwt.sign({ name: user?.username }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
-        res.cookie('token', {token}, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000) });
+        res.cookie('token', {token}, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: true, secure: isProd ? true : false, sameSite: "strict" });
         res.status(200).json({ message: "user authenticated", userName: user.username, userEmail: user.email });
     }
     catch(e){

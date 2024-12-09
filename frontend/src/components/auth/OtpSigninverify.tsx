@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { baseurl } from "../../utils/constants";
+import CryptoJS from "crypto-js";
 
 export default function OtpSigninverify() {
   const [userInput, setUserInput] = useState(new Array(6).fill(""));
@@ -17,7 +18,7 @@ export default function OtpSigninverify() {
   const navigate = useNavigate();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const controls = useAnimation();
-
+  const secretKey = import.meta.env.VITE_APP_SECRET_KEY as string;
   const user = JSON.parse(localStorage.getItem("user-form") || "{}");
 
   useEffect(() => {
@@ -115,9 +116,15 @@ export default function OtpSigninverify() {
       });
 
       if (res.status === 200) {
-        localStorage.setItem('User', JSON.stringify(res.data));
-        localStorage.removeItem('user-form');
+        const encryptedData = (data: any) => {
+          return CryptoJS.AES.encrypt(data, secretKey).toString()
+        }
+        const userName = encryptedData(res.data.userName);
+        const userEmail = encryptedData(res.data.userEmail);
+        localStorage.setItem('UserName', userName);
+        localStorage.setItem('UserEmail', userEmail);
         localStorage.removeItem('otpTimestamp');
+        localStorage.removeItem('user-form');
         navigate("/game", { replace: true });
       } else {
         throw new Error(res.data?.message || "Invalid OTP");

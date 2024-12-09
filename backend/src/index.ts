@@ -7,13 +7,12 @@ import rateLimit from 'express-rate-limit';
 import { generateRandomCard, checkWinner } from '../game/GameLogic';
 import { WebSocketWithId, GameState } from '../types/types';
 import AuthRouter from './routes/Auth';
-import Demo from './routes/Demo';
 import cors from 'cors'
 
 const app = express();
 app.use(cors({
   origin : "http://localhost:5173",
-  methods : ['GET','POST','PUT'],
+  methods : ['GET','POST','PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(cookieParser());
@@ -39,7 +38,6 @@ let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
 app.use('/api/auth', limiter, AuthRouter);
-app.use(Demo);
 
 // Broadcast message to all clients
 const broadcast = (message: any) => {
