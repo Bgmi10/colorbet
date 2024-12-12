@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { baseurl } from "../../utils/constants";
+import { baseurl, secretKey } from "../../utils/constants";
 import CryptoJS from "crypto-js";
 
 export default function OtpSigninverify() {
@@ -18,7 +18,6 @@ export default function OtpSigninverify() {
   const navigate = useNavigate();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const controls = useAnimation();
-  const secretKey = import.meta.env.VITE_APP_SECRET_KEY as string;
   const user = JSON.parse(localStorage.getItem("user-form") || "{}");
 
   useEffect(() => {
@@ -110,7 +109,7 @@ export default function OtpSigninverify() {
     try {
       const res = await axios.post(baseurl + "/api/auth/signin", {
         name: user.name,
-        email: user.email,
+        email: user.email ,
         password: user.password,
         otp,
       });

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import CryptoJs from "crypto-js";
+import { secretKey } from "../../utils/constants";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -13,8 +14,6 @@ export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>();
-  const secretKey = import.meta.env.VITE_APP_SECRET_KEY as string;
-  console.log(secretKey);
 
   const handlechange = (e : React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

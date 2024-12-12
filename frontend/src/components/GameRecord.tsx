@@ -1,29 +1,40 @@
-import React from 'react';
+'use client'
 
-interface Data {
-  winner: string;
+import { motion } from 'framer-motion';
+
+interface GameRecordData {
+  id: string;
+  winner: 'A' | 'B';
 }
 
 interface GameRecordProps {
-  data: {
-    message?: Data[]; 
-  };
+  data: GameRecordData[];
 }
 
 export const GameRecord: React.FC<GameRecordProps> = ({ data }) => {
+  if (!data || data.length === 0) return null;
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-wrap border w-fit m-3 p-2 gap-3">
-        {
-          data?.message?.map((i: Data, index: number) => (
-            <div key={index}>
-              {i.winner === "A" && <img src="https://colorwiz.cyou/images/luckyhit_red_dot.png" alt="Red Dot" />}
-              {i.winner === "B" && <img src="https://colorwiz.cyou/images/luckyhit_black_dot.png" alt="Black Dot" />}
-            </div>
-          ))
-        }
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gray-800 rounded-xl  justify-center items-center flex p-4 mb-4 shadow-lg border border-yellow-500/30 gap-3"
+    >
+      <h2 className="text-xl font-bold text-yellow-500 mb-2">History</h2>
+      <div className="flex flex-wrap gap-2">
+        {data.map((game) => (
+          <img
+            key={game.id}
+            src={game.winner === 'A' 
+              ? 'https://colorwiz.cyou/images/luckyhit_red_dot.png'
+              : 'https://colorwiz.cyou/images/luckyhit_black_dot.png'}
+            alt={game.winner === 'A' ? 'Red win' : 'Black win'}
+            className="w-6 h-6"
+          />
+        ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
+

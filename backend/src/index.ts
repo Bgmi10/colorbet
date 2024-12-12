@@ -52,7 +52,6 @@ wss.on('connection', async (ws: WebSocketWithId) => {
   clients.push(ws);
   console.log('New client connected');
 
-  // Send current game state to the newly connected client
   if (currentGameState) {
     ws.send(JSON.stringify({
       type: 'currentgame',
@@ -63,20 +62,21 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     }));
   }
 
-  // Fetch the last 30 games and send to the client
-  try {
-    const games = await prisma.game.findMany({
-      orderBy: { updatedAt: 'desc' },
+  try{
+    const findgame = await prisma.game.findMany({
+      orderBy: {
+        createdAt: "desc"
+      },
       take: 30
     });
-    ws.send(JSON.stringify({ type: 'findgame', success: true, message: games }));
-  } catch (e) {
+    ws.send(JSON.stringify({ type: "findgame", findgame: findgame}));
+  }
+  catch(e){
     console.log(e);
-    ws.send(JSON.stringify({ type: 'findgame', success: false, message: 'Error while finding games' }));
   }
 
   ws.on('message', async (data: WebSocket.Data) => {
-    // receiving data from the client 
+     
     const message = JSON.parse(data.toString());
 
     if (message.type === 'placeBet' && isBettingOpen) { // Only allow bets when betting is open
@@ -154,9 +154,15 @@ const startGamePhase = async () => {
     cardBImg: cardBData.img,
     winner,
   };
+   const last30Games = await prisma.game.findMany({
+    orderBy: { 
+      createdAt: "desc"
+    },
+    take: 30
+   });
 
   // Broadcast the result of the game
-  broadcast({ type: 'gameResult', gameState: currentGameState, period: currentPeriod, timeleft: 0 });
+  broadcast({ type: 'gameResult', gameState: currentGameState, period: currentPeriod, timeleft: 0, findgame: last30Games });
 
   // Countdown for the cooldown period before starting the next game
   setTimeout(() => {
