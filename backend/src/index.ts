@@ -62,32 +62,37 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     }));
   }
 
-  try{
-    const findgame = await prisma.game.findMany({
-      orderBy: {
-        createdAt: "desc"
-      },
-      take: 30
-    });
-    ws.send(JSON.stringify({ type: "findgame", findgame: findgame}));
-  }
-  catch(e){
-    console.log(e);
-  }
+  const last30Games = await prisma.game.findMany({
+   orderBy: { createdAt: "desc" },
+   take: 30
+  })
+
+  ws.send(JSON.stringify({ 
+    type: "findgame",
+    findgame: last30Games
+  }));
 
   ws.on('message', async (data: WebSocket.Data) => {
      
     const message = JSON.parse(data.toString());
 
-    if (message.type === 'placeBet' && isBettingOpen) { // Only allow bets when betting is open
-      const { userId, amount, chosenSide } = message;
-      const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (message.type === 'placeBet' && isBettingOpen) { 
+      const { email, amount, chosenSide } = message;
+      const user = await prisma.user.findUnique({ where: { email } });
 
       if (user && user.balance >= amount) {
         try {
           await prisma.user.update({
-            where: { id: userId },
-            data: { balance: user.balance - amount },
+            where: { email },
+            data: { 
+              balance: user.balance - amount,
+              bets : {
+                //@ts-ignore
+                create: {
+                  chosenSide: chosenSide
+                }
+              }
+             },
           });
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
         } catch (e) {
@@ -98,6 +103,11 @@ wss.on('connection', async (ws: WebSocketWithId) => {
         ws.send(JSON.stringify({ type: 'betPlaced', success: false, message: 'Insufficient balance' }));
       }
     }
+
+    ws.send(JSON.stringify({ 
+      type: "bet",
+      message: "Bet cannot be place"
+    }));
   });
 
   ws.on('close', () => {

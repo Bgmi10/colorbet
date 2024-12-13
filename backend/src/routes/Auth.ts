@@ -74,7 +74,8 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
               username: name,
               memberId,
               password: hashedpassword,
-              email
+              email,
+              balance: 0.00
             }
         });
 
@@ -87,7 +88,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
         });
     
         res.cookie('token', { token }, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), secure: isProd ? true : false, httpOnly: true, sameSite: "strict" });
-        res.status(200).json({ message: "user created sucessfully", userName: user.username, userEmail: user.email })
+        res.status(200).json({ message: "user created sucessfully", userName: user.username, userEmail: user.email, balance: user?.balance, memberId: user.memberId })
     }
     catch(e){
         console.log(e);
@@ -136,7 +137,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
         
         const token = jwt.sign({ name: user?.username }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
         res.cookie('token', {token}, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: true, secure: isProd ? true : false, sameSite: "strict" });
-        res.status(200).json({ message: "user authenticated", userName: user.username, userEmail: user.email });
+        res.status(200).json({ message: "user authenticated", userName: user.username, userEmail: user.email, balance: user.balance, memberId: user.memberId });
     }
     catch(e){
         console.log(e);

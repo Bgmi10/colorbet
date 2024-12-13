@@ -1,5 +1,3 @@
-'use client'
-
 import { FaUser, FaGamepad, FaPlaceOfWorship } from "react-icons/fa";
 import { FaStarHalfStroke } from "react-icons/fa6";
 import { GiWineGlass } from "react-icons/gi";
@@ -50,7 +48,7 @@ export default function AppBar() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 rounded-t-xl shadow-lg border-t-2 border-yellow-500"
+      className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 shadow-lg border-t-2 border-yellow-500"
     >
       <div className=" mx-10 flex justify-between">
         {data.map((item) => (

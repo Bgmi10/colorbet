@@ -19,7 +19,7 @@ export const AuthProvider = ({ children } : {children : any}) => {
 
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(false);
-  
+    
     useEffect(() => {
       
       const encryptedUserName: string | any = localStorage.getItem('UserName');

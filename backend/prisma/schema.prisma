@@ -10,8 +10,8 @@ datasource db {
 model User {
   id          Int      @id @default(autoincrement())
   username    String   
-  balance     Float    @default(0)
-  bets        Bet[]    // One-to-many relation with Bet
+  balance     Float    @default(0.00)
+  bets        Bet[]    
   email       String   @unique
   password    String   
   memberId    String   @unique
@@ -19,23 +19,23 @@ model User {
 
 model Game {
   id          Int      @id @default(autoincrement())
-  cardA       String   // Card on side A
-  cardB       String   // Card on side B
-  winner      String   // 'A' or 'B'
+  cardA       String   
+  cardB       String  
+  winner      String   
   createdAt   DateTime @default(now())
-  bets        Bet[]    // One-to-many relation with Bet
+  bets        Bet[]   
   updatedAt   DateTime @updatedAt
 }
 
 model Bet {
   id        Int      @id @default(autoincrement())
   amount    Float
-  chosenSide String   // 'A' or 'B'
+  chosenSide String 
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
   game      Game      @relation(fields: [gameId], references: [id])
   gameId    Int
-  result    String    // 'win' or 'lose'
+  result    String 
   createdAt DateTime  @default(now())
 }
 
