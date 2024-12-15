@@ -48,10 +48,15 @@ export default function Login() {
         }
         const userName = encryptedData(res.data.userName);
         const userEmail = encryptedData(res.data.userEmail);
-
-        localStorage.setItem('UserName', userName);
-        localStorage.setItem('UserEmail', userEmail);
-        
+        const balance = encryptedData(String(res.data.balance));
+        const memberId = encryptedData(res.data.memberId);
+        const user = {
+          userName: userName,
+          email: userEmail,
+          balance: balance,
+          memberId: memberId
+        }
+        localStorage.setItem('user', JSON.stringify(user));
         navigate('/game');
       }
       setLoading(false);

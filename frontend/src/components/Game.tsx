@@ -16,6 +16,7 @@ const GameComponent = () => {
   const [amount, setAmount] = useState(10);
   const [chosenSide, setChosenSide] = useState('Red');
   const { user } = useContext(AuthContext);
+  console.log(user);
   const [result, setResult] = useState(null);
   const [isbetting, setIsbetting] = useState(true);
   const [revealCards, setRevealCards] = useState(false);
@@ -127,6 +128,7 @@ const GameComponent = () => {
 
   return (
     <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <button onClick={handleLogout}>Logout</button>
          <div className="flex justify-center gap-8 md:gap-12 items-center">    
             <div className="flex items-center">   
             <div className='flex flex-col text-center'>

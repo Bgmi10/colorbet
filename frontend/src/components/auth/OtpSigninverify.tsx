@@ -118,10 +118,18 @@ export default function OtpSigninverify() {
         const encryptedData = (data: any) => {
           return CryptoJS.AES.encrypt(data, secretKey).toString()
         }
+  
         const userName = encryptedData(res.data.userName);
         const userEmail = encryptedData(res.data.userEmail);
-        localStorage.setItem('UserName', userName);
-        localStorage.setItem('UserEmail', userEmail);
+        const memberId = encryptedData(res.data.memberId);
+        const balance = encryptedData(String(res.data.balance));
+        const user = {
+          userName: userName,
+          email: userEmail,
+          memberId: memberId,
+          balance: balance
+        }
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.removeItem('otpTimestamp');
         localStorage.removeItem('user-form');
         navigate("/game", { replace: true });

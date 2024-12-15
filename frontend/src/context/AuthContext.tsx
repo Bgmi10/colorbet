@@ -5,8 +5,10 @@ import { secretKey } from "../utils/constants";
 interface User{
   email: string;
   name: string;
+  memberId: string;
+  balance: string
 }
-
+// bug balance return in string instead of number
 export const AuthContext = createContext<{
   user: User | null,
   isAuthenticated: boolean | null,
@@ -14,25 +16,25 @@ export const AuthContext = createContext<{
 } | null>(null);
 
 
-
 export const AuthProvider = ({ children } : {children : any}) => {
 
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(false);
-    
+
+    console.log(user)
     useEffect(() => {
-      
-      const encryptedUserName: string | any = localStorage.getItem('UserName');
-      const encryptedUserEmail: string | any = localStorage.getItem('UserEmail'); 
+      const user = localStorage.getItem('user');
+      const userData: User | any = user ? JSON.parse(user) : null;
 
-      if(encryptedUserEmail && encryptedUserName){
-        const userName = CryptoJS.AES.decrypt(encryptedUserName, secretKey).toString(CryptoJS.enc.Utf8);
-        const userEmail = CryptoJS.AES.decrypt(encryptedUserEmail, secretKey).toString(CryptoJS.enc.Utf8);
+      if(user){
+        const userName = CryptoJS.AES.decrypt(userData.userName, secretKey).toString(CryptoJS.enc.Utf8);
+        const userEmail = CryptoJS.AES.decrypt(userData.email, secretKey).toString(CryptoJS.enc.Utf8);
+        const userBalance = CryptoJS.AES.decrypt(userData.balance, secretKey).toString(CryptoJS.enc.Utf8);
+        const userMemberId = CryptoJS.AES.decrypt(userData.memberId, secretKey).toString(CryptoJS.enc.Utf8);
 
-        if(userEmail && userName){
-          setUser({ email: userEmail, name: userName });
-          setIsAuthenticated(true);
-         };
+        setUser({ email: userEmail, name: userName, balance: userBalance, memberId: userMemberId });
+        setIsAuthenticated(true);
+        
       }
     
     },[])
