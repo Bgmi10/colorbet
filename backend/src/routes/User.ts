@@ -1,27 +1,13 @@
 import express from 'express';
 import Authmiddleware from '../middlewares/Authmiddleware';
-import { emailSchema } from '../utils/zod';
 import { prisma } from '../../prisma/prisma';
 
 
 const User = express.Router();
 
-User.get('/userProfile', Authmiddleware, async(req: express.Request, res: express.Response) => {
-
-    const isvalidreq = emailSchema.safeParse(req.body);
-    
-    if(!isvalidreq.success){
-       res.status(400).json({ message: "Invalid request" });
-       return;
-    }
-
-    const { email } = req.body;
-
-    if(!email){
-        res.status(400).json({ message: "email is required" });
-        return;
-    }
-
+User.get('/userprofile', Authmiddleware, async(req: express.Request, res: express.Response) => {
+     //@ts-ignore
+    const { email } = req.user;
     try{
         const user = await prisma.user.findUnique({
             where: { email }

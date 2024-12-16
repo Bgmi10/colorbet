@@ -4,8 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { baseurl, secretKey } from "../../utils/constants";
-import CryptoJS from "crypto-js";
+import { baseurl } from "../../utils/constants";
 
 export default function OtpSigninverify() {
   const [userInput, setUserInput] = useState(new Array(6).fill(""));
@@ -115,21 +114,6 @@ export default function OtpSigninverify() {
       });
 
       if (res.status === 200) {
-        const encryptedData = (data: any) => {
-          return CryptoJS.AES.encrypt(data, secretKey).toString()
-        }
-  
-        const userName = encryptedData(res.data.userName);
-        const userEmail = encryptedData(res.data.userEmail);
-        const memberId = encryptedData(res.data.memberId);
-        const balance = encryptedData(String(res.data.balance));
-        const user = {
-          userName: userName,
-          email: userEmail,
-          memberId: memberId,
-          balance: balance
-        }
-        localStorage.setItem('user', JSON.stringify(user));
         localStorage.removeItem('otpTimestamp');
         localStorage.removeItem('user-form');
         navigate("/game", { replace: true });

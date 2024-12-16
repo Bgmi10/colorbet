@@ -5,8 +5,7 @@ import { baseurl, validEmail } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import CryptoJs from "crypto-js";
-import { secretKey } from "../../utils/constants";
+
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -43,20 +42,6 @@ export default function Login() {
       });
 
       if(res.status === 200){
-        const encryptedData = (data: any) => {
-          return CryptoJs.AES.encrypt(data, secretKey).toString();
-        }
-        const userName = encryptedData(res.data.userName);
-        const userEmail = encryptedData(res.data.userEmail);
-        const balance = encryptedData(String(res.data.balance));
-        const memberId = encryptedData(res.data.memberId);
-        const user = {
-          userName: userName,
-          email: userEmail,
-          balance: balance,
-          memberId: memberId
-        }
-        localStorage.setItem('user', JSON.stringify(user));
         navigate('/game');
       }
       setLoading(false);

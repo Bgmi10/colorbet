@@ -115,7 +115,6 @@ const GameComponent = () => {
     try {
       const res = await axios.post(baseurl + '/api/auth/logout');
       if (res.status === 200) {
-        localStorage.clear();
         navigate('/login');
       }
     } catch (error) {

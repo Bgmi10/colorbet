@@ -1,6 +1,7 @@
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import CryptoJS from "crypto-js";
-import { secretKey } from "../utils/constants";
+import { baseurl } from "../utils/constants";
+
 
 interface User{
   email: string;
@@ -21,21 +22,26 @@ export const AuthProvider = ({ children } : {children : any}) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(false);
 
-    console.log(user)
     useEffect(() => {
-      const user = localStorage.getItem('user');
-      const userData: User | any = user ? JSON.parse(user) : null;
-
-      if(user){
-        const userName = CryptoJS.AES.decrypt(userData.userName, secretKey).toString(CryptoJS.enc.Utf8);
-        const userEmail = CryptoJS.AES.decrypt(userData.email, secretKey).toString(CryptoJS.enc.Utf8);
-        const userBalance = CryptoJS.AES.decrypt(userData.balance, secretKey).toString(CryptoJS.enc.Utf8);
-        const userMemberId = CryptoJS.AES.decrypt(userData.memberId, secretKey).toString(CryptoJS.enc.Utf8);
-
-        setUser({ email: userEmail, name: userName, balance: parseInt(userBalance), memberId: userMemberId });
+       
+      const getUser = async () => {
+        try{
+        const res = await axios.get(`${baseurl}/api/auth/userprofile`, {
+          withCredentials: true
+        });
+        const json = await res.data;
+        console.log(json);
+        if(json){
+        setUser(json);
         setIsAuthenticated(true);
-        
-      }
+      }      
+    }
+    catch(e){
+      console.log(e);
+    }
+   }
+
+   getUser();
     
     },[])
 

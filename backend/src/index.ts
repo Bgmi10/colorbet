@@ -7,12 +7,14 @@ import { generateRandomCard, checkWinner, resolveBets } from './game/GameLogic';
 import { WebSocketWithId, GameState } from './types/types';
 import AuthRouter from './routes/Auth';
 import cors from 'cors';
+import User from './routes/User';
 
 const app = express();
 const port = 3005;
 
 app.use(cors({
   origin: "http://localhost:5173",
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -38,6 +40,8 @@ let isGameInProgress = false; // Track if a game is in progress
 let isBettingOpen = true; // Manage betting phase
 
 app.use('/api/auth', limiter, AuthRouter);
+
+app.use('/api/auth', limiter, User)
 
 // Broadcast message to all WebSocket clients
 const broadcast = (message: any) => {
@@ -74,7 +78,9 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     type: "findgame",
     findgame: last30Games
   }));
+   broadcast({ 
 
+   })
   // Handle incoming WebSocket messages
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());

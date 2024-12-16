@@ -69,7 +69,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     }
 
     try {
-       const user =  await prisma.user.create({
+        await prisma.user.create({
             data: {
               username: name,
               memberId,
@@ -83,12 +83,13 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             where: { email }
         });
 
-        const token = jwt.sign({ name: name }, process.env.JWT_SECRET as string, {
+        const token = jwt.sign({ user: user }, process.env.JWT_SECRET as string, {
             expiresIn: '10h'
         });
     
-        res.cookie('token', { token }, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), secure: isProd ? true : false, httpOnly: true, sameSite: "strict" });
-        res.status(200).json({ message: "user created sucessfully", userName: user.username, userEmail: user.email, balance: user?.balance, memberId: user.memberId })
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: true,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+        secure: process.env.NODE_ENV === 'production' });
+        res.status(200).json({ message: "Signed up sucessfully"})
     }
     catch(e){
         console.log(e);
@@ -135,9 +136,10 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
           return;
         }
         
-        const token = jwt.sign({ name: user?.username }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
-        res.cookie('token', {token}, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: true, secure: isProd ? true : false, sameSite: "strict" });
-        res.status(200).json({ message: "user authenticated", userName: user.username, userEmail: user.email, balance: user.balance, memberId: user.memberId });
+        const token = jwt.sign({ user: user }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+        secure: process.env.NODE_ENV === 'production' });
+        res.status(200).json({ message: "logged In successfully"});
     }
     catch(e){
         console.log(e);
@@ -148,7 +150,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 AuthRouter.post('/logout', (req : express.Request, res : express.Response) => {
      
      res.cookie('token', '', { expires : new Date(0) });
-     res.status(200).json({ message : 'logout success' });
+     res.status(200).json({ message : 'logged out successfully' });
 
 });
 

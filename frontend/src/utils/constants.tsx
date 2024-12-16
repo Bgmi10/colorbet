@@ -5,5 +5,3 @@ export const validEmail = (email : string) => {
 
     return isValidEmail;
 }
-
-export const secretKey = import.meta.env.VITE_APP_SECRET_KEY as string;
