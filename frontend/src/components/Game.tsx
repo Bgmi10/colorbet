@@ -9,14 +9,13 @@ import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../context/AuthContext';
-
+const ws = new WebSocket('ws://localhost:5050' || 'wss://localhost:5050');
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);
   const [amount, setAmount] = useState(10);
-  const [chosenSide, setChosenSide] = useState('Red');
+  const [chosenSide, setChosenSide] = useState('A');
   const { user } = useContext(AuthContext);
-  console.log(user);
   const [result, setResult] = useState(null);
   const [isbetting, setIsbetting] = useState(true);
   const [revealCards, setRevealCards] = useState(false);
@@ -24,6 +23,9 @@ const GameComponent = () => {
   const [pockerbackimageurl, setPockerBackImageUrl] = useState('');
   const [gamerecord, setGamerecord] = useState(null);
   const navigate = useNavigate();
+  const [betplaced, setBetplaced] = useState(false)
+
+  console.log(chosenSide)
 
   const [userBetRecords, setUserBetRecords] = useState([
     { id: 1, amount: 50, side: 'Red', result: 'Win', timestamp: '2023-05-10 14:30:00' },
@@ -32,7 +34,7 @@ const GameComponent = () => {
   ]);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:5050' || 'wss://localhost:5050');
+   
 
     ws.onopen = () => {
       console.log("Connected to the WebSocket server");
@@ -55,6 +57,12 @@ const GameComponent = () => {
 
       if (data?.type === "pokerback") {
         setPockerBackImageUrl(data?.imageurl)
+      }
+
+      if(data?.type === "betPlaced"){
+        if(data?.success){
+        setBetplaced(true);
+      }
       }
 
      
@@ -87,31 +95,20 @@ const GameComponent = () => {
 
   const placeBet = async () => {
 
-    if(amount <= 0){
+    if(user?.balance <= 0){
       window.alert("insufficient balance");
-      return
+      return;
     }
-    const res = await fetch('/api/bet', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId, gameId: game?.gameId, amount, chosenSide }),
-    });
+    ws.send(
+      JSON.stringify({
+        type: "placeBet",
+        email: user?.email,
+        gameId: game?.gameState.id,
+        amount,
+        chosenSide
+      })
+    )
 
-    const data = await res.json();
-    setResult(data.message);
-
-    setUserBetRecords(prevRecords => [
-      {
-        id: prevRecords.length + 1,
-        amount: amount,
-        side: chosenSide,
-        result: 'Pending',
-        timestamp: new Date().toLocaleString()
-      },
-      ...prevRecords
-    ]);
   };
 
   const handleLogout = async () => {
@@ -129,7 +126,10 @@ const GameComponent = () => {
   return (
     <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <button onClick={handleLogout}>Logout</button>
-         <div className="flex justify-center gap-8 md:gap-12 items-center">    
+      <span>{betplaced && "bet placed success"}</span>
+      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {user?.balance}</div>
+         <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
+         
             <div className="flex items-center">   
             <div className='flex flex-col text-center'>
               <span className="text-red-500 font-serif mb-1 text-xl mt-3">RED</span>   
@@ -188,8 +188,8 @@ const GameComponent = () => {
               className="w-full md:w-auto bg-gray-700 text-white border outline-none border-yellow-500/50 rounded-lg p-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent font-serif"
               disabled={!isbetting}
             >
-              <option value="Red">Red</option>
-              <option value="Blue">Blue</option>
+              <option value="A">Red</option>
+              <option value="B">Blue</option>
             </select>
             <button
               onClick={placeBet}

@@ -6,7 +6,7 @@ interface User{
   email: string;
   name: string;
   memberId: string;
-  balance: string
+  balance: number
 }
 // bug balance return in string instead of number
 export const AuthContext = createContext<{
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children } : {children : any}) => {
         const userBalance = CryptoJS.AES.decrypt(userData.balance, secretKey).toString(CryptoJS.enc.Utf8);
         const userMemberId = CryptoJS.AES.decrypt(userData.memberId, secretKey).toString(CryptoJS.enc.Utf8);
 
-        setUser({ email: userEmail, name: userName, balance: userBalance, memberId: userMemberId });
+        setUser({ email: userEmail, name: userName, balance: parseInt(userBalance), memberId: userMemberId });
         setIsAuthenticated(true);
         
       }
