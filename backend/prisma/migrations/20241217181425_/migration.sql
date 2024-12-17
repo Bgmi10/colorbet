@@ -1,8 +1,14 @@
+-- CreateEnum
+CREATE TYPE "Gamestatus" AS ENUM ('PENDING', 'COMPLETED', 'IN_PROGRESS');
+
+-- CreateEnum
+CREATE TYPE "Betresult" AS ENUM ('PENDING', 'WIN', 'LOSE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "balance" DOUBLE PRECISION NOT NULL DEFAULT 0.00,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,
@@ -17,6 +23,7 @@ CREATE TABLE "Game" (
     "cardB" TEXT NOT NULL,
     "winner" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "status" "Gamestatus" NOT NULL DEFAULT 'PENDING',
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
@@ -29,8 +36,9 @@ CREATE TABLE "Bet" (
     "chosenSide" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "gameId" INTEGER NOT NULL,
-    "result" TEXT NOT NULL,
+    "result" "Betresult" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "commission" DOUBLE PRECISION NOT NULL DEFAULT 0.00,
 
     CONSTRAINT "Bet_pkey" PRIMARY KEY ("id")
 );

@@ -1,5 +1,6 @@
 import express from 'express';
 import WebSocket from 'ws';
+//@ts-ignore
 import { prisma } from '../prisma/prisma';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
@@ -38,10 +39,10 @@ let countdownInterval: any = null;
 let timeLeft = 15;
 let isGameInProgress = false;
 let isBettingOpen = true;
+let currentGameId: number | null = null;
 
 app.use('/api/auth', limiter, AuthRouter);
-
-app.use('/api/auth', limiter, User)
+app.use('/api/auth', limiter, User);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {
@@ -65,6 +66,7 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     }));
   }
 
+  // Send the last 30 games on connection
   const last30Games = await prisma.game.findMany({
     orderBy: { createdAt: "desc" },
     take: 30
@@ -75,11 +77,13 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     findgame: last30Games
   }));
   
+  // Handle incoming WebSocket messages
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
 
-    if (message.type === 'placeBet' && isBettingOpen) {
-      const { email, amount, chosenSide, gameId } = message;
+    // Place bet logic
+    if (message.type === 'placeBet' && isBettingOpen && currentGameId) {
+      const { email, amount, chosenSide } = message;
       const user = await prisma.user.findUnique({ where: { email } });
 
       if (user && user.balance >= amount) {
@@ -93,18 +97,17 @@ wss.on('connection', async (ws: WebSocketWithId) => {
               data: {
                 amount,
                 chosenSide,
-                game: { connect: { id: gameId } },
+                game: { connect: { id: currentGameId } },
                 user: { connect: { id: user.id } },
                 result: "PENDING"
               }
             })
           ]);
-         const updatedUser = await prisma.user.findUnique({ where: { email } });
+          const updatedUser = await prisma.user.findUnique({ where: { email } });
           broadcast({
             type: "updatedBalance",
             updatedBalance: updatedUser?.balance
-            
-          })
+          });
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
           return;
         } catch (e) {
@@ -130,21 +133,35 @@ wss.on('connection', async (ws: WebSocketWithId) => {
   });
 });
 
-const startGame = () => {
+// Start a new game
+const startGame = async () => {
   if (isGameInProgress) return;
 
   isGameInProgress = true;
   isBettingOpen = true;
   currentPeriod += 1;
-  timeLeft = 15; 
+  timeLeft = 15; // Reset countdown for betting phase
 
- broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
+  // Create a new game in the database and get its ID
+  const newGame = await prisma.game.create({
+    data: {
+      cardA: "",
+      cardB: "",
+      winner: ""
+    }
+  });
+  currentGameId = newGame.id;
 
+  // Broadcast game start
+  broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
+
+  // Countdown for the betting phase
   countdownInterval = setInterval(() => {
     if (timeLeft > 0 && isBettingOpen) {
       timeLeft -= 1;
       broadcast({ type: 'timer', timeleft: timeLeft });
     } else if (timeLeft === 0 && isBettingOpen) {
+      // End betting phase
       isBettingOpen = false;
       broadcast({ type: 'bettingClosed' });
       clearInterval(countdownInterval);
@@ -153,17 +170,24 @@ const startGame = () => {
   }, 1000);
 };
 
+// Start the game phase
 const startGamePhase = async () => {
   const cardAData = generateRandomCard();
   const cardBData = generateRandomCard();
   const winner = checkWinner(cardAData, cardBData);
 
-  const game = await prisma.game.create({
-    data: { cardA: `${cardAData.rank}_${cardAData.suit}`, cardB: `${cardBData.rank}_${cardBData.suit}`, winner: winner },
+  // Update the current game with the drawn cards and winner
+  await prisma.game.update({
+    where: { id: currentGameId! },
+    data: {
+      cardA: `${cardAData.rank}_${cardAData.suit}`,
+      cardB: `${cardBData.rank}_${cardBData.suit}`,
+      winner: winner
+    }
   });
 
   currentGameState = {
-    id: game.id,
+    id: currentGameId!,
     cardA: cardAData.rank,
     cardAImg: cardAData.img,
     cardB: cardBData.rank,
@@ -171,7 +195,7 @@ const startGamePhase = async () => {
     winner: winner,
   };
 
-  await resolveBets(game.id, winner);
+  await resolveBets(currentGameId!, winner);
   const last30Games = await prisma.game.findMany({
     orderBy: { createdAt: "desc" },
     take: 30

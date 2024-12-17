@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../prisma/prisma';
+import { AnyCnameRecord } from 'dns';
 
 const suits = ['h', 'd', 'c', 's'];
 const ranks = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
@@ -40,29 +41,30 @@ export const checkWinner = (
   cardA: { rank: string; suit: string }, 
   cardB: { rank: string; suit: string }
 ): string => {
-  // Compare rank first
+
   if (cardOrder[cardA.rank] > cardOrder[cardB.rank]) return 'A';
   if (cardOrder[cardA.rank] < cardOrder[cardB.rank]) return 'B';
   
-  // If ranks are equal, compare suits
   if (suitOrder[cardA.suit] > suitOrder[cardB.suit]) return 'A';
   if (suitOrder[cardA.suit] < suitOrder[cardB.suit]) return 'B';
   
-  // If everything is equal, it's a draw
   return 'D';
 };
 
-// Commission rates
-const COMMISSION_RATES = {
-  lowBet: 5,   // For small bets under ₹1000
-  midBet: 4,   // For bets between ₹1001 - ₹5000
-  highBet: 3   // For high bets above ₹5000
-};
+const COMMISSION_RATES: any = 0.02
+
+const calculateCommission = (betAmount: any, winAmount: any) => {
+     const profit = betAmount - winAmount;
+
+     if(profit > 0){
+      return parseFloat((profit * COMMISSION_RATES).toFixed(2));
+    }
+    return 0;
+}
 
 export const resolveBets = async (gameId: number, winner: string) => {
   return prisma.$transaction(async (tx: any) => {
-    // Fetch game with all related bets and users
-    const game = await tx.game.findUnique({
+     const game = await tx.game.findUnique({
       where: { id: gameId },
       include: { 
         bets: { 
@@ -77,7 +79,6 @@ export const resolveBets = async (gameId: number, winner: string) => {
       throw new Error(`Game ${gameId} not found`);
     }
 
-    // Update game status
     await tx.game.update({
       where: { id: gameId },
       data: { 
@@ -86,31 +87,17 @@ export const resolveBets = async (gameId: number, winner: string) => {
       }
     });
 
-    // Process each bet
     for (const bet of game.bets) {
-      // Determine if bet is a winner
       const isWinner = 
         (winner === 'A' && bet.chosenSide === 'A') ||
         (winner === 'B' && bet.chosenSide === 'B') ||
         (winner === 'D' && bet.chosenSide === 'D');
 
       if (isWinner) {
-        // Calculate winnings (original bet + winnings)
         const winAmount = bet.amount * 2;
-
-        // Apply commission based on bet amount
-        let commissionRate = COMMISSION_RATES.lowBet;
-        if (winAmount > 5000) {
-          commissionRate = COMMISSION_RATES.highBet;
-        } else if (winAmount > 1000) {
-          commissionRate = COMMISSION_RATES.midBet;
-        }
-
-        // Calculate net winnings after commission
-        const commission = Math.floor(winAmount * (commissionRate / 100));
+        const commission = calculateCommission(winAmount, bet.amount);
         const netWinnings = winAmount - commission;
 
-        // Update user balance
         await tx.user.update({
           where: { id: bet.userId },
           data: { 
@@ -120,17 +107,16 @@ export const resolveBets = async (gameId: number, winner: string) => {
           }
         });
 
-        // Update bet result
         await tx.bet.update({
           where: { id: bet.id },
           data: { 
-            result: 'WIN' 
+            result: 'WIN',
+            commission: commission
           }
         });
 
         console.log(`Bet ${bet.id}: Won ${winAmount}, Commission: ${commission}, Net Payout: ${netWinnings}`);
       } else {
-        // Update losing bet result
         await tx.bet.update({
           where: { id: bet.id },
           data: { 
@@ -142,7 +128,6 @@ export const resolveBets = async (gameId: number, winner: string) => {
 
     return game;
   }, {
-    // Use highest isolation level for financial transactions
     isolationLevel: Prisma.TransactionIsolationLevel.Serializable
   });
 };

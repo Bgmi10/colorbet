@@ -78,7 +78,6 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
               balance: 0.00
             }
         });
-
         await prisma.otp.delete({
             where: { email }
         });
