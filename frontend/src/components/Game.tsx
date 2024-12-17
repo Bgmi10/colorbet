@@ -23,19 +23,16 @@ const GameComponent = () => {
   const [pockerbackimageurl, setPockerBackImageUrl] = useState('');
   const [gamerecord, setGamerecord] = useState(null);
   const navigate = useNavigate();
-  const [betplaced, setBetplaced] = useState(false)
-
-  console.log(chosenSide)
-
+  const [betplaced, setBetplaced] = useState(false);
+  const [updatedBalance, setUpdatedBalance] = useState(0);
   const [userBetRecords, setUserBetRecords] = useState([
     { id: 1, amount: 50, side: 'Red', result: 'Win', timestamp: '2023-05-10 14:30:00' },
     { id: 2, amount: 30, side: 'Black', result: 'Loss', timestamp: '2023-05-10 14:25:00' },
     { id: 3, amount: 100, side: 'Red', result: 'Win', timestamp: '2023-05-10 14:20:00' },
   ]);
-
+  
   useEffect(() => {
-   
-
+  
     ws.onopen = () => {
       console.log("Connected to the WebSocket server");
     };
@@ -44,6 +41,10 @@ const GameComponent = () => {
       const data = JSON.parse(event.data);
       if(data?.type === "bettingClosed"){
         setIsbetting(false);
+      }
+
+      if(data?.type === "updatedBalance"){
+        setUpdatedBalance(data?.updatedBalance)
       }
       if (data?.type === "timer" || data?.type === "gameStarted") {
         setTimer(data?.timeleft);
@@ -64,19 +65,19 @@ const GameComponent = () => {
         setBetplaced(true);
       }
       }
+    
+      if (data?.type === "currentgame") {
+          setGame(data);
+      }
 
-     
-      if (data?.type === "currentgame" ||  data?.type === "gameResult" || data?.type === "findgame") {
-
-        setGame(data);
-
+      if(data?.type === "gameResult" || data?.type === "findgame"){
+        setGamerecord(data?.findgame);
         if(data?.type === "gameResult"){
-          setTimeout(() => {
-            setGame(data);
-            setRevealCards(true);
-          }, 0);
-       }
-       setGamerecord(data?.findgame);
+        setTimeout(() => {
+          setGame(data);
+          setRevealCards(true);
+        }, 0);
+      }
       }
     };
 
@@ -95,7 +96,7 @@ const GameComponent = () => {
 
   const placeBet = async () => {
 
-    if(user?.balance <= 0){
+    if(user?.balance <= 0 || user?.balance < amount){
       window.alert("insufficient balance");
       return;
     }
@@ -126,7 +127,7 @@ const GameComponent = () => {
     <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <button onClick={handleLogout}>Logout</button>
       <span>{betplaced && "bet placed success"}</span>
-      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {user?.balance}</div>
+      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {updatedBalance || user?.balance}</div>
          <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
          
             <div className="flex items-center">   

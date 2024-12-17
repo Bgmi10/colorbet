@@ -35,15 +35,14 @@ let clients: WebSocketWithId[] = [];
 let currentGameState: GameState | null = null;
 let currentPeriod = 0;
 let countdownInterval: any = null;
-let timeLeft = 15; // Countdown timer for betting phase
-let isGameInProgress = false; // Track if a game is in progress
-let isBettingOpen = true; // Manage betting phase
+let timeLeft = 15;
+let isGameInProgress = false;
+let isBettingOpen = true;
 
 app.use('/api/auth', limiter, AuthRouter);
 
 app.use('/api/auth', limiter, User)
 
-// Broadcast message to all WebSocket clients
 const broadcast = (message: any) => {
   clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
@@ -52,12 +51,10 @@ const broadcast = (message: any) => {
   });
 };
 
-// Handle WebSocket connections
 wss.on('connection', async (ws: WebSocketWithId) => {
   clients.push(ws);
   console.log('New client connected');
 
-  // Send current game state if available
   if (currentGameState) {
     ws.send(JSON.stringify({
       type: 'currentgame',
@@ -68,7 +65,6 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     }));
   }
 
-  // Send the last 30 games on connection
   const last30Games = await prisma.game.findMany({
     orderBy: { createdAt: "desc" },
     take: 30
@@ -78,14 +74,10 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     type: "findgame",
     findgame: last30Games
   }));
-   broadcast({ 
-
-   })
-  // Handle incoming WebSocket messages
+  
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
 
-    // Place bet logic
     if (message.type === 'placeBet' && isBettingOpen) {
       const { email, amount, chosenSide, gameId } = message;
       const user = await prisma.user.findUnique({ where: { email } });
@@ -107,6 +99,12 @@ wss.on('connection', async (ws: WebSocketWithId) => {
               }
             })
           ]);
+         const updatedUser = await prisma.user.findUnique({ where: { email } });
+          broadcast({
+            type: "updatedBalance",
+            updatedBalance: updatedUser?.balance
+            
+          })
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
           return;
         } catch (e) {
@@ -132,25 +130,21 @@ wss.on('connection', async (ws: WebSocketWithId) => {
   });
 });
 
-// Start a new game
 const startGame = () => {
   if (isGameInProgress) return;
 
   isGameInProgress = true;
   isBettingOpen = true;
   currentPeriod += 1;
-  timeLeft = 15; // Reset countdown for betting phase
+  timeLeft = 15; 
 
-  // Broadcast game start
-  broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
+ broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
 
-  // Countdown for the betting phase
   countdownInterval = setInterval(() => {
     if (timeLeft > 0 && isBettingOpen) {
       timeLeft -= 1;
       broadcast({ type: 'timer', timeleft: timeLeft });
     } else if (timeLeft === 0 && isBettingOpen) {
-      // End betting phase
       isBettingOpen = false;
       broadcast({ type: 'bettingClosed' });
       clearInterval(countdownInterval);
@@ -159,7 +153,6 @@ const startGame = () => {
   }, 1000);
 };
 
-// Start the game phase
 const startGamePhase = async () => {
   const cardAData = generateRandomCard();
   const cardBData = generateRandomCard();

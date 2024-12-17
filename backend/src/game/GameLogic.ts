@@ -1,115 +1,148 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../prisma/prisma';
-import { GameState } from '../types/types';
 
 const suits = ['h', 'd', 'c', 's'];
 const ranks = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
 
+const cardOrder: { [key: string]: number } = { 
+  a: 14, k: 13, q: 12, j: 11, 
+  '10': 10, '9': 9, '8': 8, '7': 7, 
+  '6': 6, '5': 5, '4': 4, '3': 3, '2': 2 
+};
 
-const cardOrder: { [key: string]: number } = { a: 14, k: 13, q: 12, j: 11, '10': 10, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 2 };
 const suitOrder: { [key: string]: number } = { s: 4, h: 3, d: 2, c: 1 };
 
-
 export const createCardImages = () => {
-    const imgs: { [key: string]: string } = {};
-    for (const suit of suits) {
-      for (const rank of ranks) {
-        imgs[`${rank}_${suit}`] = `https://colorwiz.cyou/images/poker/poker_${suit}_${rank}.png`;
-      }
+  const imgs: { [key: string]: string } = {};
+  for (const suit of suits) {
+    for (const rank of ranks) {
+      imgs[`${rank}_${suit}`] = `https://colorwiz.cyou/images/poker/poker_${suit}_${rank}.png`;
     }
-    return imgs;
+  }
+  return imgs;
+};
+
+const cardImages = createCardImages();
+
+export const generateRandomCard = () => {
+  const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+  const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+  const randomKey = `${randomRank}_${randomSuit}`;
+
+  return {
+    rank: randomRank,
+    suit: randomSuit,
+    img: cardImages[randomKey],
   };
+};
+
+export const checkWinner = (
+  cardA: { rank: string; suit: string }, 
+  cardB: { rank: string; suit: string }
+): string => {
+  // Compare rank first
+  if (cardOrder[cardA.rank] > cardOrder[cardB.rank]) return 'A';
+  if (cardOrder[cardA.rank] < cardOrder[cardB.rank]) return 'B';
   
-  const cardImages = createCardImages();
-
-
-  export const generateRandomCard = () => {
-    const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-    const randomKey = `${randomRank}_${randomSuit}`;
+  // If ranks are equal, compare suits
+  if (suitOrder[cardA.suit] > suitOrder[cardB.suit]) return 'A';
+  if (suitOrder[cardA.suit] < suitOrder[cardB.suit]) return 'B';
   
-    return {
-      rank: randomRank,
-      suit: randomSuit,
-      img: cardImages[randomKey],
-    };
-  };
+  // If everything is equal, it's a draw
+  return 'D';
+};
 
+// Commission rates
+const COMMISSION_RATES = {
+  lowBet: 5,   // For small bets under ₹1000
+  midBet: 4,   // For bets between ₹1001 - ₹5000
+  highBet: 3   // For high bets above ₹5000
+};
 
-  export const checkWinner = (cardA: { rank: string; suit: string }, cardB: { rank: string; suit: string }): string => {
-    if (cardOrder[cardA.rank] > cardOrder[cardB.rank]) return 'A';
-    if (cardOrder[cardA.rank] < cardOrder[cardB.rank]) return 'B';
-    if (suitOrder[cardA.suit] > suitOrder[cardB.suit]) return 'A';
-    if (suitOrder[cardA.suit] < suitOrder[cardB.suit]) return 'B';
-    return 'D'; // Draw
-  };
-
-
-  export const resolveBets = async (gameId: number, winner: string) => {
-    const bets = await prisma.bet.findMany({ where: { gameId } });
-  
-    for (const bet of bets) {
-      let result = 'LOSE'; // Default result is 'LOSE'
-  
-      // Handle winning side (A, B, or D)
-      if (winner === 'A') {
-        if (bet.chosenSide === 'A') {
-          result = 'WIN';  // User wins if they bet on side A
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { increment: bet.amount * 2 } }, // Double the bet amount for win
-          });
-        } else {
-          // Deduct the bet amount for losers
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { decrement: bet.amount } },
-          });
-        }
-      } else if (winner === 'B') {
-        if (bet.chosenSide === 'B') {
-          result = 'WIN';  // User wins if they bet on side B
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { increment: bet.amount * 2 } }, // Double the bet amount for win
-          });
-        } else {
-          // Deduct the bet amount for losers
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { decrement: bet.amount } },
-          });
-        }
-      } else {
-        // If it's a draw, users who bet on draw win
-        if (bet.chosenSide === 'D') {
-          result = 'WIN';  // Draw result
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { increment: bet.amount * 2 } }, // Double the bet amount for draw
-          });
-        } else {
-          // Deduct the bet amount for losers
-          await prisma.user.update({
-            where: { id: bet.userId },
-            data: { balance: { decrement: bet.amount } },
-          });
-        }
+export const resolveBets = async (gameId: number, winner: string) => {
+  return prisma.$transaction(async (tx: any) => {
+    // Fetch game with all related bets and users
+    const game = await tx.game.findUnique({
+      where: { id: gameId },
+      include: { 
+        bets: { 
+          include: { 
+            user: true 
+          } 
+        } 
       }
-  
-      try {
-        console.log('asas')
-        await prisma.bet.update({
-          
-          where: { id: bet.id },
-          //@ts-ignore
-          data: { result },
+    });
 
-         
+    if (!game) {
+      throw new Error(`Game ${gameId} not found`);
+    }
+
+    // Update game status
+    await tx.game.update({
+      where: { id: gameId },
+      data: { 
+        status: 'COMPLETED',
+        winner 
+      }
+    });
+
+    // Process each bet
+    for (const bet of game.bets) {
+      // Determine if bet is a winner
+      const isWinner = 
+        (winner === 'A' && bet.chosenSide === 'A') ||
+        (winner === 'B' && bet.chosenSide === 'B') ||
+        (winner === 'D' && bet.chosenSide === 'D');
+
+      if (isWinner) {
+        // Calculate winnings (original bet + winnings)
+        const winAmount = bet.amount * 2;
+
+        // Apply commission based on bet amount
+        let commissionRate = COMMISSION_RATES.lowBet;
+        if (winAmount > 5000) {
+          commissionRate = COMMISSION_RATES.highBet;
+        } else if (winAmount > 1000) {
+          commissionRate = COMMISSION_RATES.midBet;
+        }
+
+        // Calculate net winnings after commission
+        const commission = Math.floor(winAmount * (commissionRate / 100));
+        const netWinnings = winAmount - commission;
+
+        // Update user balance
+        await tx.user.update({
+          where: { id: bet.userId },
+          data: { 
+            balance: { 
+              increment: netWinnings 
+            } 
+          }
         });
-        console.log('asds')
-      } catch (e) {
-        console.error(`Error updating bet result for bet ID ${bet.id}:`, e);
+
+        // Update bet result
+        await tx.bet.update({
+          where: { id: bet.id },
+          data: { 
+            result: 'WIN' 
+          }
+        });
+
+        console.log(`Bet ${bet.id}: Won ${winAmount}, Commission: ${commission}, Net Payout: ${netWinnings}`);
+      } else {
+        // Update losing bet result
+        await tx.bet.update({
+          where: { id: bet.id },
+          data: { 
+            result: 'LOSE' 
+          }
+        });
       }
     }
-  };
-  
+
+    return game;
+  }, {
+    // Use highest isolation level for financial transactions
+    isolationLevel: Prisma.TransactionIsolationLevel.Serializable
+  });
+};

@@ -1,60 +1,52 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
   id          Int      @id @default(autoincrement())
-  username    String   
-  balance     Float    @default(0.00)
-  bets        Bet[]    
+  username    String   @unique
   email       String   @unique
-  password    String   
+  password    String
+  balance     Float    @default(0) 
   memberId    String   @unique
+  bets        Bet[]
+  createdAt   DateTime @default(now())
 }
 
 model Game {
-  id          Int      @id @default(autoincrement())
-  cardA       String   
-  cardB       String  
-  winner      String   
-  createdAt   DateTime @default(now())
-  bets        Bet[]   
-  status      Gamestatus @default(PENDING)
-  updatedAt   DateTime @updatedAt
+  id          Int         @id @default(autoincrement())
+  cardA       String
+  cardB       String
+  winner      String
+  status      GameStatus  @default(PENDING)
+  createdAt   DateTime    @default(now())
+  bets        Bet[]
 }
 
-enum Gamestatus {
+enum GameStatus {
   PENDING
   COMPLETED
-  IN_PROGRESS
+  CANCELLED
 }
 
 model Bet {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  chosenSide String 
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int
-  game      Game      @relation(fields: [gameId], references: [id])
-  gameId    Int
-  result    Betresult  @default(PENDING) 
-  createdAt DateTime  @default(now())
+  id          Int         @id @default(autoincrement())
+  amount      Float
+  chosenSide  String
+  result      BetResult   @default(PENDING)
+  user        User        @relation(fields: [userId], references: [id])
+  userId      Int
+  game        Game        @relation(fields: [gameId], references: [id])
+  gameId      Int
+  createdAt   DateTime    @default(now())
 }
 
-model Otp {
-  id          Int       @id  @default(autoincrement())
-  email       String    @unique
-  otpHash     String
-  expiresIn   DateTime
-  createdIn   DateTime  @default(now())  
-}
-
-enum Betresult {
+enum BetResult {
   PENDING
   WIN
   LOSE

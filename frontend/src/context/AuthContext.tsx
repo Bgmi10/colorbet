@@ -30,7 +30,6 @@ export const AuthProvider = ({ children } : {children : any}) => {
           withCredentials: true
         });
         const json = await res.data;
-        console.log(json);
         if(json){
         setUser(json);
         setIsAuthenticated(true);

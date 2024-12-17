@@ -5,14 +5,12 @@ const Authmiddleware = (req: express.Request , res: express.Response , next: exp
 
     const { token } = req.cookies;
 
-    console.log(token);
-
-    if(token === undefined) {
+    if(!token) {
         res.status(400).json({ message: 'Access Denied' });
         return;
     }
     
-    const istoken: any = jwt.verify(token.token, process.env.JWT_SECRET as string);
+    const istoken: any = jwt.verify(token, process.env.JWT_SECRET as string);
 
     if(istoken){
         //@ts-ignore
