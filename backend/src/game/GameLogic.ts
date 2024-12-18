@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../prisma/prisma';
-import { AnyCnameRecord } from 'dns';
 
 const suits = ['h', 'd', 'c', 's'];
 const ranks = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
@@ -55,11 +54,7 @@ const COMMISSION_RATES: any = 0.02
 
 const calculateCommission = (betAmount: any, winAmount: any) => {
      const profit = betAmount - winAmount;
-
-     if(profit > 0){
-      return parseFloat((profit * COMMISSION_RATES).toFixed(2));
-    }
-    return 0;
+     return profit > 0 ? +(profit * COMMISSION_RATES).toFixed(2) : 0 
 }
 
 export const resolveBets = async (gameId: number, winner: string) => {

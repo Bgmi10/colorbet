@@ -9,7 +9,10 @@ import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../context/AuthContext';
-const ws = new WebSocket('ws://localhost:5050' || 'wss://localhost:5050');
+
+
+const token = document.cookie.split(';').find((i) => i.startsWith(' token='))?.split('=')[1];
+const ws = new WebSocket(`ws://localhost:5050?token=${token}`);
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);

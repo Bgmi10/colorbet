@@ -10,5 +10,5 @@ export interface GameState {
 }
 
 export interface WebSocketWithId extends WebSocket {
-    id? : string;
+    userId? : string;
 }

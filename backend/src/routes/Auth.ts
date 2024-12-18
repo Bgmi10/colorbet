@@ -82,11 +82,11 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             where: { email }
         });
 
-        const token = jwt.sign({ email: email }, process.env.JWT_SECRET as string, {
+        const token = jwt.sign({ email: email, userId: user?.id }, process.env.JWT_SECRET as string, {
             expiresIn: '10h'
         });
     
-        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: true,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
         secure: process.env.NODE_ENV === 'production' });
         res.status(200).json({ message: "Signed up sucessfully"})
     }
@@ -135,7 +135,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
           return;
         }
         
-        const token = jwt.sign({ email: email }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
+        const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
         secure: process.env.NODE_ENV === 'production' });
         res.status(200).json({ message: "logged In successfully"});

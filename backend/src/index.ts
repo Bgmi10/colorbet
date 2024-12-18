@@ -1,6 +1,5 @@
 import express from 'express';
 import WebSocket from 'ws';
-//@ts-ignore
 import { prisma } from '../prisma/prisma';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
@@ -9,6 +8,7 @@ import { WebSocketWithId, GameState } from './types/types';
 import AuthRouter from './routes/Auth';
 import cors from 'cors';
 import User from './routes/User';
+import jwt from "jsonwebtoken";
 
 const app = express();
 const port = 3005;
@@ -52,10 +52,29 @@ const broadcast = (message: any) => {
   });
 };
 
-wss.on('connection', async (ws: WebSocketWithId) => {
-  clients.push(ws);
-  console.log('New client connected');
+const sendToUser = (userId: string, message: any) =>{
+  const client = clients.find((o) => o.userId === userId)
+  if(client && client.readyState === WebSocket.OPEN){
+    client.send(JSON.stringify(message));
+  }
+}
+wss.on('connection', async (ws: WebSocketWithId, req) => {
 
+  const params: any = new URLSearchParams(req.url?.split('?')[1]);
+  const token = params.get('token');
+  if(token === "undefined"){
+     ws.close(4000, 'No Token Provided');
+     return;
+  }
+  try{
+    if(token){
+   const isVerified = jwt.verify(token, process.env.JWT_SECRET as string);
+   //@ts-ignore
+   ws.userId = isVerified?.userId
+   clients.push(ws);
+  }  
+
+  
   if (currentGameState) {
     ws.send(JSON.stringify({
       type: 'currentgame',
@@ -77,7 +96,16 @@ wss.on('connection', async (ws: WebSocketWithId) => {
     findgame: last30Games
   }));
   
-  // Handle incoming WebSocket messages
+}
+  catch(e){
+    console.log(e);
+  }
+
+  ws.on('close', () => {
+    clients = clients.filter((c) => c !== ws);
+    console.log('Client disconnected');
+  });
+
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
 
@@ -104,10 +132,13 @@ wss.on('connection', async (ws: WebSocketWithId) => {
             })
           ]);
           const updatedUser = await prisma.user.findUnique({ where: { email } });
-          broadcast({
+          
+          if(updatedUser){
+          sendToUser(ws.userId!, {
             type: "updatedBalance",
-            updatedBalance: updatedUser?.balance
-          });
+            updatedBalance: updatedUser?.balance  
+          })
+        }
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
           return;
         } catch (e) {
@@ -195,12 +226,28 @@ const startGamePhase = async () => {
     winner: winner,
   };
 
-  await resolveBets(currentGameId!, winner);
+  const reSolvedBets = await resolveBets(currentGameId!, winner);
+
+  await Promise.all(
+    reSolvedBets?.bets?.map(async(i: any) => {
+         const user = await prisma.user.findUnique({ where: { id: i.userId } });
+        
+         if(user){
+          //@ts-ignore
+          sendToUser(i.userId, {
+            type: "updatedBalance",
+            updatedBalance: user.balance
+          })
+         }
+    })
+  )
+
   const last30Games = await prisma.game.findMany({
     orderBy: { createdAt: "desc" },
     take: 30
   });
-
+  
+  
   broadcast({
     type: 'gameResult',
     gameState: currentGameState,
@@ -209,7 +256,6 @@ const startGamePhase = async () => {
     findgame: last30Games
   });
 
-  // Wait for the cooldown before starting the next game
   setTimeout(() => {
     isGameInProgress = false;
     startGame(); // Start the next game after cooldown
