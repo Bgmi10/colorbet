@@ -14,6 +14,14 @@ const Signinotp = async (req : express.Request, res : express.Response, next: ex
     }
 
     const { email } = req.body;
+
+    const userExist = await prisma.user.findUnique({ where: { email } });
+
+     if (userExist) {
+       res.status(401).json({ message: 'User with this email already exists. Try to log in.' });
+       return;
+     }
+     
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
     const expiresIn = new Date(Date.now() +  60 * 1000);

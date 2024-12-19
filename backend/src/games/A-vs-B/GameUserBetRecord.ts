@@ -22,7 +22,6 @@ GameUserBetRecord.get('/A-vs-B/betrecords', Authmiddleware, async (req: express.
     try{
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string);
-        console.log(limit)
         const skip = (page - 1)* limit;
         const user = await prisma.user.findUnique({ 
             where: { email },

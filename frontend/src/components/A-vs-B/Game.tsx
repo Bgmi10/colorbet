@@ -28,6 +28,9 @@ const GameComponent = () => {
   const navigate = useNavigate();
   const [betplaced, setBetplaced] = useState(false);
   const [updatedBalance, setUpdatedBalance] = useState(0);
+  const [betamount, setBetAmount] = useState(0)
+
+  console.log(betamount);
   
   useEffect(() => {
   
@@ -66,6 +69,10 @@ const GameComponent = () => {
     
       if (data?.type === "currentgame") {
           setGame(data);
+      }
+
+      if(data?.type === "newBet"){
+        setBetAmount(data)
       }
 
       if(data?.type === "gameResult" || data?.type === "findgame"){
@@ -114,9 +121,9 @@ const GameComponent = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.post(baseurl + '/api/auth/logout');
+      const res = await axios.post(`${baseurl}/api/auth/logout`, {}, { withCredentials: true });
       if (res.status === 200) {
-        navigate('/login');
+        navigate("/login")
       }
     } catch (error) {
       console.error('Logout failed:', error);

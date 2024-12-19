@@ -111,7 +111,7 @@ export default function OtpSigninverify() {
         email: user.email ,
         password: user.password,
         otp,
-      });
+      }, { withCredentials: true });
 
       if (res.status === 200) {
         localStorage.removeItem('otpTimestamp');
@@ -157,7 +157,7 @@ export default function OtpSigninverify() {
         setRedirectCounter((prev) => {
           if (prev <= 1) {
             clearInterval(redirectInterval);
-            navigate('/login', { replace: true });
+            navigate('/login');
             return 0;
           }
           return prev - 1;
@@ -211,7 +211,7 @@ export default function OtpSigninverify() {
             <button
               onClick={handleResendOtp}
               className="px-4 py-2 rounded-md bg-amber-500 hover:bg-amber-600 text-white transition-colors duration-200"
-              disabled={loading}
+              disabled={loading || user === "{}"}
             >
               {loading ? <FontAwesomeIcon icon={faSpinner} spin /> : "Send OTP"}
             </button>

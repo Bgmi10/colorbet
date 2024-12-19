@@ -30,7 +30,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
 
     const { email, password, name } = req.body;
  
-    if(!email || !password || !name) {
+    if(!email || !password) {
       res.status(400).json({ message: "bad request all fields are required" });
       return;
     }
@@ -39,7 +39,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
         res.status(401).json({ message: 'email format error' });
         return;
     }
-    
+
     const upperCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); 
     const lowerCaseLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i)); 
     const digits = Array.from({ length: 9 }, (_, i) => (i + 1).toString()); 
@@ -55,18 +55,8 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
    }
 
        const randomUsernameLength = Math.floor(Math.random() * 5) + 8; 
-       const memberId = generateRandomUsername(randomUsernameLength);
-        
-    const hashedpassword = await bcrypt.hash("password",10).then(res => res); 
-
-    const user  = await prisma.user.findUnique({
-        where: { email }
-    })
-
-    if(user?.email === email){
-       res.status(401).json({ message: 'user with this email is already exist try to login' });
-       return;
-    }
+       const memberId = generateRandomUsername(randomUsernameLength); 
+       const hashedpassword = await bcrypt.hash(password, 10);
 
     try {
        const user = await prisma.user.create({
@@ -85,7 +75,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             expiresIn: '10h'
         });
     
-        res.cookie('token',token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
         secure: process.env.NODE_ENV === 'production' });
         res.status(200).json({ message: "Signed up sucessfully"});
     }
@@ -147,8 +137,10 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 
 AuthRouter.post('/logout', (req : express.Request, res : express.Response) => {
      
-     res.cookie('token', null, { expires : new Date(0) });
+     res.cookie('token', '', { expires : new Date(0), path: '/', httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+     secure: process.env.NODE_ENV === 'production'});
      res.status(200).json({ message : 'logged out successfully' });
+     
 
 });
 

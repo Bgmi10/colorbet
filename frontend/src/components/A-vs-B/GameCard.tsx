@@ -9,7 +9,7 @@ interface GameCardProps {
   isRevealed: boolean;
 }
 
-export const GameCard: React.FC<GameCardProps> = ({ frontImage, backImage, isWinner, isRevealed }) => {
+export const GameCard: React.FC<GameCardProps> = ({ frontImage, backImage, isRevealed }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   
   useEffect(() => {

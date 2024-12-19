@@ -43,7 +43,7 @@ export const UserBetRecords = () => {
         withCredentials: true
       });
       const json = res.data;
-      if (json?.message === "no bets found for A-vs-B") {
+      if (json?.message === "No bets found for A-vs-B") {
         setIsBetNotFound(true);
       } else if (json?.message === "bets") {
         setRecords(json);
@@ -117,7 +117,6 @@ export const UserBetRecords = () => {
           animate={{ opacity: 1 }}
           className='flex flex-col items-center justify-center text-center p-8'
         >
-          <img src="/empty-state.svg" alt="No bets found" className="w-48 h-48 mb-4" />
           <span className='text-red-500 text-lg font-serif'>No bets placed yet!</span>
           <p className='text-gray-400 mt-2'>Start betting to see your records here.</p>
         </motion.div>

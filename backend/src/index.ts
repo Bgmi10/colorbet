@@ -110,7 +110,7 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
 
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
-
+    
     if (message.type === 'placeBet' && isBettingOpen && currentGameId) {
       const { email, amount, chosenSide } = message;
       const user = await prisma.user.findUnique({ where: { email } });
@@ -132,6 +132,15 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
               }
             })
           ]);
+          broadcast({ 
+            type: "newBet",
+            bet: {
+              userId: user.id,
+              amount: amount,
+              chosenSide: chosenSide,
+
+            }
+          });
           const updatedUser = await prisma.user.findUnique({ where: { email } });
           
           if(updatedUser){
@@ -139,6 +148,7 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
             type: "updatedBalance",
             updatedBalance: updatedUser?.balance  
           })
+
         }
           ws.send(JSON.stringify({ type: 'betPlaced', success: true }));
           return;
