@@ -50,7 +50,7 @@ export default function AppBar() {
       transition={{ duration: 0.5 }}
       className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 shadow-lg border-t-2 border-yellow-500"
     >
-      <div className=" mx-10 flex justify-between">
+      <div className="sm:mx-10 flex justify-between">
         {data.map((item) => (
           <Link 
             to={item.link} 
