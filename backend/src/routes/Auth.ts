@@ -69,7 +69,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     }
 
     try {
-        await prisma.user.create({
+       const user = await prisma.user.create({
             data: {
               username: name,
               memberId,
@@ -81,14 +81,13 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
         await prisma.otp.delete({
             where: { email }
         });
-
-        const token = jwt.sign({ email: email, userId: user?.id }, process.env.JWT_SECRET as string, {
+        const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, {
             expiresIn: '10h'
         });
     
-        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
+        res.cookie('token',token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
         secure: process.env.NODE_ENV === 'production' });
-        res.status(200).json({ message: "Signed up sucessfully"})
+        res.status(200).json({ message: "Signed up sucessfully"});
     }
     catch(e){
         console.log(e);
@@ -148,7 +147,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 
 AuthRouter.post('/logout', (req : express.Request, res : express.Response) => {
      
-     res.cookie('token', '', { expires : new Date(0) });
+     res.cookie('token', null, { expires : new Date(0) });
      res.status(200).json({ message : 'logged out successfully' });
 
 });

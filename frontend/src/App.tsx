@@ -1,5 +1,5 @@
 import { BrowserRouter as Router , Routes , Route } from "react-router-dom"
-import GameComponent from "./components/Game";
+import GameComponent from "./components/A-vs-B/Game";
 import Login from "./components/auth/Login";
 import Notfound from "./Notfound";
 import SignIn from "./components/auth/SignIn";

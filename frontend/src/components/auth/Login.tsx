@@ -44,7 +44,7 @@ export default function Login() {
       });
 
       if(res.status === 200){
-        navigate('/game');
+        window.location.href = ('/A-vs-B');
       }
       setLoading(false);
     } catch (e: any){

@@ -1,17 +1,17 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GameCard } from './GameCard';
 import { UserBetRecords } from './UserBetRecords';
-import { baseurl } from '../utils/constants';
+import { baseurl } from '../../utils/constants';
 import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
+import vsImg from "../../assets/vs.png";
 
-
-const token = document.cookie.split(';').find((i) => i.startsWith(' token='))?.split('=')[1];
+const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
 const ws = new WebSocket(`ws://localhost:5050?token=${token}`);
 
 const GameComponent = () => {
@@ -28,24 +28,19 @@ const GameComponent = () => {
   const navigate = useNavigate();
   const [betplaced, setBetplaced] = useState(false);
   const [updatedBalance, setUpdatedBalance] = useState(0);
-  const [userBetRecords, setUserBetRecords] = useState([
-    { id: 1, amount: 50, side: 'Red', result: 'Win', timestamp: '2023-05-10 14:30:00' },
-    { id: 2, amount: 30, side: 'Black', result: 'Loss', timestamp: '2023-05-10 14:25:00' },
-    { id: 3, amount: 100, side: 'Red', result: 'Win', timestamp: '2023-05-10 14:20:00' },
-  ]);
   
   useEffect(() => {
   
     ws.onopen = () => {
       console.log("Connected to the WebSocket server");
     };
-
+    
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if(data?.type === "bettingClosed"){
         setIsbetting(false);
       }
-
+     
       if(data?.type === "updatedBalance"){
         setUpdatedBalance(data?.updatedBalance)
       }
@@ -97,6 +92,8 @@ const GameComponent = () => {
     };
   }, []);
 
+  useMemo(() => game, [game])
+
   const placeBet = async () => {
 
     if(user?.balance <= 0 || user?.balance < amount){
@@ -130,7 +127,7 @@ const GameComponent = () => {
     <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <button onClick={handleLogout}>Logout</button>
       <span>{betplaced && "bet placed success"}</span>
-      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {updatedBalance || user?.balance}</div>
+      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {updatedBalance || updatedBalance === 0 && user?.balance}</div>
          <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
          
             <div className="flex items-center">   
@@ -145,7 +142,7 @@ const GameComponent = () => {
             </div>
             </div>
              <div className="justify-center flex">
-              <img src="https://colorwiz.cyou/images/luckyhit_vs.png" className="h-20" alt="VS" />
+              <img src={vsImg} className="h-20" alt="VS" />
              </div>
             <div className="flex items-center">
               <div className='flex flex-col text-center'>
@@ -217,7 +214,7 @@ const GameComponent = () => {
             </motion.p>
           )}
         
-        <UserBetRecords records={userBetRecords} />
+        <UserBetRecords />
     </div>
   );
 };

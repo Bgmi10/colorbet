@@ -116,7 +116,7 @@ export default function OtpSigninverify() {
       if (res.status === 200) {
         localStorage.removeItem('otpTimestamp');
         localStorage.removeItem('user-form');
-        navigate("/game", { replace: true });
+        window.location.href = ('/A-vs-B');
       } else {
         throw new Error(res.data?.message || "Invalid OTP");
       }

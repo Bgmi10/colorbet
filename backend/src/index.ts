@@ -3,12 +3,13 @@ import WebSocket from 'ws';
 import { prisma } from '../prisma/prisma';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-import { generateRandomCard, checkWinner, resolveBets } from './game/GameLogic';
+import { generateRandomCard, checkWinner, resolveBets } from './games/A-vs-B/GameLogic';
 import { WebSocketWithId, GameState } from './types/types';
 import AuthRouter from './routes/Auth';
 import cors from 'cors';
 import User from './routes/User';
 import jwt from "jsonwebtoken";
+import GameUserBetRecord from './games/A-vs-B/GameUserBetRecord';
 
 const app = express();
 const port = 3005;
@@ -25,10 +26,10 @@ app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  limit: 100,
+  limit: 250,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
-  message: "Too many requests, try again after 10 minutes"
+  message: "Too many requests, better luck next time."
 });
 
 const wss = new WebSocket.Server({ port: 5050 });
@@ -43,6 +44,7 @@ let currentGameId: number | null = null;
 
 app.use('/api/auth', limiter, AuthRouter);
 app.use('/api/auth', limiter, User);
+app.use('/api/game', limiter, GameUserBetRecord);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {
@@ -109,7 +111,6 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
 
-    // Place bet logic
     if (message.type === 'placeBet' && isBettingOpen && currentGameId) {
       const { email, amount, chosenSide } = message;
       const user = await prisma.user.findUnique({ where: { email } });

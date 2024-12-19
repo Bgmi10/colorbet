@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id          Int      @id @default(autoincrement())
-  username    String   
+  userName    String   
   balance     Float    @default(0.00)
   bets        Bet[]    
   email       String   @unique

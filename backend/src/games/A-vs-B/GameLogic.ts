@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '../../prisma/prisma';
+import { prisma } from '../../../prisma/prisma';
 
 const suits = ['h', 'd', 'c', 's'];
 const ranks = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
