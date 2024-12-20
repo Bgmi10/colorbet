@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GameCard } from './GameCard';
@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
 import vsImg from "../../assets/vs.png";
+import { chips } from '../../utils/constants';
+import ChipSlider from './ChipSlider';
+import AnimatedChip from './AnimatedChip';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
 const ws = new WebSocket(`ws://localhost:5050?token=${token}`);
@@ -28,10 +31,10 @@ const GameComponent = () => {
   const navigate = useNavigate();
   const [betplaced, setBetplaced] = useState(false);
   const [updatedBalance, setUpdatedBalance] = useState(0);
-  const [betamount, setBetAmount] = useState(0)
-
-  console.log(betamount);
+  const [betamount, setBetAmount] = useState(0);
+  const [showAnimatedChip, setShowAnimatedChip] = useState(false);
   
+
   useEffect(() => {
   
     ws.onopen = () => {
@@ -107,6 +110,7 @@ const GameComponent = () => {
       window.alert("insufficient balance");
       return;
     }
+    setShowAnimatedChip(true);
     ws.send(
       JSON.stringify({
         type: "placeBet",
@@ -118,6 +122,12 @@ const GameComponent = () => {
     )
 
   };
+
+
+  const handleAnimationCompelete = () => {
+    setShowAnimatedChip(false);
+    setBetplaced(true);
+  }
 
   const handleLogout = async () => {
     try {
@@ -139,17 +149,18 @@ const GameComponent = () => {
          
             <div className="flex items-center">   
             <div className='flex flex-col text-center'>
-              <span className="text-red-500 font-serif mb-1 text-xl mt-3">RED</span>   
+              <span className="text-red-500 font-serif mb-1 text-xl mt-3">RED</span> 
                 <GameCard
                   frontImage={game?.gameState?.cardAImg}
                   backImage={pockerbackimageurl}
                   isWinner={game?.gameState?.winner === 'A'}
                   isRevealed={revealCards}
                 />
+                {betamount?.bet?.totalAAmount}
             </div>
             </div>
              <div className="justify-center flex">
-              <img src={vsImg} className="h-20" alt="VS" />
+               <img src={vsImg} alt="VS"/>
              </div>
             <div className="flex items-center">
               <div className='flex flex-col text-center'>
@@ -160,12 +171,22 @@ const GameComponent = () => {
                  isWinner={game?.gameState?.winner === 'B'}
                  isRevealed={revealCards}
                />
+                {betamount?.bet?.totalBAmount}
               </div>
             </div>
+            <AnimatePresence>
+          {showAnimatedChip && (
+            <AnimatedChip
+              amount={amount}
+              chosenSide={chosenSide}
+              onAnimationComplete={handleAnimationCompelete}
+            />
+          )}
+        </AnimatePresence>
           </div>
       
             <motion.div
-              className="text-xl font-bold justify-center flex gap-2 mt-5"
+              className="text-xl font-bold justify-center flex gap-2"
               key={timer}
             >
              <span className='text-md font-serif'>Next Round Starts In </span>
@@ -180,7 +201,7 @@ const GameComponent = () => {
             </motion.div>
 
           <GameRecord data={gamerecord} />
-
+         <ChipSlider setAmount={setAmount} balance={updatedBalance || user?.balance}/>
           <div className="flex flex-col md:flex-row justify-center items-center mt-8 space-y-4 md:space-y-0 md:space-x-4">
             <input
               type="number"

@@ -60,6 +60,11 @@ const sendToUser = (userId: string, message: any) =>{
     client.send(JSON.stringify(message));
   }
 }
+
+
+let totalAAmount = 0;
+let totalBAmount = 0;
+
 wss.on('connection', async (ws: WebSocketWithId, req) => {
 
   const params: any = new URLSearchParams(req.url?.split('?')[1]);
@@ -102,12 +107,12 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
   catch(e){
     console.log(e);
   }
+  
 
   ws.on('close', () => {
     clients = clients.filter((c) => c !== ws);
     console.log('Client disconnected');
   });
-
   ws.on('message', async (data: WebSocket.Data) => {
     const message = JSON.parse(data.toString());
     
@@ -132,13 +137,22 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
               }
             })
           ]);
+         
+
+          if(chosenSide === "A"){
+            totalAAmount+=amount;
+          }
+          else if(chosenSide === "B"){
+            totalBAmount+=amount;
+          }
           broadcast({ 
             type: "newBet",
             bet: {
               userId: user.id,
               amount: amount,
               chosenSide: chosenSide,
-
+              totalAAmount,
+              totalBAmount
             }
           });
           const updatedUser = await prisma.user.findUnique({ where: { email } });
@@ -162,7 +176,6 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
         return;
       }
     }
-
     ws.send(JSON.stringify({
       type: "bet",
       message: "Bet cannot be placed"
@@ -174,6 +187,7 @@ wss.on('connection', async (ws: WebSocketWithId, req) => {
     console.log('Client disconnected');
   });
 });
+
 
 // Start a new game
 const startGame = async () => {
@@ -193,10 +207,8 @@ const startGame = async () => {
     }
   });
   currentGameId = newGame.id;
-
   // Broadcast game start
   broadcast({ type: 'gameStarted', period: currentPeriod, timeleft: timeLeft, bettingOpen: isBettingOpen });
-
   // Countdown for the betting phase
   countdownInterval = setInterval(() => {
     if (timeLeft > 0 && isBettingOpen) {
@@ -210,6 +222,9 @@ const startGame = async () => {
       startGamePhase();
     }
   }, 1000);
+
+  totalAAmount = 0;
+  totalBAmount = 0;
 };
 
 // Start the game phase

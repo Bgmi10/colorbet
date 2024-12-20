@@ -61,7 +61,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     try {
        const user = await prisma.user.create({
             data: {
-              username: name,
+              userName: name,
               memberId,
               password: hashedpassword,
               email,
