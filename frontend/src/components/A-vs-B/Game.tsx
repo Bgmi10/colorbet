@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
 import vsImg from "../../assets/vs.png";
-import { chips } from '../../utils/constants';
 import ChipSlider from './ChipSlider';
 import AnimatedChip from './AnimatedChip';
 
@@ -48,7 +47,7 @@ const GameComponent = () => {
       }
      
       if(data?.type === "updatedBalance"){
-        setUpdatedBalance(data?.updatedBalance)
+        setUpdatedBalance(data?.updatedBalance / 100)
       }
       if (data?.type === "timer" || data?.type === "gameStarted") {
         setTimer(data?.timeleft);
@@ -106,7 +105,7 @@ const GameComponent = () => {
 
   const placeBet = async () => {
 
-    if(user?.balance <= 0 || user?.balance < amount){
+    if(user?.balance <= 0){
       window.alert("insufficient balance");
       return;
     }
@@ -116,7 +115,7 @@ const GameComponent = () => {
         type: "placeBet",
         email: user?.email,
         gameId: game?.gameState.id,
-        amount,
+        amount: amount * 100,
         chosenSide
       })
     )
@@ -125,7 +124,6 @@ const GameComponent = () => {
 
 
   const handleAnimationCompelete = () => {
-    setShowAnimatedChip(false);
     setBetplaced(true);
   }
 
@@ -144,7 +142,7 @@ const GameComponent = () => {
     <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <button onClick={handleLogout}>Logout</button>
       <span>{betplaced && "bet placed success"}</span>
-      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: {updatedBalance || updatedBalance === 0 && user?.balance}</div>
+      <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: ₹ {updatedBalance || updatedBalance === 0 && user?.balance/100}</div>
          <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
          
             <div className="flex items-center">   
@@ -156,7 +154,7 @@ const GameComponent = () => {
                   isWinner={game?.gameState?.winner === 'A'}
                   isRevealed={revealCards}
                 />
-                {betamount?.bet?.totalAAmount}
+                {betamount?.bet?.totalAAmount / 100 | 0 }
             </div>
             </div>
              <div className="justify-center flex">
@@ -171,7 +169,7 @@ const GameComponent = () => {
                  isWinner={game?.gameState?.winner === 'B'}
                  isRevealed={revealCards}
                />
-                {betamount?.bet?.totalBAmount}
+                {betamount?.bet?.totalBAmount / 100 | 0} 
               </div>
             </div>
             <AnimatePresence>
@@ -198,10 +196,10 @@ const GameComponent = () => {
               >
                 {timer < 10 ? `0${timer}` : timer}
               </motion.span>
-            </motion.div>
+            </motion.div> 
 
           <GameRecord data={gamerecord} />
-         <ChipSlider setAmount={setAmount} balance={updatedBalance || user?.balance}/>
+         <ChipSlider setAmount={setAmount} balance={updatedBalance  || user?.balance / 100}/>
           <div className="flex flex-col md:flex-row justify-center items-center mt-8 space-y-4 md:space-y-0 md:space-x-4">
             <input
               type="number"

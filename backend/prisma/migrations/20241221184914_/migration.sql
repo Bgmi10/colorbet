@@ -7,8 +7,8 @@ CREATE TYPE "Betresult" AS ENUM ('PENDING', 'WIN', 'LOSE');
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
-    "balance" DOUBLE PRECISION NOT NULL DEFAULT 0.00,
+    "userName" TEXT NOT NULL,
+    "balance" INTEGER NOT NULL DEFAULT 0,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,

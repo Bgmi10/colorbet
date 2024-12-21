@@ -15,6 +15,8 @@ export default function ChipSlider({ setAmount, balance }: { setAmount: (value: 
     setSelectedChip(value)
     setAmount(value)
   }
+  
+  const roundedBalance = Math.round(balance);
 
   return (
     <motion.div 
@@ -34,11 +36,11 @@ export default function ChipSlider({ setAmount, balance }: { setAmount: (value: 
               transition={{ duration: 0.4 }}
               whileTap={{ scale: 0.3 }}
             >
-             <button  onClick={() => handleChipClick(chip.value)} disabled={balance < chip.value}>
+             <button  onClick={() => handleChipClick(chip.value)} disabled={roundedBalance < chip.value}>
               <motion.img
                 src={chip.url}
                 alt={`${chip.value} chips`}
-                className={ `w-[44px] ${balance < chip.value ? "opacity-30 cursor-not-allowed" : "opacity-100 cursor-pointer"} ${selectedChip === chip.value}`}
+                className={ `w-[44px] ${ roundedBalance < chip.value ? "opacity-30 cursor-not-allowed" : "opacity-100 cursor-pointer"} ${selectedChip === chip.value}`}
                 animate={{
                   scale: selectedChip === chip.value ? 1.2 : 0.9,
                   zIndex: selectedChip === chip.value ? 10 : 1,

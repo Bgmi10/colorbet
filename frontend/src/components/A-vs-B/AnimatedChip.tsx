@@ -37,26 +37,24 @@ const chipImages: Record<number, string> = {
 
 const AnimatedChip: React.FC<AnimatedChipProps> = ({ amount, chosenSide, onAnimationComplete }) => {
   const chipImage = React.useMemo(() => {
-    // Return the image based on the amount or a default value if not found
     return chipImages[amount] || chip10;
   }, [amount]);
 
-  const targetPosition = chosenSide === 'A' ? { x: -200, y: -100 } : { x: 200, y: -100 };
+  const targetPosition = chosenSide === 'A' ? { x: -600, y: 10 } : { x:-140, y: 20 };
 
   return (
     <motion.img
       src={chipImage}
       alt={`${amount} chip`}
-      initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
       animate={{ ...targetPosition, opacity: 1, scale: 1, zIndex: 20 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
       onAnimationComplete={onAnimationComplete}
-      style={{ 
-        position: 'fixed', 
+      initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+      style={{  
         bottom: '50%', 
         left: '50%', 
-        width: '50px', 
-        height: '50px',
+        width: '25px', 
+        height: '25px',
         zIndex: 20,
       }}
     />

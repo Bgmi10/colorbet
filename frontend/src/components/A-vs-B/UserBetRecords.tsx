@@ -178,7 +178,7 @@ export const UserBetRecords = () => {
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
                       <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">{record.gameId}</td>
-                      <td className="px-4 sm:px-6 py-4">{record.amount}</td>
+                      <td className="px-4 sm:px-6 py-4">{record.amount / 100}</td>
                       <td className="px-4 sm:px-6 py-4">
                         <img
                           src={record?.chosenSide === "A" ? "https://colorwiz.cyou/images/luckyhit_red_dot.png" : "https://colorwiz.cyou/images/luckyhit_black_dot.png"}
@@ -191,11 +191,11 @@ export const UserBetRecords = () => {
                           {record.result === "WIN" ? "Won" : "Lost"}
                         </span>
                       </td>
-                      <td className={`px-4 py-4 hidden sm:table-cell ${record.result === "WIN" ? "text-green-500 px-7" : "text-red-500 px-10"}`}>
-                        {record.result === "LOSE" ? <span>0</span> : <span>+{record.amount}</span>}
+                      <td className={`px-4 py-4 hidden sm:table-cell ${record.result === "WIN" ? "text-green-500 px-7" : "text-red-500 px-[40px]"}`}>
+                        {record.result === "LOSE" ? <span>0</span> : <span>+{record.amount / 100}</span>}
                       </td>
                       <td className={`py-4 hidden sm:table-cell ${record?.commission === 0 ? "text-green-500 px-16" : "text-red-500 px-14"}`}>
-                        {record?.commission === 0 ? <span>{record.commission}</span> : <span>-{record.commission}</span>}
+                        {record?.commission === 0 ? <span>{record.commission / 100}</span> : <span>-{record.commission / 100}</span>}
                       </td>
                       <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
                         {new Date(record.createdAt).toLocaleDateString('en-IN', {

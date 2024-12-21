@@ -91,13 +91,13 @@ export const resolveBets = async (gameId: number, winner: string) => {
       if (isWinner) {
         const winAmount = bet.amount * 2;
         const commission = calculateCommission(winAmount, bet.amount);
-        const netWinnings = winAmount - commission;
+        const netWinnings = (winAmount - commission);
 
         await tx.user.update({
           where: { id: bet.userId },
           data: { 
             balance: { 
-              increment: netWinnings 
+              increment: parseInt(netWinnings.toFixed(2)) 
             } 
           }
         });
