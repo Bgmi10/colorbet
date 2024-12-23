@@ -35,6 +35,7 @@ const GameComponent = () => {
   const [showAnimatedChip, setShowAnimatedChip] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   
+  
   useEffect(() => {
   
     ws.onopen = () => {

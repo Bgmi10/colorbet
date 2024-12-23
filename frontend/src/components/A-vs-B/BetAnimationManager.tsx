@@ -33,16 +33,16 @@ const chipImages = {
 
 const bettingAreas = {
   A: {
-    minX: -250,
+    minX: -180,
     maxX: -250,
     minY: -200,
-    maxY: 40,
+    maxY: -40,
   },
   B: {
-    minX: -190,
-    maxX: -90,
-    minY: -20,
-    maxY: 40,
+    minX: 180,
+    maxX: 250,
+    minY: -200,
+    maxY: -40,
   },
 };
 
@@ -73,7 +73,7 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
       const betId = Date.now();
       const position = getRandomPosition(newBet.bet.chosenSide);
 
-     // audio.play();
+     audio.play();
       
       setPositions(prev => ({
         ...prev,
