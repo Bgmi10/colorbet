@@ -11,6 +11,7 @@ import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
 import vsImg from "../../assets/vs.png";
 import ChipSlider from './ChipSlider';
+import BetAnimationManager from './BetAnimationManager';
 import AnimatedChip from './AnimatedChip';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
@@ -32,8 +33,8 @@ const GameComponent = () => {
   const [updatedBalance, setUpdatedBalance] = useState(0);
   const [betamount, setBetAmount] = useState(0);
   const [showAnimatedChip, setShowAnimatedChip] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
   
-
   useEffect(() => {
   
     ws.onopen = () => {
@@ -55,6 +56,7 @@ const GameComponent = () => {
           setIsbetting(true);
         }
         if (data?.type === "gameStarted") {
+          setGameEnded(false)
           setRevealCards(false);
         }
       }
@@ -74,10 +76,15 @@ const GameComponent = () => {
       }
 
       if(data?.type === "newBet"){
-        setBetAmount(data)
+        setBetAmount(data);
+
+        if(data?.bet?.totalAAmount === 0){
+          setShowAnimatedChip(false)
+        }
       }
 
       if(data?.type === "gameResult" || data?.type === "findgame"){
+        setGameEnded(true)
         setGamerecord(data?.findgame);
         if(data?.type === "gameResult"){
         setTimeout(() => {
@@ -173,13 +180,7 @@ const GameComponent = () => {
               </div>
             </div>
             <AnimatePresence>
-          {showAnimatedChip && (
-            <AnimatedChip
-              amount={amount}
-              chosenSide={chosenSide}
-              onAnimationComplete={handleAnimationCompelete}
-            />
-          )}
+          <BetAnimationManager newBet={betamount} gameEnded={gameEnded}/> 
         </AnimatePresence>
           </div>
       

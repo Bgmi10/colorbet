@@ -26,9 +26,6 @@ export const GameCard: React.FC<GameCardProps> = ({ frontImage, backImage, isRev
     <div className="relative h-72 perspective-1000 w-52">
     
       <AnimatePresence initial={false}>
-        <div className='absolute z-20 ml-[-47px]'>
-      {<Lottie options={config} height={300} width={200} />}
-      </div>
         <motion.div
           key={isFlipped ? 'front' : 'back'}
           initial={{ rotateY: isFlipped ? -180 : 0, opacity: 0 }}

@@ -225,6 +225,14 @@ const startGame = async () => {
 
   totalAAmount = 0;
   totalBAmount = 0;
+
+  broadcast({
+    type: "newBet",
+    bet: {
+      totalAAmount,
+      totalBAmount
+    }
+  })
 };
 
 // Start the game phase
