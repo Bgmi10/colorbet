@@ -22,6 +22,8 @@ import Avatar8 from "../assets/change_head/Avatar8.png";
 import Avatar9 from "../assets/change_head/Avatar9.png";
 import Avatar10 from "../assets/change_head/Avatar10.png";
 import Avatar11 from "../assets/change_head/Avatar11.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 
 export const baseurl = 'http://localhost:3005'
 
@@ -130,3 +132,118 @@ export const chips = [
     Avatar10,
     Avatar11
   ];
+
+
+ export const ProfileSetttingsData = [
+    {
+        id: 1,
+        icon: <FontAwesomeIcon icon={faHeadset} className="text-2xl"/>,
+        title: "Support & Contact",
+        link: "/support-chat"  
+    },
+    {
+        id: 2,
+        icon: <FontAwesomeIcon icon={faGift} className="text-2xl"/>,
+        link: "/referals",
+        title: "Promotion",
+    },
+    {
+        id: 3,
+        icon: <FontAwesomeIcon icon={faWallet} className="text-2xl"/>,
+        title: "Chip Bank",
+        options: [
+            {
+                id: "1",
+                icon: <FontAwesomeIcon icon={faThunderstorm} className="text-2xl"/>,
+                title: "Recharge",
+                link: "/recharge-chip",
+            },
+            {
+                id: "2",
+                title: "Withdrawal",
+                link: "/withdrawal-chip",
+                icon: <FontAwesomeIcon icon={faCoins} className="text-2xl"/>
+            },
+            {
+                id: "3",
+                title: "Transaction history",
+                link: "/transaction-history",
+                icon: <FontAwesomeIcon icon={faExchangeAlt} className="text-2xl"/>
+            }
+        ]
+    },
+    {
+        id: 4,
+        icon: <FontAwesomeIcon icon={faCreditCard} className="text-2xl"/>,
+        title: "Bank Accounts",
+        link: "/bank-account",
+    },
+    {
+        id: 5,
+        icon: <FontAwesomeIcon icon={faShield} className="text-2xl" />, 
+        title: "Account & Security",
+        options: [
+            {
+                id: "1",
+                title: "Reset Password",
+                icon: <FontAwesomeIcon icon={faUndoAlt} className="text-2xl" />,
+                link: "/reset-password"
+            },
+            {
+                id: "2",
+                title: "Two-Factor Authentication",
+                icon: <FontAwesomeIcon icon={faLockOpen} className="text-2xl" />, 
+                link: "/two-factor-authentication"
+            },
+            {
+                id: "3",
+                title: "Login Activity",
+                icon: <FontAwesomeIcon icon={faHistory} className="text-2xl" />,
+                link: "/login-activity"
+            },
+            {
+                id: "4",
+                title: "Manage Devices",
+                icon: <FontAwesomeIcon icon={faMobileAlt} className="text-2xl" />,
+                link: "/manage-devices"
+            },
+            {
+                id: "5",
+                title: "Update Email",
+                icon: <FontAwesomeIcon icon={faEnvelope} className="text-2xl" />,
+                link: "/update-email"
+            },
+            {
+                id: "6",
+                title: "Close Account",
+                icon: <FontAwesomeIcon icon={faTimesCircle} className="text-2xl" />,
+                link: "/close-account"
+            }
+        ],
+    },
+    {
+        id: 6,
+        icon: <FontAwesomeIcon icon={faMailBulk} className="text-2xl"/>,
+        title: "Report & Feedbacks",
+        link: "/report",
+    },
+    {
+        id: 7,
+        icon: <FontAwesomeIcon icon={faInfoCircle} className="text-2xl" />,
+        title: "Policy & Guidelines",
+        options: [
+          {
+            id: "1",
+            title: "Privacy Policy",
+            icon: <FontAwesomeIcon icon={faUserSecret} className="text-2xl" />,
+            link: "/privacy-policy"
+          },
+          {
+            id: "2",
+            title: "Risk Disclosure Agreement",
+            icon: <FontAwesomeIcon icon={faExclamationTriangle} className="text-2xl" />,
+            link: "/risk-disclosure"
+          }
+        ],
+    }
+];

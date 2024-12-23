@@ -14,7 +14,7 @@ import chip50k from "../../assets/chips/50000_0.png";
 import chip100k from "../../assets/chips/100000_0.png";
 import chaalSound from "../../assets/chaal.mp3"
 
-// todo: align the chips in to certian path inside a card and also on refresh state should persist && include a chip sound when happen to give a better control for user like a mute/sound 
+// todo: here optimize the performance later on 
 
 const chipImages = {
   10: chip10,
@@ -121,7 +121,7 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
                 opacity: 1,
                 x: position.x,
                 y: position.y,
-                rotate: Math.random() * 360, // Random rotation for more natural look
+                rotate: Math.random() * 360, 
               } : {
                 scale: 1,
                 opacity: 1,
