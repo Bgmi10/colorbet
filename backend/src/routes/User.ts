@@ -13,7 +13,7 @@ User.get('/userprofile', Authmiddleware, async(req: express.Request, res: expres
             where: { email }
         });
 
-        res.status(200).json({ id: user?.id, email: user?.email, balance: user?.balance, memberId: user?.memberId});
+        res.status(200).json({ id: user?.id, email: user?.email, userName: user?.userName, balance: user?.balance, memberId: user?.memberId});
     }
     catch(e){
         console.log(e);

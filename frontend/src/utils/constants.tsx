@@ -10,6 +10,18 @@ import chip10k from "../assets/chips/10000_0.png";
 import chip20k from "../assets/chips/20000_0.png";
 import chip50k from "../assets/chips/50000_0.png";
 import chip100k from "../assets/chips/100000_0.png";
+import Avatar0 from "../assets/change_head/Avatar0.png";
+import Avatar1 from "../assets/change_head/Avatar1.png";
+import Avatar2 from "../assets/change_head/Avatar2.png";
+import Avatar3 from "../assets/change_head/Avatar3.png";
+import Avatar4 from "../assets/change_head/Avatar4.png";
+import Avatar5 from "../assets/change_head/Avatar5.png";
+import Avatar6 from "../assets/change_head/Avatar6.png";
+import Avatar7 from "../assets/change_head/Avatar7.png";
+import Avatar8 from "../assets/change_head/Avatar8.png";
+import Avatar9 from "../assets/change_head/Avatar9.png";
+import Avatar10 from "../assets/change_head/Avatar10.png";
+import Avatar11 from "../assets/change_head/Avatar11.png";
 
 export const baseurl = 'http://localhost:3005'
 
@@ -102,3 +114,19 @@ export const chips = [
       value: 100000
     }
   ]
+
+
+ export const profileAvatar = [
+    Avatar0,
+    Avatar1,
+    Avatar2,
+    Avatar3,
+    Avatar4,
+    Avatar5,
+    Avatar6,
+    Avatar7,
+    Avatar8,
+    Avatar9,
+    Avatar10,
+    Avatar11
+  ];

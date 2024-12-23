@@ -12,7 +12,6 @@ import { AuthContext } from '../../context/AuthContext';
 import vsImg from "../../assets/vs.png";
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
-import AnimatedChip from './AnimatedChip';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
 const ws = new WebSocket(`ws://localhost:5050?token=${token}`);
@@ -161,6 +160,7 @@ const GameComponent = () => {
                   backImage={pockerbackimageurl}
                   isWinner={game?.gameState?.winner === 'A'}
                   isRevealed={revealCards}
+                  outlineShade={"rgba(252, 78, 65, 0.9)"}
                 />
                 {betamount?.bet?.totalAAmount / 100 | 0 }
             </div>
@@ -176,6 +176,7 @@ const GameComponent = () => {
                  backImage={pockerbackimageurl}
                  isWinner={game?.gameState?.winner === 'B'}
                  isRevealed={revealCards}
+                 outlineShade="rgba(96, 165, 250, 0.9)"
                />
                 {betamount?.bet?.totalBAmount / 100 | 0} 
               </div>
