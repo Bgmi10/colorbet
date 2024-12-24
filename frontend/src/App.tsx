@@ -9,6 +9,7 @@ import OtpForgetVerify from "./components/auth/OtpForgetVerify";
 import AppBar from "./components/AppBar";
 import Profile from "./components/profile/Profile";
 import ProtectOtpPage from "./components/auth/ProtectOtpPage";
+import RechargeChip from "./components/RechargeChip";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
           <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
          </Route>
+         <Route element={ <RechargeChip /> } path="/recharge-chip" />
          <Route element={ <Profile /> } path="/profile" />
         </Routes>
         <AppBar />

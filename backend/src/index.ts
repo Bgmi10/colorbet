@@ -11,6 +11,7 @@ import User from './routes/User';
 import jwt from "jsonwebtoken";
 import GameUserBetRecord from './games/A-vs-B/GameUserBetRecord';
 import Authmiddleware from './middlewares/Authmiddleware';
+import paymentRouter from './routes/paymentRoute';
 
 const app = express();
 const port = 3005;
@@ -44,8 +45,9 @@ let isBettingOpen = true;
 let currentGameId: number | null = null;
 
 app.use('/api/auth', limiter, AuthRouter);
-app.use('/api/auth', limiter,Authmiddleware, User);
+app.use('/api/auth', limiter, Authmiddleware, User);
 app.use('/api/game', limiter, GameUserBetRecord);
+app.use('/api', limiter, paymentRouter);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {

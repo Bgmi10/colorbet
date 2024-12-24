@@ -1,7 +1,7 @@
 //<reference types="vite/client" />
 
 interface ImportMetaEnv {
-    VITE_APP_SECRET_KEY: string
+  VITE_APP_RAZORPAY_KEY_ID: string
     // more env variables...
   }
   
