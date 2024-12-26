@@ -7,7 +7,9 @@ const razorpayInstance = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET as string
 });
 
-console.log(razorpayInstance);
+
+
+console.log(process.env.RAZORPAY_KEY_SECRET);
 
 export const createOrder = async (amount: number, currency: string = "INR") => {
        const options = {

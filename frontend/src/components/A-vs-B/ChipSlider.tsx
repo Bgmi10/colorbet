@@ -40,11 +40,9 @@ export default function ChipSlider({ setAmount, balance }: { setAmount: (value: 
               <motion.img
                 src={chip.url}
                 alt={`${chip.value} chips`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 className={ `w-[44px] ${ roundedBalance < chip.value ? "opacity-30 cursor-not-allowed" : "opacity-100 cursor-pointer"} ${selectedChip === chip.value}`}
-                animate={{
-                  scale: selectedChip === chip.value ? 1.2 : 0.9,
-                  zIndex: selectedChip === chip.value ? 10 : 1,
-                }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               />
               </button>
