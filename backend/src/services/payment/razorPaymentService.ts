@@ -1,15 +1,11 @@
 import Razorpay from "razorpay";
-import { prisma } from "../../prisma/prisma";
+import { prisma } from "../../../prisma/prisma";
 
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID as string,
     key_secret: process.env.RAZORPAY_KEY_SECRET as string
 });
-
-
-
-console.log(process.env.RAZORPAY_KEY_SECRET);
 
 export const createOrder = async (amount: number, currency: string = "INR") => {
        const options = {

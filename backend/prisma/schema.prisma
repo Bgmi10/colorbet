@@ -16,6 +16,7 @@ model User {
   password    String   
   memberId    String   @unique
   avatarUrl   String   
+  payment     payment[]
 }
 
 model Game {
@@ -60,4 +61,16 @@ enum Betresult {
   PENDING
   WIN
   LOSE
+}
+
+
+model payment {
+  id          Int     @id @default(autoincrement())
+  upiRef      String  @unique
+  email       String  @unique
+  amount      Int
+  status      String
+  createdAt   DateTime  @default(now())
+  user        User    @relation(fields: [email], references: [email])
+
 }

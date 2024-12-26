@@ -10,6 +10,7 @@ import AppBar from "./components/AppBar";
 import Profile from "./components/profile/Profile";
 import ProtectOtpPage from "./components/auth/ProtectOtpPage";
 import RechargeChip from "./components/RechargeChip";
+import ImpsService from "./components/paymentService/ImpsService";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
          </Route>
          <Route element={ <RechargeChip /> } path="/recharge-chip" />
          <Route element={ <Profile /> } path="/profile" />
+         <Route element={ <ImpsService /> } path="/payment-imps" />
         </Routes>
         <AppBar />
        </Router>

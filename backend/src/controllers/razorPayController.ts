@@ -1,4 +1,4 @@
-    import { createOrder, updateUserBalance } from "../services/paymentservice";
+    import { createOrder, updateUserBalance } from "../services/payment/razorPaymentService";
     import express from "express";
 
     export const initiatePayment = async (req: express.Request, res: express.Response) => {

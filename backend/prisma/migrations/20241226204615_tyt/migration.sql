@@ -55,6 +55,18 @@ CREATE TABLE "Otp" (
     CONSTRAINT "Otp_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "payment" (
+    "id" SERIAL NOT NULL,
+    "upiRef" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "status" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "payment_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -64,8 +76,17 @@ CREATE UNIQUE INDEX "User_memberId_key" ON "User"("memberId");
 -- CreateIndex
 CREATE UNIQUE INDEX "Otp_email_key" ON "Otp"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "payment_upiRef_key" ON "payment"("upiRef");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "payment_email_key" ON "payment"("email");
+
 -- AddForeignKey
 ALTER TABLE "Bet" ADD CONSTRAINT "Bet_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Bet" ADD CONSTRAINT "Bet_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payment" ADD CONSTRAINT "payment_email_fkey" FOREIGN KEY ("email") REFERENCES "User"("email") ON DELETE RESTRICT ON UPDATE CASCADE;

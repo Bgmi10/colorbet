@@ -11,8 +11,8 @@ import User from './routes/User';
 import jwt from "jsonwebtoken";
 import GameUserBetRecord from './games/A-vs-B/GameUserBetRecord';
 import Authmiddleware from './middlewares/Authmiddleware';
-import paymentRouter from './routes/paymentRoute';
-import iftttRouter from './routes/iftttRouter';
+import razorPayment from './routes/razorPayment';
+import impsRouter from './routes/imps';
 
 const app = express();
 const port = 3005;
@@ -48,8 +48,8 @@ let currentGameId: number | null = null;
 app.use('/api/auth', limiter, AuthRouter);
 app.use('/api/auth', limiter, Authmiddleware, User);
 app.use('/api/game', limiter, GameUserBetRecord);
-app.use('/api', limiter, paymentRouter);
-app.use('/api', limiter, iftttRouter);
+app.use('/api/payment', limiter, razorPayment);
+app.use('/api/payment', limiter, Authmiddleware, impsRouter);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {

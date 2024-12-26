@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faWallet, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { faArrowLeft, faWallet, faCheck, faBank } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { baseurl, chips } from "../utils/constants";
 import axios from "axios";
@@ -11,7 +11,8 @@ export default function RechargeChip() {
     // @ts-ignore
     const { user, setUser } = useContext(AuthContext);
     const [amount, setAmount] = useState(10);
-    const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
+    const [selectedPaymentMode, setSelectedPaymentMode] = useState(""); 
+    const navigate = useNavigate();
 
     const RazorpayLogo = () => (    
         <svg fill="#fff" height="30" viewBox=".8 .48 1894.74 400.27" width="100" xmlns="http://www.w3.org/2000/svg">
@@ -23,19 +24,27 @@ export default function RechargeChip() {
     const paymentMethods = [
         {
             id: "1",
-            name: "Razor pay",
             logo: RazorpayLogo
+        },
+        {
+            id: "2",
+            name: "Imps Transfer",
+            logo: ()=> <FontAwesomeIcon icon={faBank} className='text-xl text-gray-400' />,
+            link: "/payment-imps"
         }
     ];
-
     const handleInitiatePayment = async () => {
 
         if(!selectedPaymentMode){
             return;
+        }
 
+        if(selectedPaymentMode === "2"){
+            navigate(`/payment-imps?amount=${amount}`);
+            return;
         }
         try {
-            const orderResult = await axios.post(baseurl + "/api/payment", { amount: amount * 100, memberId: user?.memberId }, { withCredentials: true });
+            const orderResult = await axios.post(`${baseurl}/api/payment/razorpay`, { amount: amount * 100, memberId: user?.memberId }, { withCredentials: true });
         
             const { order } = orderResult.data;
         
@@ -56,7 +65,7 @@ export default function RechargeChip() {
                     };
             
                     const successResponse = await axios.post(
-                        baseurl + "/api/payment/success",
+                        `${baseurl}/api/payment/razorpay/success`,
                         paymentData,
                         { withCredentials: true }
                     );
@@ -159,11 +168,17 @@ export default function RechargeChip() {
                             key={method.id}
                             className="dark:bg-gray-800 bg-gray-600  p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-700 transition-colors"
                             onClick={() => setSelectedPaymentMode(method.id)}
-                        >
-                            <div>{method.logo()}</div>
-                            {selectedPaymentMode === method.id && (
-                                <FontAwesomeIcon icon={faCheck} className="text-yellow-500" />
-                            )}
+                        >  
+                            
+                            <div className='flex gap-2 items-center'>
+                                <span>{method.logo()}</span>
+                                <span className='text-lg font-normal'>{method.name}</span>
+                            </div>
+                            <div>
+                                {selectedPaymentMode === method.id && (
+                                    <FontAwesomeIcon icon={faCheck} className="text-yellow-500" />
+                                )}
+                            </div>
                         </div>
                     ))}
                 </motion.div>
