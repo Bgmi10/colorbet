@@ -1,35 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import chip10 from "../../assets/chips/10_0.png";
-import chip20 from "../../assets/chips/20_0.png";
-import chip50 from "../../assets/chips/50_0.png";
-import chip100 from "../../assets/chips/100_0.png";
-import chip200 from "../../assets/chips/200_0.png";
-import chip500 from "../../assets/chips/500_0.png";
-import chip1k from "../../assets/chips/1000_0.png";
-import chip5k from "../../assets/chips/5000_0.png";
-import chip10k from "../../assets/chips/10000_0.png";
-import chip20k from "../../assets/chips/20000_0.png";
-import chip50k from "../../assets/chips/50000_0.png";
-import chip100k from "../../assets/chips/100000_0.png";
-import chaalSound from "../../assets/chaal.mp3"
+import chaalSound from "../../../public/assets/chaal.mp3";
+import { chips } from '../../utils/constants';
 
-// todo: here optimize the performance later on 
+const chipImages = chips.reduce((acc: any, chip) => {
+  acc[chip.value] = chip.url;
+  return acc;
+}, {});
 
-const chipImages = {
-  10: chip10,
-  20: chip20,
-  50: chip50,
-  100: chip100,
-  200: chip200,
-  500: chip500,
-  1000: chip1k,
-  5000: chip5k,
-  10000: chip10k,
-  20000: chip20k,
-  50000: chip50k,
-  100000: chip100k,
-};
 
 const bettingAreas = {
   A: {

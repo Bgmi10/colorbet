@@ -18,7 +18,7 @@ export const GameRecord: React.FC<GameRecordProps> = ({ data }) => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-800 rounded-lg mt-3 justify-center items-center flex p-1 border border-yellow-500/30"
+      className="dark:bg-gray-800 rounded-lg mt-3 justify-center items-center flex p-1 border border-yellow-500/30"
     >
       <div className="flex flex-wrap gap-1">
         {data.map((game) => (

@@ -41,12 +41,12 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 px-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-md w-full"
+        className="dark:bg-gray-800  bg-slate-100 p-8 rounded-xl shadow-lg max-w-md w-full"
       >
         <h2 className="text-3xl font-semibold text-yellow-500 text-center">
           Create an Account
@@ -62,7 +62,7 @@ export default function SignIn() {
               value={form.name}
               onChange={handleChange}
               placeholder="Name"
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               required
             />
           </div>
@@ -74,7 +74,7 @@ export default function SignIn() {
               value={form.email}
               onChange={handleChange}
               placeholder="Email"
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               required
             />
           </div>
@@ -86,7 +86,7 @@ export default function SignIn() {
               value={form.password}
               onChange={handleChange}
               placeholder="Password"
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               required
             />
           </div>

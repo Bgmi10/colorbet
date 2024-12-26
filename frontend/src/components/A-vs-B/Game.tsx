@@ -9,7 +9,7 @@ import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
-import vsImg from "../../assets/vs.png";
+import vsImg from "../../../public/assets/vs.png";
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
 
@@ -134,21 +134,8 @@ const GameComponent = () => {
     setBetplaced(true);
   }
 
-  const handleLogout = async () => {
-    try {
-      const res = await axios.post(`${baseurl}/api/auth/logout`, {}, { withCredentials: true });
-      if (res.status === 200) {
-        navigate("/login")
-      }
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
   return (
-    <div className=" bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-      <button onClick={handleLogout}>Logout</button>
-      <span>{betplaced && "bet placed success"}</span>
+    <div className=" bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 text-white">
       <div className='flex justify-end right-0 absolute mt-10 mr-10'>Available balance: ₹ {updatedBalance || updatedBalance === 0 && user?.balance/100}</div>
          <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
          
@@ -190,7 +177,7 @@ const GameComponent = () => {
               className="text-xl font-bold justify-center flex gap-2"
               key={timer}
             >
-             <span className='text-md font-serif'>Next Round Starts In </span>
+             <span className='text-md text-gray-700 dark:text-white font-serif'>Next Round Starts In </span>
              <motion.span 
               initial={{ scale:1.2 , opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -209,12 +196,12 @@ const GameComponent = () => {
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder="Bet Amount"
-              className="w-full md:w-auto bg-gray-700 text-white border border-yellow-500/50 rounded-lg outline-none p-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className="w-full md:w-auto dark:bg-gray-700 dark:text-white text-gray-700 border border-yellow-500/50 rounded-lg outline-none p-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             />
             <select
               value={chosenSide}
               onChange={(e) => setChosenSide(e.target.value)}
-              className="w-full md:w-auto bg-gray-700 text-white border outline-none border-yellow-500/50 rounded-lg p-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent font-serif"
+              className="w-full md:w-auto dark:bg-gray-700 dark:text-white text-gray-700 border outline-none border-yellow-500/50 rounded-lg p-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent font-serif"
               disabled={!isbetting}
             >
               <option value="A">Red</option>
@@ -225,7 +212,7 @@ const GameComponent = () => {
               className={`w-full md:w-auto px-5 py-2 rounded-lg font-serif flex justify-center items-center gap-2 transition duration-300 ${
                 isbetting
                   ? 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'dark:bg-gray-600 bg-slate-200 text-gray-400 cursor-not-allowed'
               }`} 
               disabled={!isbetting}
             >

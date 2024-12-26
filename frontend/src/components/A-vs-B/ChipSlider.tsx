@@ -51,14 +51,14 @@ export default function ChipSlider({ setAmount, balance }: { setAmount: (value: 
         </AnimatePresence>
         <motion.button
           onClick={() => setShowAll(!showAll)}
-          className="ml-2 p-2 mt-[-7px] bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
+          className="ml-2 p-2 mt-[-7px] dark:bg-gray-700 dark:border-none border border-gray-300 rounded-full dark:hover:bg-gray-600 transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
           {showAll ? (
-            <ChevronLeft className="w-5 h-5 text-white" />
+            <ChevronLeft className="w-5 h-5 dark:text-white text-gray-700" />
           ) : (
-            <ChevronRight className="w-5 h-5  text-white" />
+            <ChevronRight className="w-5 h-5  dark:text-white text-gray-700" />
           )}
         </motion.button>
       </div>

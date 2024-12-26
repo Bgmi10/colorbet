@@ -1,27 +1,27 @@
-import chip10 from "../assets/chips/10_0.png";
-import chip20 from "../assets/chips/20_0.png";
-import chip50 from "../assets/chips/50_0.png";
-import chip100 from "../assets/chips/100_0.png";
-import chip200 from "../assets/chips/200_0.png";
-import chip500 from "../assets/chips/500_0.png";
-import chip1k from "../assets/chips/1000_0.png";
-import chip5k from "../assets/chips/5000_0.png";
-import chip10k from "../assets/chips/10000_0.png";
-import chip20k from "../assets/chips/20000_0.png";
-import chip50k from "../assets/chips/50000_0.png";
-import chip100k from "../assets/chips/100000_0.png";
-import Avatar0 from "../assets/change_head/Avatar0.png";
-import Avatar1 from "../assets/change_head/Avatar1.png";
-import Avatar2 from "../assets/change_head/Avatar2.png";
-import Avatar3 from "../assets/change_head/Avatar3.png";
-import Avatar4 from "../assets/change_head/Avatar4.png";
-import Avatar5 from "../assets/change_head/Avatar5.png";
-import Avatar6 from "../assets/change_head/Avatar6.png";
-import Avatar7 from "../assets/change_head/Avatar7.png";
-import Avatar8 from "../assets/change_head/Avatar8.png";
-import Avatar9 from "../assets/change_head/Avatar9.png";
-import Avatar10 from "../assets/change_head/Avatar10.png";
-import Avatar11 from "../assets/change_head/Avatar11.png";
+import chip10 from "../../public/assets/chips/10_0.png";
+import chip20 from "../../public/assets/chips/20_0.png";
+import chip50 from "../../public/assets/chips/50_0.png";
+import chip100 from "../../public/assets/chips/100_0.png";
+import chip200 from "../../public/assets/chips/200_0.png";
+import chip500 from "../../public/assets/chips/500_0.png";
+import chip1k from "../../public/assets/chips/1000_0.png";
+import chip5k from "../../public/assets/chips/5000_0.png";
+import chip10k from "../../public/assets/chips/10000_0.png";
+import chip20k from "../../public/assets/chips/20000_0.png";
+import chip50k from "../../public/assets/chips/50000_0.png";
+import chip100k from "../../public/assets/chips/100000_0.png";
+import Avatar0 from "../../public/assets/change_head/Avatar0.png";
+import Avatar1 from "../../public/assets/change_head/Avatar1.png";
+import Avatar2 from "../../public/assets/change_head/Avatar2.png";
+import Avatar3 from "../../public/assets/change_head/Avatar3.png";
+import Avatar4 from "../../public/assets/change_head/Avatar4.png";
+import Avatar5 from "../../public/assets/change_head/Avatar5.png";
+import Avatar6 from "../../public/assets/change_head/Avatar6.png";
+import Avatar7 from "../../public/assets/change_head/Avatar7.png";
+import Avatar8 from "../../public/assets/change_head/Avatar8.png";
+import Avatar9 from "../../public/assets/change_head/Avatar9.png";
+import Avatar10 from "../../public/assets/change_head/Avatar10.png";
+import Avatar11 from "../../public/assets/change_head/Avatar11.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 
@@ -116,6 +116,7 @@ export const chips = [
       value: 100000
     }
   ]
+  
 
 
  export const profileAvatar = [

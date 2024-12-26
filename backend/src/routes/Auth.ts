@@ -65,7 +65,8 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
               memberId,
               password: hashedpassword,
               email,
-              balance: 0.00
+              balance: 0.00,
+              avatarUrl: ""
             }
         });
         await prisma.otp.delete({

@@ -56,12 +56,12 @@ export default function Login() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
       <motion.div 
        initial = {{ opacity : 0, y: -20}}
        animate = {{opacity : 10, y : 0 }}
        transition = {{ duration : 0.5 }}
-       className="bg-gray-800 m-20 rounded-xl w-full max-w-md p-10"
+       className="dark:bg-gray-800 bg-slate-100 m-20 rounded-xl w-full max-w-md p-10"
       >
         <h1 id="login-heading" className="text-3xl font-semibold text-yellow-500 text-center">Welcome to Colorwiz</h1>
         <p className="text-gray-300 text-center mt-2">Please log in to continue</p>
@@ -76,7 +76,7 @@ export default function Login() {
               name="email"
               placeholder="Email"
               onChange={handlechange}
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100  dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="Email"
               required
             />
@@ -89,7 +89,7 @@ export default function Login() {
               name="password"
               placeholder="Password"
               onChange={handlechange}
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="Password"
               required
             />

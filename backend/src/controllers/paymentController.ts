@@ -22,7 +22,7 @@
 
         try{
             const updateUser = await updateUserBalance(memberId, amount);
-            res.status(200).json({  sucess: true, updateUser });
+            res.status(200).json({  success: true, updateUser });
         }
         catch(e: any){
             res.status(500).json({ success: false, message: e.message });

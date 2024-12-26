@@ -169,8 +169,8 @@ export default function OtpSigninverify() {
   }, [error, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 px-4">
+      <div className="dark:bg-gray-800 bg-slate-100 p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-semibold text-yellow-500 text-center mb-6">
           Verify your OTP
         </h2>
@@ -185,7 +185,7 @@ export default function OtpSigninverify() {
               value={digit}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className="w-12 h-12 text-center text-2xl bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-12 h-12 text-center text-2xl dark:bg-gray-700 dark:text-white bg-gray-100 text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label={`Digit ${index + 1}`}
               disabled={!canEnterOtp}
             />

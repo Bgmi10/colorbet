@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function RechargeChip() {
     // @ts-ignore
-    const { user } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
     const [amount, setAmount] = useState(10);
     const [selectedPaymentMode, setSelectedPaymentMode] = useState("");
 
@@ -60,17 +60,19 @@ export default function RechargeChip() {
                         paymentData,
                         { withCredentials: true }
                     );
-            
-                    if (successResponse.data.success) {
-                        alert("Payment successful!");
-                    } else {
-                        alert("Payment failed!");
+ 
+                    if(successResponse.data.success){
+                        window.alert('payment success');
+                        setUser((prev: any) => ({...prev, balance: prev.balance + paymentData.amount}) )
+                    } 
+                    else{
+                        window.alert('payment failed try again..')
                     }
                 },
                 prefill: {
                     name: user?.userName,
                     email: user?.email,
-                    contact: "9999999999",
+                    contact: "7845442450",
                 },
                 theme: {
                     color: "#FFD700",
@@ -86,8 +88,8 @@ export default function RechargeChip() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white mb-14">
-            <header className="bg-gray-800 p-4 flex items-center justify-between">
+        <div className="min-h-screen dark:bg-gray-900 text-white mb-14">
+            <header className="dark:bg-gray-800 p-4 flex items-center justify-between">
                 <Link to="/profile" className="text-yellow-500 hover:text-yellow-600 transition-colors">
                     <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
                 </Link>
@@ -100,10 +102,10 @@ export default function RechargeChip() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-gray-800 rounded-lg p-6 mb-8"
+                    className="dark:bg-gray-800 bg-slate-100 rounded-lg p-6 mb-8"
                 >
-                    <h2 className="text-lg font-semibold mb-2">Available Balance</h2>
-                    <p className="text-2xl font-bold text-yellow-500">₹ {(user?.balance / 100).toFixed(2)}</p>
+                    <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-white">Available Balance</h2>
+                    <p className="text-2xl font-bold dark:text-white text-gray-700">₹ {(user?.balance / 100).toFixed(2)}</p>
                 </motion.div>
 
                 <motion.div 
@@ -118,7 +120,7 @@ export default function RechargeChip() {
                         <input 
                             type="number" 
                             id="amount"
-                            className="bg-gray-800 w-full p-3 pl-10 rounded-md border border-gray-700 text-white focus:outline-none focus:border-yellow-500"
+                            className="dark:bg-gray-800 w-full p-3 pl-10 rounded-md border dark:border-gray-700 dark:text-white text-gray-700 focus:outline-none focus:border-yellow-500"
                             value={amount}
                             placeholder="Enter amount"
                         />
@@ -136,7 +138,7 @@ export default function RechargeChip() {
                         {chips.map((chip) => (
                             <button
                                 key={chip.id}
-                                className={`p-2 rounded-md transition-colors ${amount === chip.value ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
+                                className={`p-2 rounded-md transition-colors ${amount === chip.value ? 'bg-yellow-500 dark:text-gray-900' : 'dark:bg-gray-800 bg-slate-100 dark:text-white text-gray-700 dark:hover:bg-gray-700 hover:bg-gray-200'}`}
                                 onClick={() => setAmount(chip.value)}
                             >
                                 ₹ {chip.value}
@@ -151,11 +153,11 @@ export default function RechargeChip() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="mb-8"
                 >
-                    <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
+                    <h3 className="text-lg font-semibold mb-4 dark:text-white text-gray-700">Payment Method</h3>
                     {paymentMethods.map((method) => (
                         <div 
                             key={method.id}
-                            className="bg-gray-800 p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-700 transition-colors"
+                            className="dark:bg-gray-800 bg-gray-600  p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-700 transition-colors"
                             onClick={() => setSelectedPaymentMode(method.id)}
                         >
                             <div>{method.logo()}</div>

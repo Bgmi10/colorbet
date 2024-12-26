@@ -53,12 +53,12 @@ export default function ForgetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-800 m-4 rounded-xl w-full max-w-md p-8"
+        className="dark:bg-gray-800 bg-slate-100 m-4 rounded-xl w-full max-w-md p-8"
       >
         <h1 id="forget-password-heading" className="text-3xl font-semibold text-yellow-500 text-center">Reset Password</h1>
         <p className="text-gray-300 text-center mt-2">Enter your email and new password</p>
@@ -74,7 +74,7 @@ export default function ForgetPassword() {
               placeholder="Email"
               value={form?.email}
               onChange={handleChange}
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="Email"
               required
             />
@@ -88,7 +88,7 @@ export default function ForgetPassword() {
               placeholder="New Password"
               value={form?.newpassword}
               onChange={handleChange}
-              className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-full p-3 dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label="New Password"
               required
             />

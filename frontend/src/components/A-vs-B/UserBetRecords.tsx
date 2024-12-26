@@ -103,7 +103,7 @@ export const UserBetRecords = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-800 rounded-xl p-2 sm:p-6 mt-4 mb-40 border border-yellow-500/30 shadow-lg"
+      className="dark:bg-gray-800 bg-slate-100 rounded-xl p-2 sm:p-6 mt-4 mb-40 border border-yellow-500/30 shadow-lg"
     >
       <h2 className="text-2xl font-bold text-yellow-500 mb-4">Your Recent Bets</h2>
       {error && (
@@ -130,13 +130,13 @@ export const UserBetRecords = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className='text-xs font-normal absolute bg-slate-900 rounded-md p-2 right-8 mt-[-50px] border border-gray-500 z-10'
+                    className='text-xs font-normal absolute dark:bg-slate-900 bg-gray-400 text-white rounded-md p-2 right-8 mt-[-50px] border border-gray-500 z-10'
                   >
                     0.02% commission is applied on winnings; 0% commission on losses.
                   </motion.div>
                 )}
               </AnimatePresence>
-              <thead className="text-xs uppercase bg-gray-700">
+              <thead className="text-xs dark:text-black text-gray-700 uppercase dark:bg-gray-700 bg-slate-200">
                 <tr>
                   <th scope="col" className="px-4 sm:px-6 py-3 hidden sm:table-cell">Game ID</th>
                    <th scope="col" className="px-4 sm:px-6 py-3 ">Bet Amount</th>
@@ -172,7 +172,7 @@ export const UserBetRecords = () => {
                   records?.bets?.map((record: BetRecord, index: number) => (
                     <motion.tr
                       key={record.id}
-                      className="bg-gray-800 border-b border-gray-700 last:border-b-0"
+                      className="dark:bg-gray-800 border-b dark:text-white text-gray-700 dark:border-gray-700 last:border-b-0"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -228,8 +228,7 @@ export const UserBetRecords = () => {
             </span>
             <div className='flex gap-3'>
               <Button
-                variant='contained'
-                style={{ backgroundColor: "#0f172a" }}
+                variant='outlined'
                 onClick={handlePrev}
                 disabled={page === 1 || isLoading}
               >
@@ -237,7 +236,6 @@ export const UserBetRecords = () => {
               </Button>
               <Button
                 variant='contained'
-                style={{ backgroundColor: "#0f172a" }}
                 onClick={handleNext}
                 disabled={page === records?.totalPages || isLoading}
               >

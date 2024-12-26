@@ -48,7 +48,7 @@ export default function AppBar() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 shadow-lg border-t-2 border-yellow-500"
+      className="fixed bottom-0 left-0 right-0 dark:bg-gray-900 bg-white p-2 shadow-lg border-t-2 border-yellow-500"
     >
       <div className="sm:mx-10 flex justify-between">
         {data.map((item) => (
@@ -60,7 +60,7 @@ export default function AppBar() {
             onMouseLeave={() => setHoveredId(null)}
           >
             <motion.button
-              className="focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-full p-3 bg-gray-800 relative z-10"
+              className="focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-full p-3 dark:bg-gray-800 bg-slate-200 relative z-10"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -4,22 +4,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import vip1Frame from "../../assets/headFrame/vip1.png";
+import vip1Frame from "../../../public/assets/headFrame/vip1.png";
 import { baseurl, profileAvatar } from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
 import { ProfileSetttingsData } from "../../utils/constants"
 import TopNavDropdown from './TopNavDropdown';
 import axios from 'axios';
+import { ThemeContext } from '../../context/ThemeContext';
 
 export default function Profile() {
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
+    console.log(user)
     const [selectedAvatar, setSelectedAvatar] = useState(profileAvatar[0]);
     const [openMenus, setOpenMenus] = useState<number[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isEditUserName, setIsEditName] = useState(false);
     const [userName, setUserName] = useState("");
     const [isLoad, setIsLoad] = useState(false);
+    const { toggleTheme } = useContext(ThemeContext);
 
     const handleToggleTheme = () => {
         console.log("Toggle theme clicked");
@@ -48,11 +51,21 @@ export default function Profile() {
         setIsShowAvatar(true);
     }
 
-    const handleAvatarSelect = (avatar: string) => {
-        setSelectedAvatar(avatar);
-        setIsShowAvatar(false);
+    const handleAvatarSelect = async (avatar: string) => {
+        
+        try{
+            const url = import.meta.env.VITE_APP_URL as string
+            const user =  await axios.put(`${baseurl}/api/auth/userprofile`,{
+                avatarUrl: url+avatar
+            }, { withCredentials: true });
+            setUser((prev: any) => ({...prev, avatarUrl: user.data.user.avatarUrl}));
+            setIsShowAvatar(false);
+        }
+        catch(e){
+            console.log(e);
+        }
     }
-
+    
     const toggleMenu = (id: number) => {
         setOpenMenus(prev => 
             prev.includes(id) ? prev.filter(menuId => menuId !== id) : [...prev, id]
@@ -60,12 +73,12 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="min-h-screen bg-white dark:bg-gray-800  text-white">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex justify-between bg-gray-800 p-4 shadow-md relative"
+                className="flex justify-between dark:bg-gray-800  p-4 shadow-md relative"
             >
                 <span className="text-yellow-500 text-2xl font-bold ">Profile</span>
                 <div className="flex items-center space-x-4">
@@ -89,7 +102,7 @@ export default function Profile() {
                             isOpen={isDropdownOpen}
                             onClose={() => setIsDropdownOpen(false)}
                             onLogout={Logout}
-                            onToggleTheme={handleToggleTheme}
+                            onToggleTheme={toggleTheme}
                         />
                     </div>
                 </div>
@@ -100,7 +113,7 @@ export default function Profile() {
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
                     >
-                    <img src={selectedAvatar} alt="avatar" className="rounded-full border-4 border-yellow-500"/>
+                    <img src={user?.avatarUrl !== "" ? user?.avatarUrl : selectedAvatar} alt="avatar" className="rounded-full"/>
                     <img src={vip1Frame} alt="frame" className="absolute mt-[-150px] ml-[-10px]"/>
                 </motion.div>
                 <motion.button
@@ -119,20 +132,20 @@ export default function Profile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-                <div className="bg-gray-800 rounded-md p-6 shadow-lg">
+                <div className="dark:bg-gray-800 rounded-md p-6">
                  <div className="grid grid-cols-2 gap-4">
                         <motion.div 
-                            className="bg-gray-700 p-4 rounded-md"
+                            className="dark:bg-gray-700 bg-slate-100 bg-gray- p-4 rounded-md"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3, duration: 0.5 }}
                         >
                             <FontAwesomeIcon icon={faIdCard} className="text-yellow-500 text-2xl mb-2" />
                             <p className="text-gray-400 text-sm">Player ID</p>
-                            <p className="text-white font-bold text-lg">{user?.memberId}</p>
+                            <p className="dark:text-white text-gray-700 font-bold text-lg">{user?.memberId}</p>
                         </motion.div>
                         <motion.div 
-                            className="bg-gray-700 p-4 rounded-md flex justify-between"
+                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md flex justify-between"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.4, duration: 0.5 }}
@@ -142,8 +155,8 @@ export default function Profile() {
                                  
                                   <p className="text-gray-400 text-sm">Username</p>
                                   <div className='flex gap-3 items-center'>
-                                  <input className={`placeholder:text-white font-bold outline-none border-none text-lg ${ !isEditUserName ? "bg-gray-700" : "bg-gray-200 p-1 rounded-md text-gray-400 font-serif placeholder:text-gray-400"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
-                                  {
+                                  <input className={`dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white  p-1 ${ !isEditUserName ? "dark:bg-gray-700" : "dark:bg-gray-200  bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
+                                  { 
                                     isEditUserName &&
                                      <div className='flex gap-4'>
                                         <FontAwesomeIcon icon={faClose} className='text-red-500 cursor-pointer' onClick={() => setIsEditName(false)}/>
@@ -155,23 +168,23 @@ export default function Profile() {
                              <div><FontAwesomeIcon icon={faEdit}  onClick={()=> setIsEditName(p => !p)} className='cursor-pointer hover:text-gray-500 text-gray-400'/></div>
                         </motion.div>
                         <motion.div 
-                            className="bg-gray-700 p-4 rounded-md"
+                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5, duration: 0.5 }}
                         >
                             <FontAwesomeIcon icon={faCoins} className="text-yellow-500 text-2xl mb-2" />
                             <p className="text-gray-400 text-sm">Balance</p>
-                            <p className="text-white font-bold text-lg">₹ {(user?.balance / 100).toFixed(2)}</p>
+                            <p className="dark:text-white text-gray-700 font-bold text-lg">₹ {(user?.balance / 100).toFixed(2)}</p>
                         </motion.div>
                         <motion.div 
-                            className="bg-gray-700 p-4 rounded-md"
+                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6, duration: 0.5 }}
                         >
                             <FontAwesomeIcon icon={faTrophy} className="text-yellow-500 text-2xl mb-2" />
-                            <p className="text-gray-400 text-sm">Vip-1</p>
+                            <p className="dark:text-gray-400 text-gray-900 text-sm">Vip-1</p>
                         </motion.div>
                     </div>
                 </div>
@@ -185,7 +198,7 @@ export default function Profile() {
                 {ProfileSetttingsData.map((item) => (
                     <motion.div 
                         key={item.id} 
-                        className="px-6 py-4 hover:bg-gray-800 transition-colors duration-200"
+                        className="px-6 py-4 dark:hover:bg-gray-700 hover:bg-slate-100 transition-colors duration-200"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: item.id * 0.1 }}
@@ -196,7 +209,7 @@ export default function Profile() {
                         >
                             <div className="flex items-center space-x-4 text-yellow-500">
                                 {item.icon}
-                                <span className="font-bold">{item.title}</span>
+                                <span className="font-bold dark:text-white text-gray-700">{item.title}</span>
                             </div>
                             {item.options && (
                                 <motion.div
@@ -219,7 +232,7 @@ export default function Profile() {
                                     {item.options.map((option) => (
                                         <Link key={option.id} to={option.link} className="flex items-center space-x-2 text-gray-300 hover:text-yellow-500">
                                             {option.icon}
-                                            <span className="font-bold">{option.title}</span>
+                                            <span className="font-bold dark:text-white text-gray-700">{option.title}</span>
                                         </Link>
                                     ))}
                                 </motion.div>
