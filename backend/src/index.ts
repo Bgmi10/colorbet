@@ -32,7 +32,7 @@ const limiter = rateLimit({
   limit: 250,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
-  message: "Too many requests, better luck next time."
+  message: "Too many requests, better luck next time..."
 });
 
 const wss = new WebSocket.Server({ port: 5050 });

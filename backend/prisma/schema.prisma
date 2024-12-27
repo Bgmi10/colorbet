@@ -16,7 +16,7 @@ model User {
   password    String   
   memberId    String   @unique
   avatarUrl   String   
-  payment     payment[]
+  payment     Payment[]
 }
 
 model Game {
@@ -64,13 +64,15 @@ enum Betresult {
 }
 
 
-model payment {
-  id          Int     @id @default(autoincrement())
-  upiRef      String  @unique
-  email       String  @unique
-  amount      Int
-  status      String
-  createdAt   DateTime  @default(now())
-  user        User    @relation(fields: [email], references: [email])
-
+model Payment {
+  id            Int        @id @default(autoincrement())
+  upiRef        String     @unique 
+  amount        Int
+  userId        Int
+  status        String
+  createdAt     DateTime   @default(now())
+  user          User       @relation(fields: [userId], references: [id])
+  senderMobile  String 
+  remarks       String?
+  senderName    String
 }
