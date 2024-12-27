@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faClock, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { baseurl } from "../../utils/constants";
+import { appName, baseurl, kotakPng } from "../../utils/constants";
 import { useNavigate, useLocation } from "react-router-dom";
-import { PaymentSuccess } from "./PaymentSuccess";
+import PaymentSuccess from "./PaymentSuccess";
+import PoweredBy from "./PoweredBy";
+import { AuthContext } from "../../context/AuthContext";
+//@ts-ignore
+import profile from "../../../public/assets/profile.png";
 
 const TIMER_DURATION = 5 * 60;
 const STORAGE_KEY = 'payment_session';
@@ -15,7 +19,6 @@ interface PaymentSession {
   endTime: number;
   started: boolean;
 }
-
 export default function ImpsService() {
   const [refNumber, setRefNumber] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +29,9 @@ export default function ImpsService() {
   const [initialLoading, setInitialLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
+  //@ts-ignore
+  const { setUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -123,9 +128,9 @@ export default function ImpsService() {
       );
 
       if (res.status === 200) {
-        setData(res.data.payment);
+        setUser((prev: any) => ({...prev, balance: prev.balance + res.data.payment.amount}));
+        setData(res.data);
         setSuccess(true);
-        // clearSession();
       }
       setLoading(false);
     } catch (e: any) {
@@ -136,22 +141,18 @@ export default function ImpsService() {
   };
 
   const handleSuccessComplete = () => {
-    // navigate('/recharge-chip');
+    navigate('/recharge-chip');
+    clearSession();
   };
 
   return (
     <>
-    { !success && <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
-      {initialLoading ? (
-        <div className="text-yellow-500 text-2xl">
-          <FontAwesomeIcon icon={faSpinner} spin /> Loading...
-        </div>
-      ) : (
+    { !success && <div className="flex justify-center dark:bg-gray-900">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="dark:bg-gray-800 bg-slate-100 m-20 rounded-xl w-full max-w-md p-10"
+          className="dark:bg-gray-800 bg-slate-100 m-4 mb-20 rounded-xl w-full max-w-md p-10"
         >
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-semibold text-yellow-500">
@@ -163,10 +164,10 @@ export default function ImpsService() {
             </div>
           </div>
 
-          <div className="dark:bg-gray-700 bg-gray-400 p-6 rounded-lg mb-6">
+          <div className="dark:bg-gray-700 bg-slate-200 p-6 rounded-lg mb-6">
             <div className="text-center">
-              <span className="text-lg text-gray-100">Amount to Pay</span>
-              <div className="text-3xl font-bold text-white mt-2 flex items-center justify-center">
+              <span className="text-lg dark:text-gray-100 text-gray-600">Amount to Pay</span>
+              <div className="text-3xl font-bold dark:text-gray-200 text-gray-700 mt-2 flex items-center justify-center">
                 <FontAwesomeIcon icon={faIndianRupeeSign} className="mr-2" />
                 {amount}
               </div>
@@ -181,7 +182,7 @@ export default function ImpsService() {
               <div className="flex justify-between">
                 <span>Bank Name:</span>
                 <div className="flex gap-2 items-center">
-                   <img src="https://netbanking.kotak.com/knb2/favicon.ico" alt="kotak" className="rounded-full w-5 h-5" /> 
+                   <img src={kotakPng} alt="kotak" className="rounded-full w-5 h-5" /> 
                    <span className="font-medium">
                      Kotak Mahindra Bank</span>
                  </div>
@@ -189,15 +190,17 @@ export default function ImpsService() {
               <div className="flex justify-between">
                 <span>Account Name:</span>
                 <div className="flex gap-2 items-center">
-                   <img src="https://lh3.googleusercontent.com/ogw/AF2bZyiXtcpbiTPAc9nDs-LGyYCzKLtHKUG85VTA1GqCcb7MNaw=s32-c-mo" alt="subash-profile" className="h-5 w-5"/>
+                   <img src={profile} alt="subash-profile" className="h-5 w-5"/>
                    <span className="font-medium">Subash Chandra Bose R</span>
                 </div>
               </div>
               <div className="flex justify-between">
                 <span>Account Number:</span>
-                <div className="flex gap-2 items-center">
-                   <img src="https://www.f-cdn.com/assets/main/en/assets/badges/verified/verified-v2.svg" alt="subash-profile" className="h-4 w-4"/>
-                   <span className="font-medium">8947360713</span>
+                <div className="flex gap-2 items-center relative"> 
+                 <div className="absolute left-[-25px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none"><g clip-path="url(#a)"><path fill="#50C878" d="m12 0 2.33 3.307 3.67-1.7.364 4.029L22.392 6l-1.699 3.67L24 12l-3.307 2.33 1.7 3.67-4.029.364L18 22.392l-3.67-1.699L12 24l-2.33-3.307-3.67 1.7-.364-4.029L1.608 18l1.699-3.67L0 12l3.307-2.33L1.607 6l4.029-.364L6 1.608l3.67 1.699L12 0Z" /><path stroke="#fff" stroke-width="3" d="m7 12.243 3.28 3.237L16.84 9"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h24v24H0z" strokeWidth={1}/></clipPath></defs></svg>
+                 </div>
+                    <span className="font-medium">8947360713</span>
                 </div>
                
               </div>
@@ -255,14 +258,13 @@ export default function ImpsService() {
               </button>
             </form>
           )}
-
-          
+            <PoweredBy />
         </motion.div>
-      )}
-     
+      
     </div>}
-     {!success && (
-      <PaymentSuccess onComplete={handleSuccessComplete}  data={data}/>
+    
+     {success && (
+      <PaymentSuccess  data={data} onComplete={handleSuccessComplete}/>
     )}
     </>
   );

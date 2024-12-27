@@ -23,6 +23,7 @@ import Avatar9 from "../../public/assets/change_head/Avatar9.png";
 import Avatar10 from "../../public/assets/change_head/Avatar10.png";
 import Avatar11 from "../../public/assets/change_head/Avatar11.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import kotakPng1 from '../../public/assets/kotak.ico'
 import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 
 export const baseurl = 'http://localhost:3005'
@@ -248,3 +249,7 @@ export const chips = [
         ],
     }
 ];
+
+export const kotakPng = kotakPng1
+
+export const appName = "colorwiz";

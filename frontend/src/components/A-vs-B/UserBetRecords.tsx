@@ -103,7 +103,7 @@ export const UserBetRecords = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="dark:bg-gray-800 bg-slate-100 rounded-xl p-2 sm:p-6 mt-4 mb-40 border border-yellow-500/30 shadow-lg"
+      className="dark:bg-gray-800 bg-slate-100 rounded-xl p-2 sm:p-6 mt-4 mb-16 border border-yellow-500/30 shadow-lg"
     >
       <h2 className="text-2xl font-bold text-yellow-500 mb-4">Your Recent Bets</h2>
       {error && (

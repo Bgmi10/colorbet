@@ -11,26 +11,30 @@ import Profile from "./components/profile/Profile";
 import ProtectOtpPage from "./components/auth/ProtectOtpPage";
 import RechargeChip from "./components/RechargeChip";
 import ImpsService from "./components/paymentService/ImpsService";
+import { Suspense } from "react";
+import Loader from "./components/Loader";
 
 function App() {
   return (
     <>
        <Router>
-        <Routes>
-         <Route element={ <GameComponent /> } path="/A-vs-B" />
-         <Route element={ <Login /> } path="/login" />
-         <Route element={ <SignIn /> } path="/signin" />
-         <Route element={ <Notfound /> } path="*" />
-         <Route element={ <ForgetPassword /> } path="/forget-password" />
-         <Route element={<ProtectOtpPage children={ <Outlet /> } /> }>
-          <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
-          <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
-         </Route>
-         <Route element={ <RechargeChip /> } path="/recharge-chip" />
-         <Route element={ <Profile /> } path="/profile" />
-         <Route element={ <ImpsService /> } path="/payment-imps" />
-        </Routes>
-        <AppBar />
+        <Suspense fallback={ <Loader /> }>
+          <Routes>
+           <Route element={ <GameComponent /> } path="/A-vs-B" />
+           <Route element={ <Login /> } path="/login" />
+           <Route element={ <SignIn /> } path="/signin" />
+           <Route element={ <Notfound /> } path="*" />
+           <Route element={ <ForgetPassword /> } path="/forget-password" />
+           <Route element={<ProtectOtpPage children={ <Outlet /> } /> }>
+             <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
+             <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
+           </Route>
+           <Route element={ <RechargeChip /> } path="/recharge-chip" />
+           <Route element={ <Profile /> } path="/profile" />
+           <Route element={ <ImpsService /> } path="/payment-imps" />
+          </Routes>
+          <AppBar />
+        </Suspense>
        </Router>
       
     </>

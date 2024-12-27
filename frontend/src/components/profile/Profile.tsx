@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+//@ts-ignore
 import vip1Frame from "../../../public/assets/headFrame/vip1.png";
 import { baseurl, profileAvatar } from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
@@ -13,6 +14,7 @@ import axios from 'axios';
 import { ThemeContext } from '../../context/ThemeContext';
 
 export default function Profile() {
+    //@ts-ignore
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
     console.log(user)
@@ -23,12 +25,6 @@ export default function Profile() {
     const [userName, setUserName] = useState("");
     const [isLoad, setIsLoad] = useState(false);
     const { toggleTheme } = useContext(ThemeContext);
-
-    const handleToggleTheme = () => {
-        console.log("Toggle theme clicked");
-        // Implement theme toggle functionality here
-    };
-
     
     const handleEditName = async () => {
         
@@ -37,6 +33,7 @@ export default function Profile() {
            const res = await axios.put(`${baseurl}/api/auth/userprofile`,{
                 userName: userName
             }, { withCredentials: true });
+            //@ts-ignore
             setUser((p: any) => ({...p, userName: res?.userName}));
             setIsEditName(false);
             setIsLoad(false);
@@ -112,9 +109,10 @@ export default function Profile() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                    className=''
                     >
-                    <img src={user?.avatarUrl !== "" ? user?.avatarUrl : selectedAvatar} alt="avatar" className="rounded-full"/>
-                    <img src={vip1Frame} alt="frame" className="absolute mt-[-150px] ml-[-10px]"/>
+                    <img src={user?.avatarUrl !== "" ? user?.avatarUrl : selectedAvatar} alt="avatar" className="rounded-full relative"/>
+                   { <img src={vip1Frame} alt="frame" className="mt-[-151px] ml-[-13px] absolute"/> }
                 </motion.div>
                 <motion.button
                     onClick={handleShowAvatar}

@@ -87,7 +87,7 @@ export default function RechargeChip() {
                     color: "#FFD700",
                 },
             };
-        
+            //@ts-ignore
             const paymentObject = new window.Razorpay(options);
             paymentObject.open();
         } catch (error) {
