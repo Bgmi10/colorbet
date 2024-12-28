@@ -1,28 +1,53 @@
+//@ts-ignore
 import chip10 from "../../public/assets/chips/10_0.png";
+//@ts-ignore
 import chip20 from "../../public/assets/chips/20_0.png";
+//@ts-ignore
 import chip50 from "../../public/assets/chips/50_0.png";
+//@ts-ignore
 import chip100 from "../../public/assets/chips/100_0.png";
+//@ts-ignore
 import chip200 from "../../public/assets/chips/200_0.png";
+//@ts-ignore
 import chip500 from "../../public/assets/chips/500_0.png";
+//@ts-ignore
 import chip1k from "../../public/assets/chips/1000_0.png";
+//@ts-ignore
 import chip5k from "../../public/assets/chips/5000_0.png";
+//@ts-ignore
 import chip10k from "../../public/assets/chips/10000_0.png";
+//@ts-ignore
 import chip20k from "../../public/assets/chips/20000_0.png";
+//@ts-ignore
 import chip50k from "../../public/assets/chips/50000_0.png";
+//@ts-ignore
 import chip100k from "../../public/assets/chips/100000_0.png";
+//@ts-ignore
 import Avatar0 from "../../public/assets/change_head/Avatar0.png";
+//@ts-ignore
 import Avatar1 from "../../public/assets/change_head/Avatar1.png";
+//@ts-ignore
 import Avatar2 from "../../public/assets/change_head/Avatar2.png";
+//@ts-ignore
 import Avatar3 from "../../public/assets/change_head/Avatar3.png";
+//@ts-ignore
 import Avatar4 from "../../public/assets/change_head/Avatar4.png";
+//@ts-ignore
 import Avatar5 from "../../public/assets/change_head/Avatar5.png";
+//@ts-ignore
 import Avatar6 from "../../public/assets/change_head/Avatar6.png";
+//@ts-ignore
 import Avatar7 from "../../public/assets/change_head/Avatar7.png";
+//@ts-ignore
 import Avatar8 from "../../public/assets/change_head/Avatar8.png";
+//@ts-ignore
 import Avatar9 from "../../public/assets/change_head/Avatar9.png";
+//@ts-ignore
 import Avatar10 from "../../public/assets/change_head/Avatar10.png";
+//@ts-ignore
 import Avatar11 from "../../public/assets/change_head/Avatar11.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+//@ts-ignore
 import kotakPng1 from '../../public/assets/kotak.ico'
 import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 

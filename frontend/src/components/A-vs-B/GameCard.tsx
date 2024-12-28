@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+//@ts-ignore
 import pokerBack from  "../../../public/assets/poker_back.png";
 
 interface GameCardProps {

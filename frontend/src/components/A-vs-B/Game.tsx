@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GameCard } from './GameCard';
 import { UserBetRecords } from './UserBetRecords';
-import { baseurl } from '../../utils/constants';
 import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
+//@ts-ignore
 import vsImg from "../../../public/assets/vs.png";
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
@@ -20,17 +19,22 @@ const GameComponent = () => {
   const [game, setGame] = useState(null);
   const [amount, setAmount] = useState(10);
   const [chosenSide, setChosenSide] = useState('A');
+  //@ts-ignore
   const { user } = useContext(AuthContext);
+  //@ts-ignore
   const [result, setResult] = useState(null);
   const [isbetting, setIsbetting] = useState(true);
   const [revealCards, setRevealCards] = useState(false);
   const [timer, setTimer] = useState(0);
   const [pockerbackimageurl, setPockerBackImageUrl] = useState('');
   const [gamerecord, setGamerecord] = useState(null);
+  //@ts-ignore
   const navigate = useNavigate();
+  //@ts-ignore
   const [betplaced, setBetplaced] = useState(false);
   const [updatedBalance, setUpdatedBalance] = useState(0);
   const [betamount, setBetAmount] = useState(0);
+  //@ts-ignore
   const [showAnimatedChip, setShowAnimatedChip] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   
@@ -121,18 +125,18 @@ const GameComponent = () => {
       JSON.stringify({
         type: "placeBet",
         email: user?.email,
+        //@ts-ignore
         gameId: game?.gameState.id,
         amount: amount * 100,
         chosenSide
       })
-    )
-
+    ) 
   };
 
 
-  const handleAnimationCompelete = () => {
-    setBetplaced(true);
-  }
+  // const handleAnimationCompelete = () => {
+  //   setBetplaced(true);
+  // }
 
   return (
     <div className=" bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 text-white">
@@ -143,13 +147,17 @@ const GameComponent = () => {
             <div className='flex flex-col text-center'>
               <span className="text-red-500 font-serif mb-1 text-xl mt-3">RED</span> 
                 <GameCard
+                //@ts-ignore
                   frontImage={game?.gameState?.cardAImg}
                   backImage={pockerbackimageurl}
+                  //@ts-ignore
                   isWinner={game?.gameState?.winner === 'A'}
                   isRevealed={revealCards}
                   outlineShade={"rgba(252, 78, 65, 0.9)"}
                 />
-                {betamount?.bet?.totalAAmount / 100 | 0 }
+                
+                { //@ts-ignore 
+                betamount?.bet?.totalAAmount / 100 | 0 }
             </div>
             </div>
              <div className="justify-center flex">
@@ -159,13 +167,17 @@ const GameComponent = () => {
               <div className='flex flex-col text-center'>
                <span className="text-blue-500 font-serif mb-1 text-xl mt-3">BLUE</span>
                 <GameCard
+                //@ts-ignore
                  frontImage={game?.gameState?.cardBImg}
+                 //@ts-ignore
                  backImage={pockerbackimageurl}
-                 isWinner={game?.gameState?.winner === 'B'}
+                 //@ts-ignore
+                 isWinner={ game?.gameState?.winner === 'B'}
                  isRevealed={revealCards}
                  outlineShade="rgba(96, 165, 250, 0.9)"
                />
-                {betamount?.bet?.totalBAmount / 100 | 0} 
+                { //@ts-ignore 
+                betamount?.bet?.totalBAmount / 100 | 0} 
               </div>
             </div>
             <AnimatePresence>
@@ -188,7 +200,8 @@ const GameComponent = () => {
               </motion.span>
             </motion.div> 
 
-          <GameRecord data={gamerecord} />
+          <GameRecord //@ts-ignore
+          data={gamerecord} />
          <ChipSlider setAmount={setAmount} balance={updatedBalance  || user?.balance / 100}/>
           <div className="flex flex-col md:flex-row justify-center items-center mt-8 space-y-4 md:space-y-0 md:space-x-4">
             <input

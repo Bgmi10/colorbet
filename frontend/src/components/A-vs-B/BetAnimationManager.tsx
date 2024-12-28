@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+//@ts-ignore
 import chaalSound from "../../../public/assets/chaal.mp3";
 import { chips } from '../../utils/constants';
 
@@ -25,6 +26,7 @@ const bettingAreas = {
 };
 
 const getRandomPosition = (side: string) => {
+  //@ts-ignore
   const area = bettingAreas[side];
   return {
     x: Math.random() * (area?.maxX - area?.minX) + area?.minX,
@@ -87,6 +89,7 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
     <div className="absolute inset-0 pointer-events-none">
       <AnimatePresence>
         {activeBets.map((bet: any) => {
+          //@ts-ignore
           const position = positions[bet.id] || getRandomPosition(bet.chosenSide);
           
           return (

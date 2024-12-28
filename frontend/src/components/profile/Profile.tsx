@@ -17,7 +17,7 @@ export default function Profile() {
     //@ts-ignore
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
-    console.log(user)
+    //@ts-ignore
     const [selectedAvatar, setSelectedAvatar] = useState(profileAvatar[0]);
     const [openMenus, setOpenMenus] = useState<number[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

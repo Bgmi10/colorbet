@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
 import { baseurl, validEmail } from "../../utils/constants";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,7 +10,6 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [err, setErr] = useState("");
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>();
 

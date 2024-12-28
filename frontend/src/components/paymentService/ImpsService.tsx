@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faClock, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { appName, baseurl, kotakPng } from "../../utils/constants";
+import { baseurl, kotakPng } from "../../utils/constants";
 import { useNavigate, useLocation } from "react-router-dom";
 import PaymentSuccess from "./PaymentSuccess";
 import PoweredBy from "./PoweredBy";
@@ -26,6 +26,7 @@ export default function ImpsService() {
   const [success, setSuccess] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [amount, setAmount] = useState<string>("");
+  //@ts-ignore
   const [initialLoading, setInitialLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();

@@ -8,6 +8,7 @@ import {  validEmail } from "../../utils/constants";
 export default function SignIn() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  //@ts-ignore
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const nameInputRef = useRef<HTMLInputElement>(null);

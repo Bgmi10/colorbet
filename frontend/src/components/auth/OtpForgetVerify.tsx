@@ -52,7 +52,7 @@ export default function OtpSigninverify() {
 
     return () => clearInterval(interval);
   }, []);
-
+//@ts-ignore
   const checkTimerStatus = () => {
     const storedTimestamp = localStorage.getItem("otpTimestamp");
     if (storedTimestamp) {
