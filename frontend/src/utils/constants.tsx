@@ -50,8 +50,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //@ts-ignore
 import kotakPng1 from '../../public/assets/kotak.ico'
 import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
-
-export const baseurl = 'http://localhost:3005'
+const isprod = false;
+export const baseurl = isprod ? 'http://44.204.84.25:3005' : 'http://localhost:3005'
 
 export const validEmail = (email : string) => {
     const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);

@@ -1,5 +1,6 @@
 import express from 'express';
 import { prisma } from '../../prisma/prisma';
+import { userProfileUpdate } from '../utils/zod';
 
 
 const User = express.Router();
@@ -29,6 +30,14 @@ User.get('/userprofile', async(req: express.Request, res: express.Response) => {
 
 
 User.put("/userprofile", async(req: express.Request, res: express.Response) => {
+
+    const isvalidReq = userProfileUpdate.safeParse(req.body);
+
+    if(!isvalidReq.success){
+        res.status(400).json({ message: "invalid request" });
+        return
+    }
+    
     const { userName, avatarUrl } = req.body;
     //@ts-ignore
     const { email } = req.user;

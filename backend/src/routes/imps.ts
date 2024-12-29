@@ -61,13 +61,9 @@ impsRouter.post("/imps", async (req: express.Request, res: express.Response) => 
 
         const user = await prisma.user.findUnique({
           where: { email },
+          select: { id: true }
         });
 
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-
-        // Process payment in transaction
         const payment = await prisma.$transaction(async (p: any) => {
           const pay = await p.payment.create({
             data: {
@@ -78,7 +74,7 @@ impsRouter.post("/imps", async (req: express.Request, res: express.Response) => 
               remarks: verificationResult.remarks,
               senderName: verificationResult.senderName,
               user: {
-                connect: { id: user.id },
+                connect: { id: user?.id },
               },
             },
           });

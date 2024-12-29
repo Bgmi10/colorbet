@@ -9,7 +9,7 @@ import { kotakPng } from '../../utils/constants';
 import PoweredBy from './PoweredBy';
 
 export default function PaymentSuccess({ data, onComplete }: { data: any, onComplete: any }) {
-  const [redirectCountdown, setRedirectCountdown] = useState(10);
+  const [redirectCountdown, setRedirectCountdown] = useState(15);
 
   useEffect(() => {
    const timer = setInterval(() => {

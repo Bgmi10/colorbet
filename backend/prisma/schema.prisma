@@ -8,26 +8,28 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  userName    String   
-  balance     Int      @default(0)
-  bets        Bet[]    
-  email       String   @unique
-  password    String   
-  memberId    String   @unique
-  avatarUrl   String   
-  payment     Payment[]
+  id            Int           @id @default(autoincrement())
+  userName      String   
+  balance       Int           @default(0)
+  bets          Bet[]    
+  email         String        @unique
+  password      String   
+  memberId      String        @unique
+  avatarUrl     String   
+  payment       Payment[]
+  bankAccount   BankAccount[]
+  withdrawals   Withdrawal[]
 }
 
 model Game {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   cardA       String   
   cardB       String  
   winner      String   
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
   bets        Bet[]   
   status      Gamestatus @default(PENDING)
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime   @updatedAt
 }
 
 enum Gamestatus {
@@ -37,16 +39,16 @@ enum Gamestatus {
 }
 
 model Bet {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  chosenSide String 
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int
-  game      Game      @relation(fields: [gameId], references: [id])
-  gameId    Int
-  result    Betresult  @default(PENDING) 
-  createdAt DateTime  @default(now())
-  commission Float    @default(0.00)
+  id            Int        @id @default(autoincrement())
+  amount        Float
+  chosenSide    String 
+  user          User       @relation(fields: [userId], references: [id])
+  userId        Int
+  game          Game       @relation(fields: [gameId], references: [id])
+  gameId        Int
+  result        Betresult  @default(PENDING) 
+  createdAt     DateTime   @default(now())
+  commission    Float      @default(0.00)
 }
 
 model Otp {
@@ -75,4 +77,39 @@ model Payment {
   senderMobile  String 
   remarks       String?
   senderName    String
+}
+
+model BankAccount {
+  id                  Int             @id   @default(autoincrement())
+  accountNumber       String
+  ifscCode            String 
+  upiId               String?
+  bankName            String
+  userId              Int
+  user                User            @relation(fields: [userId], references: [id])
+  accountHolderName   String
+  email               String
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  withdrawals         Withdrawal[]
+}
+
+model Withdrawal{
+  id                       Int             @id    @default(autoincrement())
+  withdrawalStatus         WithdrwalStatus @default(PENDING)
+  userId                   Int        
+  user                     User            @relation(fields: [userId], references: [id])
+  bankAccountId            Int
+  bank                     BankAccount     @relation(fields: [bankAccountId], references: [id])
+  amount                   Int
+  transactionId            String
+  createdAt                DateTime        @default(now())
+  completedAt              DateTime?       
+ }          
+
+
+enum WithdrwalStatus { 
+  PENDING
+  FAILED
+  SUCCESS
 }

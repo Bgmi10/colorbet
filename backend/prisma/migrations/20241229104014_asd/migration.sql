@@ -4,6 +4,9 @@ CREATE TYPE "Gamestatus" AS ENUM ('PENDING', 'COMPLETED', 'IN_PROGRESS');
 -- CreateEnum
 CREATE TYPE "Betresult" AS ENUM ('PENDING', 'WIN', 'LOSE');
 
+-- CreateEnum
+CREATE TYPE "WithdrwalStatus" AS ENUM ('PENDING', 'FAILED', 'SUCCESS');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -64,10 +67,40 @@ CREATE TABLE "Payment" (
     "status" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "senderMobile" TEXT NOT NULL,
-    "remarks" TEXT NOT NULL,
+    "remarks" TEXT,
     "senderName" TEXT NOT NULL,
 
     CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BankAccount" (
+    "id" SERIAL NOT NULL,
+    "accountNumber" TEXT NOT NULL,
+    "ifscCode" TEXT NOT NULL,
+    "upiId" TEXT,
+    "bankName" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "accountHolderName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "BankAccount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Withdrawal" (
+    "id" SERIAL NOT NULL,
+    "withdrawalStatus" "WithdrwalStatus" NOT NULL DEFAULT 'PENDING',
+    "userId" INTEGER NOT NULL,
+    "bankAccountId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "transactionId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Withdrawal_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -90,3 +123,12 @@ ALTER TABLE "Bet" ADD CONSTRAINT "Bet_gameId_fkey" FOREIGN KEY ("gameId") REFERE
 
 -- AddForeignKey
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BankAccount" ADD CONSTRAINT "BankAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Withdrawal" ADD CONSTRAINT "Withdrawal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Withdrawal" ADD CONSTRAINT "Withdrawal_bankAccountId_fkey" FOREIGN KEY ("bankAccountId") REFERENCES "BankAccount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

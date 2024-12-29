@@ -1,4 +1,4 @@
-import { number, z } from "zod";
+import { z } from "zod";
 
 export const signinSchema = z.object({
     email : z.string(),
@@ -28,4 +28,21 @@ export const forget_passoword_schema = z.object({
 export const game_user_bet_record = z.object({
     page: z.number().int().positive().default(1),
     limit: z.number().int().positive().default(10)
+});
+
+export const userProfileUpdate = z.object({
+    userName: z.string(),
+    avatarUrl: z.string()
+});
+
+export const addBankAccount = z.object({
+    accountNumber: z.string(),
+    accountHolderName: z.string(),
+    ifscCode: z.string(),
+    bankName: z.string()
+});
+
+export const withdrawal = z.object({
+    bankAccountId: z.number().int(),
+    amount: z.number().int(),
 })
