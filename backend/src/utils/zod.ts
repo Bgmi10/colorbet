@@ -30,10 +30,6 @@ export const game_user_bet_record = z.object({
     limit: z.number().int().positive().default(10)
 });
 
-export const userProfileUpdate = z.object({
-    userName: z.string(),
-    avatarUrl: z.string()
-});
 
 export const addBankAccount = z.object({
     accountNumber: z.string(),

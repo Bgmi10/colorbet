@@ -278,3 +278,240 @@ export const chips = [
 export const kotakPng = kotakPng1
 
 export const appName = "colorwiz";
+
+export const bankDatas = [
+  {
+    id: "1",
+    bankName: "HDFC Bank",
+    imageUrl: "https://www.hdfcbank.com/static/features/%5BBBHOST%5D/theme-nb-hdfc/favicon.ico"
+  },
+  {
+    id: "2",
+    bankName: "ICICI Bank",
+    imageUrl: "https://www.icicibank.com/etc.clientlibs/icicibank/clientlibs/clientlib-base/resources/images/favicon.ico"
+  },
+  {
+    id: "3",
+    bankName: "Kotak Mahindra Bank",
+    imageUrl: "https://netbanking.kotak.com/knb2/favicon.ico"
+  },
+  {
+    id: "4",
+    bankName: "Axis Bank",
+    imageUrl: "https://smartsearch.senseforth.com/AxisProdSmartSearch/Axis_Bank_SS/Images/Loader.gif"
+  },
+  {
+    id: "5",
+    bankName: "TNSC Bank",
+    imageUrl: "https://www.tnscbank.com/jb-content/uploads/2022/10/favicon.png"
+  },
+  {
+    id: "6",
+    bankName: "Airtel Payment Bank",
+    imageUrl: "https://www.airtel.in/bank/favicon.ico"
+  },
+  {
+    id: "7",
+    bankName: "Bank Of India",
+    imageUrl: "https://bankofindia.co.in/o/boi-global-theme/images/favicon.ico"
+  },
+   {
+    id: "8",
+    bankName: "AU Small Finance Bank",
+    imageUrl: "https://www.aubank.in/assets/images/favicon.png"
+  },{
+    id: "9",
+    bankName: "Bassien Catholic Co-Operative Bank",
+  },
+  {
+    id: "10",
+    bankName: "BNP Parabas Bank",
+    imageUrl: "https://cdn-group.bnpparibas.com/favicon.ico"
+  },
+  {
+    id: "11",
+    bankName: "Bank of Bahrain and Kuwait",
+    imageUrl: "https://www.bbkonline.com/wp-content/uploads/2022/11/fav.png?w=32"
+  },
+  {
+    id: "12",
+    bankName: "Bob Card",
+    imageUrl: "https://www.bobcard.co.in/favicon.ico"
+  },
+  {
+    id: "13",
+    bankName: "Bank of Baroda Corporate",
+    imageUrl: "https://www.bankofbaroda.in/-/media/project/bob/shared/favicon/favicon.png"
+  },
+  {
+    id: "14",
+    bankName: "Bank of Baroda Retail",
+    imageUrl: "https://www.bankofbaroda.in/-/media/project/bob/shared/favicon/favicon.png"
+  },
+  {
+    id: "15",
+    bankName: "Bank Of Maharashtra"
+  },
+  {
+    id: "16",
+    bankName: "Canara Bank"
+  },
+  {
+    id: "17",
+    bankName: "Catholic Syrian Bank"
+  },
+  {
+    id: "18",
+    bankName: "Central Bank",
+    imageUrl: "https://www.centralbankofindia.co.in/sites/default/files/favicon.ico"
+  },
+  {
+    id: "19",
+    bankName: "City Union Bank",
+    imageUrl: "https://www.cityunionbank.com/assets/frontend/images/favicon.jpg"
+  },
+  {
+    id: "20",
+    bankName: "Corporation Bank"
+  },
+  {
+    id: "21",
+    bankName: "Cosmos Co-Operative Bank",
+    imageUrl: "https://www.cosmosbank.com/images/cosmos-bank-2019-fevicon.png"
+  },
+  {
+    id: "22",
+    bankName: "DBS Bank",
+    imageUrl: "https://www.dbs.com/in/iwov-resources/flp/splitter/images/maps-icons-pi/DBS.png"
+  },
+  {
+    id: "23",
+    bankName: "DCB Bank LTD",
+    imageUrl: "https://www.dcbbank.com/favicon.ico"
+  },
+  {
+    id: "24",
+    bankName: "Dena Bank"
+  },
+  {
+    id: "25",
+    bankName: "Deutsche Bank"
+  },
+  {
+    id: "26",
+    bankName: "Dhanlaxmi Bank",
+    imageUrl: "https://www.dhanbank.com/images/icons/favicon.png"
+  },
+  {
+    id: "27",
+    bankName: "Federal Bank"
+  },
+  {
+    id: "28",
+    bankName: "HSBC",
+    imageUrl: "https://www.hsbc.co.in/etc.clientlibs/dpws/clientlibs-public/clientlib-site/resources/favicons/favicon-32x32.png"
+  },
+  {
+    id: "29",
+    bankName: "IDBI Bank",
+  },
+  {
+    id: "30",
+    bankName: "IDFC First Bank",
+  }
+  ,
+  {
+    id: "31",
+    bankName: "Indian Bank",
+    imageUrl: "https://www.netbanking.indianbank.in/img/FavIcon1.png"
+  },
+  {
+    id: "32",
+    bankName: "Indusland Bank",
+  },
+  {
+    id: "33",
+    bankName: "Indian Overseas Bank"
+  },
+  {
+    id: "34",
+    bankName: "Karnataka Bank"
+  },
+  {
+    id: "35",
+    bankName: "J&K Bank"
+  },
+  {
+    id: "36",
+    bankName: "JANATA SAHAKARI Bank LTD PUNE"
+  },
+  {
+    id: "37",
+    bankName: "Karur Vysya Bank",
+    imageUrl: "https://www.kvb.co.in/img/icon-192x192.png"
+  },
+  {
+    id: "38",
+    bankName: "Lakshmi Vilas Bank - Retail"
+  },
+  {
+    id: "39",
+    bankName: "Lakshmi Vilas Bank - Corporate"
+  },
+  {
+    id: "40",
+    bankName: "Pubjab National Bank"
+  },
+  {
+    id: "41",
+    bankName: "Pubjab & Sind Bank"
+  },
+  {
+    id: "42",
+    bankName: "Pubjab & Maharashtra Co-Operative Bank"
+  },
+  {
+    id: "43",
+    bankName: "RBL Bank Limited"
+  },
+  {
+    id: "44",
+    bankName: "RBS"
+  },
+  {
+    id: "45",
+    bankName: "Saraswat Co-Operative Bank"
+  },
+   {
+    id :"46",
+    bankName: "The South Indian Bank"
+   },
+   {
+    id: "47",
+    bankName: "Standard Chartered Bank"
+   },
+   {
+    id: "48",
+    bankName: "TamilNad Mercantile Bank Ltd"
+   },
+   {
+    id: "49",
+    bankName: "UCO Bank"
+   },
+   {
+    id: "50",
+    bankName: "Union Bank of India"
+   },
+   {
+    id: "51",
+    bankName: "Yes Bank"
+   },
+   {
+    id: "52",
+    bankName: "The Zorastrain Co-Operative Bank"
+   }
+]
+
+
+
+export const newGif = "https://www.iob.in/new-icon.gif"

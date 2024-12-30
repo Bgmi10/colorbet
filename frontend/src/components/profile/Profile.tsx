@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 //@ts-ignore
 import vip1Frame from "../../../public/assets/headFrame/vip1.png";
@@ -25,6 +25,7 @@ export default function Profile() {
     const [userName, setUserName] = useState("");
     const [isLoad, setIsLoad] = useState(false);
     const { toggleTheme } = useContext(ThemeContext);
+    const navigate = useNavigate();
     
     const handleEditName = async () => {
         
@@ -70,12 +71,12 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-800  text-white">
+        <div className="min-h-screen bg-white dark:bg-gray-900  text-white">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex justify-between dark:bg-gray-800  p-4 shadow-md relative"
+                className="flex justify-between p-4 shadow-md relative"
             >
                 <span className="text-yellow-500 text-2xl font-bold ">Profile</span>
                 <div className="flex items-center space-x-4">
@@ -116,11 +117,11 @@ export default function Profile() {
                 </motion.div>
                 <motion.button
                     onClick={handleShowAvatar}
-                    className="mt-4 bg-yellow-500 font-serif hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-md"
+                    className="mt-4 bg-yellow-500 font-serif hover:bg-yellow-600 text-gray-900  py-2 px-4 rounded-md"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <FontAwesomeIcon icon={faEdit} className="mr-2 "/>
+                    <FontAwesomeIcon icon={faEdit} className="mr-2"/>
                     Edit Avatar
                 </motion.button>
             </div>
@@ -130,7 +131,7 @@ export default function Profile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-                <div className="dark:bg-gray-800 rounded-md p-6">
+                <div className="dark:bg-gray-900 rounded-md p-6">
                  <div className="grid grid-cols-2 gap-4">
                         <motion.div 
                             className="dark:bg-gray-700 bg-slate-100 bg-gray- p-4 rounded-md"
@@ -193,7 +194,7 @@ export default function Profile() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
             >
-                {ProfileSetttingsData.map((item) => (
+                {ProfileSetttingsData.map((item: any) => (
                     <motion.div 
                         key={item.id} 
                         className="px-6 py-4 dark:hover:bg-gray-700 hover:bg-slate-100 transition-colors duration-200"
@@ -203,7 +204,9 @@ export default function Profile() {
                     >
                         <div 
                             className="flex justify-between items-center cursor-pointer"
-                            onClick={() => item.options && toggleMenu(item.id)}
+                            onClick={() => {
+                                navigate(item.link)
+                                item.options && toggleMenu(item.id)}}
                         >
                             <div className="flex items-center space-x-4 text-yellow-500">
                                 {item.icon}
@@ -227,7 +230,7 @@ export default function Profile() {
                                     transition={{ duration: 0.3 }}
                                     className="mt-2 ml-8 space-y-2"
                                 >
-                                    {item.options.map((option) => (
+                                    {item.options.map((option: any) => (
                                         <Link key={option.id} to={option.link} className="flex items-center space-x-2 text-gray-300 hover:text-yellow-500">
                                             {option.icon}
                                             <span className="font-bold dark:text-white text-gray-700">{option.title}</span>

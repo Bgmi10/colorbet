@@ -9,10 +9,11 @@ import OtpForgetVerify from "./components/auth/OtpForgetVerify";
 import AppBar from "./components/AppBar";
 import Profile from "./components/profile/Profile";
 import ProtectOtpPage from "./components/auth/ProtectOtpPage";
-import RechargeChip from "./components/RechargeChip";
-import ImpsService from "./components/paymentService/ImpsService";
+import RechargeChip from "./components/recharge/RechargeChip";
+import ImpsService from "./components/recharge/ImpsService";
 import { Suspense } from "react";
 import Loader from "./components/Loader";
+import Bank from "./components/withdrawal/Bank";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
            <Route element={ <RechargeChip /> } path="/recharge-chip" />
            <Route element={ <Profile /> } path="/profile" />
            <Route element={ <ImpsService /> } path="/payment-imps" />
+           <Route element={ <Bank /> } path="/bank-account" />
           </Routes>
           <AppBar />
         </Suspense>

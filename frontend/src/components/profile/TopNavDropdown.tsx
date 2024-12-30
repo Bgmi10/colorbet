@@ -19,7 +19,7 @@ const TopNavDropdown: React.FC<TopNavDropdownProps> = ({ isOpen, onLogout, onTog
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-48 dark:bg-gray-800  bg-slate-100 rounded-md shadow-lg py-1 z-10"
+                    className="absolute right-0 mt-2 w-48 dark:bg-gray-900  bg-slate-100 rounded-md shadow-lg py-1 z-10"
                 >
                     <button
                         onClick={onToggleTheme}

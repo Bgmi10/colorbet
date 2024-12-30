@@ -3,3 +3,10 @@ export const validEmail = ( email : string ) => {
 
    return isvalid;
 } 
+
+
+export const generateTransactionId = () => {
+    const now = Date.now();
+    const randomsuffix = Math.random().toString(36).substring(2, 10);
+    return `txn_${now}_${randomsuffix}`;
+} 

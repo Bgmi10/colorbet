@@ -23,7 +23,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ avatars, onSelect, onCl
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="dark:bg-gray-800 bg-white p-6 rounded-md max-w-md w-full shadow-lg"
+                    className="dark:bg-gray-900 bg-white p-6 rounded-md max-w-md w-full shadow-lg"
                 >
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-yellow-500 text-2xl font-serif">Select Your Avatar</h2>

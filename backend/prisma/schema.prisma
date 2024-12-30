@@ -16,9 +16,9 @@ model User {
   password      String   
   memberId      String        @unique
   avatarUrl     String   
-  payment       Payment[]
-  bankAccount   BankAccount[]
-  withdrawals   Withdrawal[]
+  payments       Payment[]
+  bankAccounts   BankAccount[]
+  withdrawals    Withdrawal[]
 }
 
 model Game {
@@ -80,19 +80,31 @@ model Payment {
 }
 
 model BankAccount {
-  id                  Int             @id   @default(autoincrement())
-  accountNumber       String
-  ifscCode            String 
-  upiId               String?
-  bankName            String
-  userId              Int
-  user                User            @relation(fields: [userId], references: [id])
-  accountHolderName   String
-  email               String
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  withdrawals         Withdrawal[]
+  id                  Int               @id      @default(autoincrement())
+  accountNumber       String            @unique
+  ifscCode            String   
+  upiId               String?  
+  bankName            String  
+  userId              Int  
+  user                User              @relation(fields: [userId], references: [id])
+  accountHolderName   String  
+  email               String  
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  withdrawals         Withdrawal[]      
+  accountStatus       AccountStatus[]   
+  bankImage           String
 }
+
+model AccountStatus {
+   id              Int            @id      @default(autoincrement())
+   verified        Boolean                 @default(false)
+   bankAccountId   Int
+   reason          String    
+   bank            BankAccount             @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+   createdAt       DateTime                @default(now())
+}
+
 
 model Withdrawal{
   id                       Int             @id    @default(autoincrement())
