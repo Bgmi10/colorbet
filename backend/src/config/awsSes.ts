@@ -3,7 +3,7 @@ import AWS  from 'aws-sdk';
 const ses = new AWS.SES({ 
     region: 'eu-north-1',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    secretAccessKey: process.env.AWS_ACCESS_SECRET_KEY
 });
 
 export default async function sendOtp(email : string, otp: number, endpoint: string){

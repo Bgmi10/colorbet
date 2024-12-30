@@ -1,5 +1,5 @@
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import axios from "axios";
 import { baseurl } from "../../utils/constants";
 import ButtonLoader from "./ButtonLoader";
@@ -7,7 +7,26 @@ import { toast } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
-export default function EditPanel({ form, handleFormChange, setIsShowBankSearch, error, setError, setIsEditPanel, selectionEdit, setUser, setForm}) {
+interface Form {
+  accountHolderName: string;
+  accountNumber: string;
+  ifscCode: string;
+  bankName: string;
+  upiId: string;
+  bankImage: string;
+}
+
+export default function EditPanel({ form, handleFormChange, setIsShowBankSearch, error, setError, setIsEditPanel, selectionEdit, setUser, setForm}: {
+  form: Form,
+  handleFormChange: any,
+  setIsShowBankSearch: any,
+  error: any,
+  setError: any,
+  setIsEditPanel: any,
+  selectionEdit: any,
+  setUser: any,
+  setForm: any
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleEditBankApi = async (e: React.FormEvent) => {
@@ -23,16 +42,16 @@ export default function EditPanel({ form, handleFormChange, setIsShowBankSearch,
       
       if (res.status === 200) {
         setForm({ accountHolderName: "", accountNumber: "", ifscCode: "", bankName: "Select Bank Account*", upiId: "", bankImage: ""});
-        setUser((prev) => ({
+        setUser((prev: any) => ({
           ...prev,
-          bankAccounts: prev.bankAccounts.map((account) =>
+          bankAccounts: prev.bankAccounts.map((account: any) =>
             account.id === selectionEdit.id ? res.data.updatedBankData : account
           ),
         }));
         setIsEditPanel(false);
         toast.success("Bank account updated successfully");
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       setError(e.response?.data?.message || "An error occurred");
       toast.error(e.response?.data?.message || "Failed to update bank account");
@@ -119,7 +138,7 @@ export default function EditPanel({ form, handleFormChange, setIsShowBankSearch,
             disabled={isLoading}
           >
             {isLoading ? (
-              <ButtonLoader value="Saving" loader={true} />
+              <ButtonLoader value="Saving..." loader={true} />
             ) : (
               "Save Changes"
             )}

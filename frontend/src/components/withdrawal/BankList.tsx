@@ -1,4 +1,3 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion } from "framer-motion";
@@ -71,7 +70,7 @@ export default function BankList({
                       key={bank.id}
                       className="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer transition-colors duration-200"
                       onClick={() => {
-                        setForm(prev => ({...prev, bankName: bank.bankName, bankImage: bank.imageUrl || 'https://img.freepik.com/premium-photo/bank-money-finance_557469-13537.jpg?ga=GA1.1.1168591914.1718009553&semt=ais_hybrid'}))
+                        setForm((prev: any) => ({...prev, bankName: bank.bankName, bankImage: bank.imageUrl || 'https://img.freepik.com/premium-photo/bank-money-finance_557469-13537.jpg?ga=GA1.1.1168591914.1718009553&semt=ais_hybrid'}))
                         setIsShowBankSearch(false);
                         setBankResults([]);
                       }}

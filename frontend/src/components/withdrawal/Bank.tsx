@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faExclamationCircle, faAngleDown, faBank, faEdit, faTrash, faPlus, faCheckCircle, faTimesCircle, faInfo, faInfoCircle, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faExclamationCircle, faAngleDown, faBank, faEdit, faTrash, faPlus, faCheckCircle, faTimesCircle, faInfoCircle, faClose } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
 import Fuse from "fuse.js";
 import BankList from "./BankList";
@@ -18,13 +18,22 @@ interface Bank {
   imageUrl: string;
 }
 
+interface Form {
+  accountHolderName: string;
+  accountNumber: string;
+  ifscCode: string;
+  bankName: string;
+  upiId: string;
+  bankImage: string;
+}
 export default function Bank() {
+  //@ts-ignore
   const { user, setUser } = useContext(AuthContext);
   const [isForm, setIsForm] = useState(false);
   const [isShowBankSearch, setIsShowBankSearch] = useState(false);
   const [searchedBankName, setSearchedBankName] = useState('');
   const [bankResults, setBankResults] = useState<Bank[] | null>(null);
-  const [form, setForm] = useState({ accountHolderName: "", accountNumber: "", ifscCode: "", bankName: "Select Bank Account*", upiId: "", bankImage: ""})
+  const [form, setForm] = useState<Form>({ accountHolderName: "", accountNumber: "", ifscCode: "", bankName: "Select Bank Account*", upiId: "", bankImage: ""})
   const [error, setError] = useState('');
   const [deletepanel, setDeletePanel] = useState(false);
   const [selectiondelete, setSelectionDelete] = useState(null);
@@ -43,7 +52,7 @@ export default function Bank() {
     const timeOut = setTimeout(() => {
       if (searchedBankName.trim() !== "") {
         const res = fuse.search(searchedBankName.trim());
-        const a = res?.map((i) => i.item);
+        const a: any = res?.map((i) => i.item);
         setBankResults(a);
       } else {
         setBankResults([]);
@@ -132,8 +141,9 @@ export default function Bank() {
           <div className="rounded-lg p-6 lg:p-8">
             {!isForm ? (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
                 className="flex flex-col items-center gap-4"
               >
                 <div className="flex items-center gap-3">
@@ -163,7 +173,7 @@ export default function Bank() {
         ) : (
           <>
             <AnimatePresence>
-              {iseditpanel && (
+                {iseditpanel && (
                 <EditPanel
                   setUser={setUser}
                   setForm={setForm}
@@ -245,7 +255,14 @@ export default function Bank() {
   );
 }
 
-function BankForm({ form, handleFormChange, handleSubmit, error, setIsShowBankSearch, isLoading }) {
+function BankForm({ form, handleFormChange, handleSubmit, error, setIsShowBankSearch, isLoading }: {
+  form: Form,
+  handleFormChange: any,
+  handleSubmit: any,
+  error: string,
+  setIsShowBankSearch: any,
+  isLoading: boolean
+}) {
   return (
     <motion.form
       initial={{ opacity: 0, y: 20 }}
@@ -315,18 +332,18 @@ function BankForm({ form, handleFormChange, handleSubmit, error, setIsShowBankSe
   );
 }
 
-function BankCard({ account, onEdit, onDelete }) {
+function BankCard({ account, onEdit, onDelete }: { account: any, onEdit: any, onDelete: any}) {
   const isVerified = account?.accountStatus?.[0]?.verified ?? false;  
   const [isshowrules, setIshShowRules] = useState(false);
   const handleShowRules = () => {
     setIshShowRules(p => !p);
   }
-  return ( 
+  return  (
     <>
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
     >
       <div className={`p-2 text-center text-white flex justify-between ${isVerified ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -432,5 +449,7 @@ function BankCard({ account, onEdit, onDelete }) {
       </div>
     </motion.div>
     </>
-  );
+  )
 }
+  ;
+

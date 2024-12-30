@@ -1,11 +1,13 @@
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import axios from "axios";
 import { baseurl } from "../../utils/constants";
 import ButtonLoader from "./ButtonLoader";
 import { toast } from "react-hot-toast";
 
-export default function DeletePanel({ setDeletePanel, selectiondelete, deleteIcon, setUser }) {
+export default function DeletePanel({ setDeletePanel, selectiondelete, deleteIcon, setUser }: {
+  setDeletePanel: any, selectiondelete: any, deleteIcon: any, setUser: any
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleDeleteAccount = async () => {
@@ -14,9 +16,9 @@ export default function DeletePanel({ setDeletePanel, selectiondelete, deleteIco
       const res = await axios.delete(`${baseurl}/api/add-bankaccount/${selectiondelete?.id}`, { withCredentials: true });
       
       if (res.status === 200) {
-        setUser((prev) => ({
+        setUser((prev: any) => ({
           ...prev,
-          bankAccounts: prev.bankAccounts.filter((i) => i?.id !== res.data.restData.id),
+          bankAccounts: prev.bankAccounts.filter((i: any) => i?.id !== res.data.restData.id),
         }));
         setDeletePanel(false);
         toast.success("Bank account deleted successfully");

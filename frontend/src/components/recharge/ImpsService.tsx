@@ -221,7 +221,6 @@ export default function ImpsService() {
               <li>Click verify to complete the process</li>
             </ol>
           </div>
-
           {!success && (
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
               <div className="mb-4">
