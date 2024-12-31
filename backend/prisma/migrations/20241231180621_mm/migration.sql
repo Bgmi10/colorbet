@@ -111,6 +111,7 @@ CREATE TABLE "Withdrawal" (
     "transactionId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "completedAt" TIMESTAMP(3),
+    "payoutMethod" TEXT NOT NULL,
 
     CONSTRAINT "Withdrawal_pkey" PRIMARY KEY ("id")
 );

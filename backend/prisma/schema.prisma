@@ -117,6 +117,7 @@ model Withdrawal{
   transactionId            String
   createdAt                DateTime        @default(now())
   completedAt              DateTime?       
+  payoutMethod             String
  }          
 
 

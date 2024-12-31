@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { baseurl, chips } from "../../utils/constants";
 import axios from "axios";
+import Header from '../Header';
 
 export default function RechargeChip() {
     // @ts-ignore
@@ -98,14 +99,7 @@ export default function RechargeChip() {
 
     return (
         <div className="min-h-screen dark:bg-gray-900 text-white mb-14">
-            <header className="dark:bg-gray-800 p-4 flex items-center justify-between">
-                <Link to="/profile" className="text-yellow-500 hover:text-yellow-600 transition-colors">
-                    <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
-                </Link>
-                <h1 className="text-xl font-bold text-yellow-500">Recharge Wallet</h1>
-                <div className="w-6"></div>
-            </header>
-
+           <Header title='Recharge Wallet' link='/profile'/> 
             <main className="container mx-auto px-4 py-8">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}

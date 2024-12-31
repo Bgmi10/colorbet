@@ -11,6 +11,7 @@ import axios from "axios";
 import DeletePanel from "./DeletePanel";
 import EditPanel from "./EditPanel";
 import { toast } from "react-hot-toast";
+import Header from "../Header";
 
 interface Bank {
   id: string;
@@ -108,14 +109,7 @@ export default function Bank() {
 
   return ( 
     <div className="min-h-screen dark:bg-gray-900 mb-20">
-      <header className="p-4 flex items-center justify-between  dark:bg-gray-800 shadow-md dark:text-white text-gray-700">
-        <Link to="/profile" className="text-yellow-500 hover:text-yellow-600 transition-colors">
-          <FontAwesomeIcon icon={faArrowLeft} className="text-xl " />
-        </Link>
-        <h1 className="text-xl font-bold text-yellow-500 ">Bank Account Setup</h1>
-        <div className="w-6"></div>
-      </header>
-      
+     <Header title="Bank Account Setup" link="/profile" />
       <AnimatePresence>
         {deletepanel && (
           <DeletePanel

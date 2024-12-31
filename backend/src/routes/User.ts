@@ -1,5 +1,6 @@
 import express from 'express';
 import { prisma } from '../../prisma/prisma';
+import bcypt from 'bcrypt';
 
 const User = express.Router();
 
@@ -72,6 +73,37 @@ User.put("/userprofile", async(req: express.Request, res: express.Response) => {
     catch(e){
         console.log(e);
         res.status(500).json({ message: "internal server error" });
+    }
+});
+
+User.post("/checkpassword", async(req: express.Request, res: express.Response) => {
+    const { password } = req.query;
+       //@ts-ignore
+    const { email } = req.user
+
+    if(!password){
+        res.status(400).json({ message: "missing params" });
+        return;
+    }
+    try{
+        const user = await prisma.user.findUnique({ 
+            where: { email },
+         });
+
+         if(!user){
+            res.status(404).json({ message: "not found user" });
+            return;
+         }
+
+         const checkPassword = await bcypt.compare(String(password), user.password);
+
+         if(!checkPassword){
+            res.status(400).json({ message: "password not matched" });
+         }
+         res.status(200).json({ message: "password matched" });
+    }
+    catch(e){
+        console.log(e);
     }
 })
 

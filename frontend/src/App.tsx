@@ -13,7 +13,8 @@ import RechargeChip from "./components/recharge/RechargeChip";
 import ImpsService from "./components/recharge/ImpsService";
 import { Suspense } from "react";
 import Loader from "./components/Loader";
-import Bank from "./components/withdrawal/Bank";
+import Bank from "./components/bindbank/Bank";
+import Withdraw from "./components/withdrawal/Withdraw";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
            <Route element={ <Profile /> } path="/profile" />
            <Route element={ <ImpsService /> } path="/payment-imps" />
            <Route element={ <Bank /> } path="/bank-account" />
+           <Route element={ <Withdraw /> } path="/withdrawal-chip" />
           </Routes>
           <AppBar />
         </Suspense>

@@ -71,10 +71,10 @@ BankAccountRoute.post("/withdrawal", async(req: express.Request, res: express.Re
        res.status(400).json({ message: "invalid request" });
        return;
     }
-    const { bankAccountId, amount } = req.body;
+    const { bankAccountId, amount, payoutMethod } = req.body;
     //@ts-ignore
     const { email } = req.user;
-    if(!bankAccountId || !amount){
+    if(!bankAccountId || !amount || !payoutMethod){
        res.status(400).json({ message: "missing body" });
        return;
     }
@@ -94,10 +94,24 @@ BankAccountRoute.post("/withdrawal", async(req: express.Request, res: express.Re
                 connect: { id: bankAccountId }
             },
             transactionId: generateTransactionId(),
-            withdrawalStatus: "PENDING" 
+            withdrawalStatus: "PENDING",
+            payoutMethod
            }
         });
-        res.status(200).json({ message: "withdrawal requested success" });
+        if(amount < user.balance){
+            
+        }
+       const user1 = await prisma.user.update({
+            where: {
+                email
+            },
+            data: {
+                balance: {
+                    decrement: amount
+                }
+            }
+        })
+        res.status(200).json({ message: "withdrawal requested success", updatedBalance: user1.balance });
     }
     catch(e){
         console.log(e);
