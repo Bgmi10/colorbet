@@ -31,10 +31,10 @@ export default function WithdrawalRecords() {
     };
 
     return (
-        <div className="dark:bg-gray-900 min-h-screen">
+        <div className="dark:bg-gray-900 min-h-screen mb-16">
             <Header title="Withdrawal Records" link="/profile"/>
             <div className="container mx-auto py-8 px-4 lg:px-0">
-                {user?.withdrawals.length === 0 ? (
+                {user?.withdrawals?.length === 0 ? (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

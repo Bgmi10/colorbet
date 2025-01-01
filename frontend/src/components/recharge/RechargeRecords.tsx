@@ -26,7 +26,7 @@ export default function RechargeRecords() {
     };
 
     return (
-        <div className="dark:bg-gray-900 min-h-screen">
+        <div className="dark:bg-gray-900 min-h-screen mb-16">
             <Header title="Withdrawal Records" link="/profile"/>
             <div className="container mx-auto py-8 px-4 lg:px-0">
                 {user?.payments.length === 0 ? (

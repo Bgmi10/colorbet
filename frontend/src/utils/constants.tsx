@@ -218,27 +218,15 @@ export const chips = [
         options: [
             {
                 id: "1",
-                title: "Reset Password",
+                title: "Change Password",
                 icon: <FontAwesomeIcon icon={faUndoAlt} className="text-2xl" />,
-                link: "/reset-password"
-            },
-            {
-                id: "2",
-                title: "Two-Factor Authentication",
-                icon: <FontAwesomeIcon icon={faLockOpen} className="text-2xl" />, 
-                link: "/two-factor-authentication"
+                link: "/change-password"
             },
             {
                 id: "3",
                 title: "Login Activity",
                 icon: <FontAwesomeIcon icon={faHistory} className="text-2xl" />,
                 link: "/login-activity"
-            },
-            {
-                id: "4",
-                title: "Manage Devices",
-                icon: <FontAwesomeIcon icon={faMobileAlt} className="text-2xl" />,
-                link: "/manage-devices"
             },
             {
                 id: "5",

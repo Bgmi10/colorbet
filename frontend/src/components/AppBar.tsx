@@ -38,7 +38,7 @@ export default function AppBar() {
     {
       id: "5",
       icon: <FaPlaceOfWorship className={iconClass} />,
-      link: "/avaitor",
+      link: "/aviator",
       label: "Aviator"
     }
   ];

@@ -108,7 +108,7 @@ export default function Bank() {
   };
 
   return ( 
-    <div className="min-h-screen dark:bg-gray-900 mb-20">
+    <div className="min-h-screen dark:bg-gray-900 mb-16">
      <Header title="Bank Account Setup" link="/profile" />
       <AnimatePresence>
         {deletepanel && (

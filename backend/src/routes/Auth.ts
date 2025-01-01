@@ -5,7 +5,7 @@ import express from 'express';
 import { validEmail } from "../utils/constants";
 import Signinotp from "../middlewares/Signinotp";
 import verifysigninotp from "../middlewares/verifysigninotp";
-import { signinSchema, loginSchema, forget_passoword_schema } from "../utils/zod";
+import { signinSchema, loginSchema, forget_passoword_schema, changePassword } from "../utils/zod";
 import forgetotp from "../middlewares/forgetotp";
 import verifyforgetotp from "../middlewares/verifyforgetotp";
 import Authmiddleware from "../middlewares/Authmiddleware";
@@ -184,6 +184,56 @@ AuthRouter.post('/forgetpassword', verifyforgetotp, async (req: express.Request,
     catch(e){
         console.log(e);
     }
+});
+
+
+AuthRouter.post("/change-password", Authmiddleware, async (req: express.Request, res: express.Response) => {
+
+    const isvalid = changePassword.safeParse(req.body);
+
+    if(!isvalid.success){
+        res.status(400).json({ message: "invalid request" });
+        return;
+    }
+    const { oldPassword, newPassword } = req.body;
+    //@ts-ignore
+    const { email } = req.user;
+
+    if(!oldPassword || !newPassword){
+        res.status(400).json({ message: "missing body" });
+        return;
+    }
+
+    try{
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if(!user){
+            res.status(404).json({ message: "not found" });
+            return;
+        }
+
+        const isValidPassword = await bcrypt.compare(oldPassword, user?.password);
+
+        if(!isValidPassword){
+            res.status(400).json({ message: "old password not matched" });
+            return ;
+        }
+
+        const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.user.update({
+            where: { email },
+            data: {
+                password: encryptedPassword
+            }
+        });
+        res.status(200).json({ message: "password changed success" })
+    }
+    catch(e){
+        console.log(e);
+    } 
 });
 
 export default AuthRouter;

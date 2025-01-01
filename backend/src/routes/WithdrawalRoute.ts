@@ -39,8 +39,6 @@ WithdrawalRoute.post("/withdrawal", async(req: express.Request, res: express.Res
 
      const amountToTransfer = amount - withdrawalFee;
 
-     console.log(amountToTransfer)
-
     try{
         await prisma.withdrawal.create({
            data: {
@@ -67,9 +65,30 @@ WithdrawalRoute.post("/withdrawal", async(req: express.Request, res: express.Res
                 balance: {
                     decrement: amount  
                 }
-            }
-        })
-        res.status(200).json({ message: "withdrawal requested success", updatedBalance: user1.balance });
+            },
+            select: {
+                balance: true,
+                    withdrawals: {
+                        select: {
+                            id: true,
+                            amount: true,
+                            amountToTransfer: true,
+                            transactionId: true,
+                            withdrawalStatus: true,
+                            createdAt: true,
+                            withdrawalFee: true,
+                            payoutMethod: true,
+                            bank: {
+                                select: {
+                                    bankImage: true,
+                                    bankName: true
+                                }
+                            }
+                        }
+                    }
+                } 
+           })
+        res.status(200).json({ message: "withdrawal requested success", updatedData: user1 });
     }   
     catch(e){
         console.log(e);

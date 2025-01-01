@@ -43,3 +43,9 @@ export const withdrawal = z.object({
     amount: z.number().positive(),
     payoutMethod: z.string()
 })
+
+
+export const changePassword = z.object({
+    oldPassword: z.string(),
+    newPassword: z.string()
+})

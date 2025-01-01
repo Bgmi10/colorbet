@@ -70,14 +70,14 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900  text-white">
+        <div className="min-h-screen bg-white dark:bg-gray-900 text-white mb-16">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex justify-between p-4 shadow-md relative"
+                className="flex justify-between p-4 shadow-md relative items-center"
             >
-                <span className="text-yellow-500 text-2xl font-bold ">Profile</span>
+                <span className="text-yellow-500 text-xl font-bold">Profile</span>
                 <div className="flex items-center space-x-4">
                     <Link to="/recharge-chip">
                         <motion.button
@@ -109,10 +109,10 @@ export default function Profile() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                    className=''
+                    className="relative h-[140px] w-[140px]"
                     >
                     <img src={user?.avatarUrl !== "" ? user?.avatarUrl : selectedAvatar} alt="avatar" className="rounded-full relative"/>
-                   { <img src={vip1Frame} alt="frame" className="mt-[-151px] ml-[-13px] absolute"/> }
+                   {/* { <img src={vip1Frame} alt="frame" className="top-[-4px] left-[-7px] absolute"/> } */}
                 </motion.div>
                 <motion.button
                     onClick={handleShowAvatar}
@@ -125,7 +125,7 @@ export default function Profile() {
                 </motion.button>
             </div>
             <motion.div 
-                className="mt-8 px-6"
+                className="mt-2 px-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -133,7 +133,7 @@ export default function Profile() {
                 <div className="dark:bg-gray-900 rounded-md p-6">
                  <div className="grid grid-cols-2 gap-4">
                         <motion.div 
-                            className="dark:bg-gray-700 bg-slate-100 bg-gray- p-4 rounded-md"
+                            className="dark:bg-gray-800 bg-slate-100 bg-gray- p-4 rounded-md"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3, duration: 0.5 }}
@@ -143,7 +143,7 @@ export default function Profile() {
                             <p className="dark:text-white text-gray-700 font-bold text-lg">{user?.memberId}</p>
                         </motion.div>
                         <motion.div 
-                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md flex justify-between"
+                            className="dark:bg-gray-800 bg-slate-100 p-4 rounded-md flex justify-between"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.4, duration: 0.5 }}
@@ -153,7 +153,7 @@ export default function Profile() {
                                  
                                   <p className="text-gray-400 text-sm">Username</p>
                                   <div className='flex gap-3 items-center'>
-                                  <input className={`dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white  p-1 ${ !isEditUserName ? "dark:bg-gray-700" : "dark:bg-gray-200  bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
+                                  <input className={`dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white  p-1 ${ !isEditUserName ? "dark:bg-gray-800" : "dark:bg-gray-200  bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
                                   { 
                                     isEditUserName &&
                                      <div className='flex gap-4'>
@@ -166,7 +166,7 @@ export default function Profile() {
                              <div><FontAwesomeIcon icon={faEdit}  onClick={()=> setIsEditName(p => !p)} className='cursor-pointer hover:text-gray-500 text-gray-400'/></div>
                         </motion.div>
                         <motion.div 
-                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md"
+                            className="dark:bg-gray-800 bg-slate-100 p-4 rounded-md"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5, duration: 0.5 }}
@@ -176,7 +176,7 @@ export default function Profile() {
                             <p className="dark:text-white text-gray-700 font-bold text-lg">₹ {(user?.balance / 100).toFixed(2)}</p>
                         </motion.div>
                         <motion.div 
-                            className="dark:bg-gray-700 bg-slate-100 p-4 rounded-md"
+                            className="dark:bg-gray-800 bg-slate-100 p-4 rounded-md"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6, duration: 0.5 }}
@@ -196,7 +196,7 @@ export default function Profile() {
                 {ProfileSetttingsData.map((item: any) => (
                     <motion.div 
                         key={item.id} 
-                        className="px-6 py-4 dark:hover:bg-gray-700 hover:bg-slate-100 transition-colors duration-200"
+                        className="px-6 py-4 dark:hover:bg-gray-800 hover:bg-slate-100 transition-colors duration-200"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: item.id * 0.1 }}

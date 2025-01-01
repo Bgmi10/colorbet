@@ -17,12 +17,16 @@ import Bank from "./components/bindbank/Bank";
 import Withdraw from "./components/withdrawal/Withdraw";
 import WithdrawalRecords from "./components/withdrawal/WithdrawalRecords";
 import RechargeRecords from "./components/recharge/RechargeRecords";
+import ColorGame from "./components/color/ColorGame";
+import Blog from "./components/blog/Blog";
+import Aviator from "./components/aviator/Aviator";
+import ChangePassword from "./components/auth/ChangePassword";
 
 function App() {
   return (
     <>
        <Router>
-        <Suspense fallback={ <Loader /> }>
+        <Suspense fallback={ <><Loader /></> }>
           <Routes>
            <Route element={ <GameComponent /> } path="/A-vs-B" />
            <Route element={ <Login /> } path="/login" />
@@ -40,6 +44,10 @@ function App() {
            <Route element={ <Withdraw /> } path="/withdrawal-chip" />
            <Route element={ <WithdrawalRecords /> } path="withdrawal-records" />
            <Route element={ <RechargeRecords /> } path="/transaction-history" />
+           <Route element={ <ColorGame /> } path="/color" />
+           <Route element={ <Blog /> } path="/blog" />
+           <Route element={ <Aviator /> } path="/aviator" />
+           <Route element={ <ChangePassword /> } path="/change-password" />
           </Routes>
           <AppBar />
         </Suspense>

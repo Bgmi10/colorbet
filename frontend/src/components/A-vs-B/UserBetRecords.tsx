@@ -130,13 +130,13 @@ export const UserBetRecords = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className='text-xs font-normal absolute dark:bg-slate-900 bg-gray-400 text-white rounded-md p-2 right-8 mt-[-50px] border border-gray-500 z-10'
+                    className='text-xs font-normal absolute dark:bg-slate-900 bg-gray-400 dark:text-white text-gray-700 rounded-md p-2 right-8 mt-[-50px] border border-gray-500 z-10'
                   >
                     0.02% commission is applied on winnings; 0% commission on losses.
                   </motion.div>
                 )}
               </AnimatePresence>
-              <thead className="text-xs dark:text-black text-gray-700 uppercase dark:bg-gray-700 bg-slate-200">
+              <thead className="text-xs dark:text-white text-gray-700 uppercase dark:bg-gray-700 bg-slate-200">
                 <tr>
                   <th scope="col" className="px-4 sm:px-6 py-3 hidden sm:table-cell">Game ID</th>
                    <th scope="col" className="px-4 sm:px-6 py-3 ">Bet Amount</th>

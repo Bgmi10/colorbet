@@ -8,12 +8,25 @@ import { baseurl, payoutMethods } from "../../utils/constants";
 import axios from "axios";
 import Header from '../Header';
 
+interface Withdrawal{
+    id: string;
+    withdrawalStatus: string;
+    bank: Bank[],
+    amount: number;
+    transactionId: string;
+    createdAt: string;
+    payoutMethod: string;
+    withdrawalFee: number;
+    amountToTransfer: number;
+}
+
 interface Bank{
     id: string;
     accountNumber: string;
     bankName: string;
     bankImage: string;
     accountHolderName: string;
+    withdrawals: Withdrawal
 }
 
 export default function Withdraw() {
@@ -62,7 +75,7 @@ export default function Withdraw() {
             }, { withCredentials: true });
 
             if (res.status === 200) {
-                setUser((prev: Bank) => ({ ...prev, balance: res.data.updatedBalance }));
+                setUser((prev: Bank) => ({ ...prev, balance: res.data.updatedData.balance, withdrawals: res.data.updatedData.withdrawals }));
                 setSuccess("Withdrawal request submitted successfully!");
                 setIsBankOpen(false);
             }
@@ -196,10 +209,10 @@ export default function Withdraw() {
                                 {user.bankAccounts.map((bank: Bank) => (
                                     <motion.div 
                                         key={bank.id}
-                                        className={`p-4 rounded-lg transition-all duration-300 cursor-pointer ${
+                                        className={`p-4 rounded-lg transition-all duration-300 cursor-pointer dark:border-gray-700 border-gray-300 border ${
                                             selectedBankAccount?.id === bank.id 
-                                                ? 'dark:bg-gray-800 border border-gray-300' 
-                                                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-yellow-500'
+                                                ? 'dark:bg-gray-800' 
+                                                : 'bg-white dark:bg-gray-800 dark:border-gray-700 hover:border-yellow-500'
                                         }`}
                                         onClick={() => setSelectedBankAccount(bank)}
                                     >
@@ -348,7 +361,7 @@ export default function Withdraw() {
                       </div>
                       <div className="flex justify-between items-center dark:bg-gray-800 bg-slate-300 p-3 sm:p-4 rounded-lg">
                         <span className="dark:text-gray-300 text-gray-700 text-sm sm:text-base">Account Number</span>
-                        <span className="text-white font-medium text-sm sm:text-base">{selectedBankAccount?.accountNumber}</span>
+                        <span className="dark:text-gray-300 text-gray-700 font-medium text-sm sm:text-base">{selectedBankAccount?.accountNumber}</span>
                       </div>
                     </div>
               
