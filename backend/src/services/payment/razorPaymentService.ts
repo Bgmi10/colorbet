@@ -27,7 +27,7 @@ export const createOrder = async (amount: number, currency: string = "INR") => {
 
 export const updateUserBalance = async (memberId: string, amount: number) => {
        try{
-           const user = await prisma.user.update({
+            await prisma.user.update({
             where: { memberId },
             data: {
                 balance: {

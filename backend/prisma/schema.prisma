@@ -118,6 +118,8 @@ model Withdrawal{
   createdAt                DateTime        @default(now())
   completedAt              DateTime?       
   payoutMethod             String
+  withdrawalFee            Int
+  amountToTransfer         Int
  }          
 
 

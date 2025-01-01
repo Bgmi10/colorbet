@@ -20,7 +20,7 @@ const GameComponent = () => {
   const [amount, setAmount] = useState(10);
   const [chosenSide, setChosenSide] = useState('A');
   //@ts-ignore
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   //@ts-ignore
   const [result, setResult] = useState(null);
   const [isbetting, setIsbetting] = useState(true);
@@ -53,12 +53,13 @@ const GameComponent = () => {
      
       if(data?.type === "updatedBalance"){
         setUpdatedBalance(data?.updatedBalance / 100)
+        setUser((p: any) => ({ ...p, balance: data?.updatedBalance }))
       }
       if (data?.type === "timer" || data?.type === "gameStarted") {
         setTimer(data?.timeleft);
         if(data?.bettingOpen){
           setIsbetting(true);
-        }
+        } 
         if (data?.type === "gameStarted") {
           setGameEnded(false)
           setRevealCards(false);

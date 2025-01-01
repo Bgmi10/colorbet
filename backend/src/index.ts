@@ -14,6 +14,7 @@ import Authmiddleware from './middlewares/Authmiddleware';
 import razorPayment from './routes/razorPayment';
 import impsRouter from './routes/imps';
 import BankAccountRoute from './routes/BankAccountRoute';
+import WithdrawalRoute from './routes/WithdrawalRoute';
 
 const app = express();
 const port = 3005;
@@ -51,7 +52,8 @@ app.use('/api/auth', limiter, Authmiddleware, User);
 app.use('/api/game', limiter, GameUserBetRecord);
 app.use('/api/payment', limiter, razorPayment);
 app.use('/api/payment', limiter, Authmiddleware, impsRouter);
-app.use('/api', limiter, Authmiddleware, BankAccountRoute)
+app.use('/api', limiter, Authmiddleware, BankAccountRoute);
+app.use('/api', limiter, Authmiddleware, WithdrawalRoute);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {

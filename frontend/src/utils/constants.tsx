@@ -49,7 +49,7 @@ import Avatar11 from "../../public/assets/change_head/Avatar11.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //@ts-ignore
 import kotakPng1 from '../../public/assets/kotak.ico'
-import { faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBank, faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 const isprod = false;
 export const baseurl = isprod ? 'http://54.165.116.40:3005' : 'http://localhost:3005'
 
@@ -196,6 +196,12 @@ export const chips = [
                 title: "Transaction history",
                 link: "/transaction-history",
                 icon: <FontAwesomeIcon icon={faExchangeAlt} className="text-2xl"/>
+            },
+            {
+              id: "4",
+              title: "Withdrawal Records",
+              link: "/withdrawal-records",
+              icon: <FontAwesomeIcon icon={faHistory} className="text-2xl"/>
             }
         ]
     },
@@ -275,7 +281,7 @@ export const chips = [
     }
 ];
 
-export const kotakPng = kotakPng1
+export const kotakPng = kotakPng1;
 
 export const appName = "colorwiz";
 
@@ -512,6 +518,18 @@ export const bankDatas = [
    }
 ]
 
+export const payoutMethods = [
+  {
+      id: "1",
+      name: "UPI Transfer",
+      logo: () => <FontAwesomeIcon icon={faWallet} className="text-xl text-yellow-500" />
+  },
+  {
+      id: "2",
+      name: "IMPS Transfer",
+      logo: () => <FontAwesomeIcon icon={faBank} className="text-xl text-yellow-500" />
+  }
+];
 
 
-export const newGif = "https://www.iob.in/new-icon.gif"
+export const newGif = "https://www.iob.in/new-icon.gif";

@@ -27,7 +27,7 @@ export default function PaymentSuccess({ data, onComplete }: { data: any, onComp
 
   return (
     <AnimatePresence>
-      <div className="min-h-screen dark:bg-gray-900   flex justify-center items-start pt-5 px-4 mb-16 ">
+      <div className="min-h-screen dark:bg-gray-900  flex justify-center items-start pt-5 px-4 mb-16 ">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}

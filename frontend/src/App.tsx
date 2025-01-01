@@ -15,6 +15,8 @@ import { Suspense } from "react";
 import Loader from "./components/Loader";
 import Bank from "./components/bindbank/Bank";
 import Withdraw from "./components/withdrawal/Withdraw";
+import WithdrawalRecords from "./components/withdrawal/WithdrawalRecords";
+import RechargeRecords from "./components/recharge/RechargeRecords";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
            <Route element={ <ImpsService /> } path="/payment-imps" />
            <Route element={ <Bank /> } path="/bank-account" />
            <Route element={ <Withdraw /> } path="/withdrawal-chip" />
+           <Route element={ <WithdrawalRecords /> } path="withdrawal-records" />
+           <Route element={ <RechargeRecords /> } path="/transaction-history" />
           </Routes>
           <AppBar />
         </Suspense>

@@ -16,8 +16,36 @@ User.get('/userprofile', async(req: express.Request, res: express.Response) => {
                 balance: true,
                 userName: true,
                 memberId: true,
-                payments: true,
-                withdrawals: true,
+                payments: {
+                    select: {
+                        id: true,
+                        amount: true,
+                        upiRef: true,
+                        status: true,
+                        createdAt: true,
+                        senderMobile: true,
+                        senderName: true,
+                        remarks: true
+                    }
+                },
+                withdrawals: {
+                    select: {
+                        transactionId: true,
+                        id: true,
+                        bank: {
+                            select: {
+                                bankImage: true,
+                                bankName: true
+                            }
+                        },
+                        payoutMethod: true,
+                        createdAt: true,
+                        amount: true,
+                        withdrawalFee: true,
+                        withdrawalStatus: true,
+                        amountToTransfer: true
+                    }
+                },
                 bankAccounts: {
                     select: {
                         id: true,

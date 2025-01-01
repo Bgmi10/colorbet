@@ -40,6 +40,6 @@ export const addBankAccount = z.object({
 
 export const withdrawal = z.object({
     bankAccountId: z.number(),
-    amount: z.number(),
+    amount: z.number().positive(),
     payoutMethod: z.string()
 })

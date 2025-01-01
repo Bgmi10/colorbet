@@ -115,7 +115,7 @@
             console.log('No match found for remarks');
             return null;
         }
-        console.log('Extracted Remarks:', remarksMatch[1].trim());
+
         return remarksMatch[1].trim();
     }
     
@@ -131,15 +131,16 @@
     }
 
     public async searchForPaymentEmail(config: EmailSearchConfig): Promise<EmailVerificationResult> {
-        console.log('Starting email search for reference:', config.referenceNumber);
-        
         try {
           await this.connectToImap();
           await this.openMailbox();
-          
+          const date = new Date();
+          date.setDate(date.getDate() - 1);
+          const past24Hours = date.toISOString().split('T')[0];
           const searchCriteria = [
             ['FROM', config.fromEmail],
             ['SUBJECT', config.subjectPartial],
+            ['SINCE', past24Hours]
           ];
           
           const results = await this.searchEmails(searchCriteria);

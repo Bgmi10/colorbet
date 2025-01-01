@@ -64,63 +64,6 @@ BankAccountRoute.post("/add-bankaccount", async (req: express.Request, res: expr
     }
 });
 
-
-BankAccountRoute.post("/withdrawal", async(req: express.Request, res: express.Response) => {
-    const isValidReq = withdrawal.safeParse(req.body);
-    if(!isValidReq.success){
-       res.status(400).json({ message: "invalid request" });
-       return;
-    }
-    const { bankAccountId, amount, payoutMethod } = req.body;
-    //@ts-ignore
-    const { email } = req.user;
-    if(!bankAccountId || !amount || !payoutMethod){
-       res.status(400).json({ message: "missing body" });
-       return;
-    }
-    const user = await prisma.user.findUnique({
-        where: { email },
-        select: { id: true }
-    });
-
-    try{
-        await prisma.withdrawal.create({
-           data: {
-            amount,
-            user: {
-                connect: { id: user?.id}
-            },
-            bank: {
-                connect: { id: bankAccountId }
-            },
-            transactionId: generateTransactionId(),
-            withdrawalStatus: "PENDING",
-            payoutMethod
-           }
-        });
-        if(amount < user.balance){
-            
-        }
-       const user1 = await prisma.user.update({
-            where: {
-                email
-            },
-            data: {
-                balance: {
-                    decrement: amount
-                }
-            }
-        })
-        res.status(200).json({ message: "withdrawal requested success", updatedBalance: user1.balance });
-    }
-    catch(e){
-        console.log(e);
-        res.status(500).json({ message: "internal server error" });
-    }
-
-});
-
-
 BankAccountRoute.delete("/add-bankaccount/:id", async (req: express.Request, res: express.Response) => {
     const { id } = req.params;
 
@@ -187,6 +130,8 @@ BankAccountRoute.put("/edit-bankaccount/:id", async (req: express.Request, res: 
         console.log(e);
         res.status(500).json({ message: "internal server error" })
     }
-})
+});
+
+
 
 export default BankAccountRoute;

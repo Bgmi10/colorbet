@@ -6,9 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 //@ts-ignore
 import vip1Frame from "../../../public/assets/headFrame/vip1.png";
-import { baseurl, profileAvatar } from "../../utils/constants";
+import { baseurl, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
-import { ProfileSetttingsData } from "../../utils/constants"
 import TopNavDropdown from './TopNavDropdown';
 import axios from 'axios';
 import { ThemeContext } from '../../context/ThemeContext';
