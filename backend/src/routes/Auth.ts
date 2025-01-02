@@ -9,6 +9,7 @@ import { signinSchema, loginSchema, forget_passoword_schema, changePassword } fr
 import forgetotp from "../middlewares/forgetotp";
 import verifyforgetotp from "../middlewares/verifyforgetotp";
 import Authmiddleware from "../middlewares/Authmiddleware";
+import LoginActivity from "../middlewares/LoginActivity";
 
 const AuthRouter = express.Router();
 const isProd = false;
@@ -59,6 +60,8 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
        const hashedpassword = await bcrypt.hash(password, 10);
 
     try {
+       const { browser, location, connectionType, deviceType, ip, isp, os } = await LoginActivity(req);
+
        const user = await prisma.user.create({
             data: {
               userName: name,
@@ -67,13 +70,29 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
               email,
               balance: 0.00,
               avatarUrl: ""
-            }
+            },
         });
+
         await prisma.otp.delete({
             where: { email }
         });
         const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, {
             expiresIn: '10h'
+        });
+
+        await prisma.loginActivity.create({
+            data: {
+                userId: user?.id,
+                browser,
+                location,
+                connectionType,
+                deviceType,
+                ip,
+                isp,
+                os,
+                sessionToken: token,
+                loginStatus: 'true'
+            }
         });
     
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
@@ -95,6 +114,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
     }
 
     const { email, password } = req.body;
+    const { browser, location, connectionType, deviceType, ip, isp, os } = await LoginActivity(req);
 
     if(!email || !password){
          res.status(400).json({
@@ -109,6 +129,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
     }
 
     try {
+        
        const user =  await prisma.user.findUnique({
             where: { email }
         });
@@ -126,6 +147,22 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
         }
         
         const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
+        
+        await prisma.loginActivity.create({
+            data: {
+                userId: user?.id,
+                browser,
+                location,
+                connectionType,
+                deviceType,
+                ip,
+                isp,
+                os,
+                sessionToken: token,
+                loginStatus: 'true'
+            }
+        });
+
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
         secure: process.env.NODE_ENV === 'production' });
         res.status(200).json({ message: "logged In successfully"});
@@ -136,8 +173,10 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 });
 
 
-AuthRouter.post('/logout', (req : express.Request, res : express.Response) => {
-     
+AuthRouter.post('/logout', Authmiddleware, (req : express.Request, res : express.Response) => {
+      //@ts-ignore
+      const { token } = req.user;
+      
      res.cookie('token', '', { expires : new Date(0), path: '/', httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
      secure: process.env.NODE_ENV === 'production'});
      res.status(200).json({ message : 'logged out successfully' });

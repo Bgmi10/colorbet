@@ -19,6 +19,27 @@ model User {
   payments       Payment[]
   bankAccounts   BankAccount[]
   withdrawals    Withdrawal[]
+  loginActivities LoginActivity[]
+}
+
+model LoginActivity {
+  id              Int         @unique        @default(autoincrement())
+  userId          Int  
+  user            User        @relation(fields: [userId], references: [id])
+  loginStatus     String
+  browser         String
+  os              String
+  deviceType      String
+  deviceModel     String?
+  ip              String
+  location        String?
+  sessionToken    String
+  loginTime       DateTime    @default(now())
+  logoutTime      DateTime?
+  isp             String?
+  connectionType  String
+  authMethod      String      @default("emailandpassword")
+  platform        String?
 }
 
 model Game {

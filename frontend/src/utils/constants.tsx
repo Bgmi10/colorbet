@@ -49,7 +49,7 @@ import Avatar11 from "../../public/assets/change_head/Avatar11.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //@ts-ignore
 import kotakPng1 from '../../public/assets/kotak.ico'
-import { faBank, faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faLockOpen, faMailBulk, faMobileAlt, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBank, faCoins, faCreditCard, faEnvelope, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faMailBulk, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 const isprod = false;
 export const baseurl = isprod ? 'http://54.165.116.40:3005' : 'http://localhost:3005'
 

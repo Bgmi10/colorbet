@@ -15,6 +15,8 @@ const Authmiddleware = (req: express.Request , res: express.Response , next: exp
     if(istoken){
         //@ts-ignore
        req.user = istoken;
+       //@ts-ignore
+       req.token = istoken;
        next();
     }
 }
