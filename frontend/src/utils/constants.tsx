@@ -229,12 +229,6 @@ export const chips = [
                 link: "/login-activity"
             },
             {
-                id: "5",
-                title: "Update Email",
-                icon: <FontAwesomeIcon icon={faEnvelope} className="text-2xl" />,
-                link: "/update-email"
-            },
-            {
                 id: "6",
                 title: "Close Account",
                 icon: <FontAwesomeIcon icon={faTimesCircle} className="text-2xl" />,

@@ -4,7 +4,7 @@ import bcypt from 'bcrypt';
 
 const User = express.Router();
 
-User.get('/userprofile', async(req: express.Request, res: express.Response) => {
+User.get("/userprofile", async(req: express.Request, res: express.Response) => {
      //@ts-ignore
     const { email } = req.user;
     try{
@@ -16,6 +16,22 @@ User.get('/userprofile', async(req: express.Request, res: express.Response) => {
                 balance: true,
                 userName: true,
                 memberId: true,
+                loginActivities: {
+                    select: {
+                        id: true,
+                        browser: true,
+                        os: true,
+                        ip: true,
+                        loginTime: true,
+                        logoutTime: true,
+                        authMethod: true,
+                        isp: true,
+                        connectionType: true,
+                        location: true,
+                        deviceModel: true,
+                        deviceType: true
+                    }
+                },
                 payments: {
                     select: {
                         id: true,
@@ -133,6 +149,29 @@ User.post("/checkpassword", async(req: express.Request, res: express.Response) =
     catch(e){
         console.log(e);
     }
-})
+});
+
+User.delete("/delete-account", async(req: express.Request, res: express.Response) => {
+    //@ts-ignore
+      const { userId } = req.user;
+
+      try{
+        await prisma.user.delete({
+            where: { id: userId }
+        });
+        res.cookie('token', '', {
+            expires: new Date(0),
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' 
+        })
+        res.status(200).json({ message: "user deleted success" });
+      }
+      catch(e){
+        console.log(e);
+        res.status(500).json({ message: "internal server error" });
+      }
+
+});
 
 export default User;

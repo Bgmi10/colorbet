@@ -157,7 +157,10 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
         const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
 
         await prisma.loginActivity.updateMany({
-            where: { userId: user?.id, logoutTime: null },
+            where: { userId: user?.id, logoutTime: null, NOT: {
+                ip: ip,
+                deviceType: deviceType
+            } },
             data: {
                 logoutTime: new Date(),
                 sessionToken: ''
@@ -190,36 +193,33 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
 });
 
 
-AuthRouter.post(
-    '/logout',
-    Authmiddleware,
-    async (req: express.Request, res: express.Response) => {
+AuthRouter.post('/logout', Authmiddleware, async (req: express.Request, res: express.Response) => {
       //@ts-ignore
       const { userId } = req.user;
       //@ts-ignore
       const token = req.token;
 
       try {
-        // const login = await prisma.loginActivity.findFirst({
-        //     where: {
-        //         userId: userId,
-        //         sessionToken: token,
-        //         logoutTime: null
-        //     }
-        // });
+        const login = await prisma.loginActivity.findFirst({
+            where: {
+                userId: userId,
+                sessionToken: token,
+                logoutTime: null
+            }
+        });
     
-        // if(!login){
-        //     res.status(404).json({ message: "no active sessions found" });
-        //     return;
-        // }
+        if(!login){
+            res.status(404).json({ message: "no active sessions found" });
+            return;
+        }
         
-        // await prisma.loginActivity.update({
-        //     where: {id: login.id},
-        //     data: {
-        //         logoutTime: new Date(),
-        //         sessionToken: ''
-        //     }
-        // })
+        await prisma.loginActivity.update({
+            where: {id: login.id},
+            data: {
+                logoutTime: new Date(),
+                sessionToken: ''
+            }
+        });
         
         res.cookie('token', '', {
           expires: new Date(0),
@@ -234,7 +234,7 @@ AuthRouter.post(
         res.status(500).json({ message: 'Error logging out', error: err.message });
       }
     }
-  );
+);
   
 
 AuthRouter.post('/generate-forget-otp', forgetotp, (req: express.Request, res: express.Response) => {

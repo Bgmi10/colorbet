@@ -25,7 +25,7 @@ model User {
 model LoginActivity {
   id              Int         @id   @default(autoincrement())
   userId          Int  
-  user            User        @relation(fields: [userId], references: [id])
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   browser         String
   os              String
   deviceType      String
@@ -64,7 +64,7 @@ model Bet {
   id            Int        @id @default(autoincrement())
   amount        Float
   chosenSide    String 
-  user          User       @relation(fields: [userId], references: [id])
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
   game          Game       @relation(fields: [gameId], references: [id])
   gameId        Int
@@ -95,7 +95,7 @@ model Payment {
   userId        Int
   status        String
   createdAt     DateTime   @default(now())
-  user          User       @relation(fields: [userId], references: [id])
+  user          User       @relation(fields: [userId], references: [id],  onDelete: Cascade)
   senderMobile  String 
   remarks       String?
   senderName    String
@@ -108,7 +108,7 @@ model BankAccount {
   upiId               String?  
   bankName            String  
   userId              Int  
-  user                User              @relation(fields: [userId], references: [id])
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountHolderName   String  
   email               String  
   createdAt           DateTime          @default(now())
@@ -132,7 +132,7 @@ model Withdrawal{
   id                       Int             @id    @default(autoincrement())
   withdrawalStatus         WithdrwalStatus @default(PENDING)
   userId                   Int        
-  user                     User            @relation(fields: [userId], references: [id])
+  user                     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   bankAccountId            Int
   bank                     BankAccount     @relation(fields: [bankAccountId], references: [id])
   amount                   Int

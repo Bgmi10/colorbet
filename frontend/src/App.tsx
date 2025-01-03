@@ -20,8 +20,10 @@ import RechargeRecords from "./components/recharge/RechargeRecords";
 import ColorGame from "./components/color/ColorGame";
 import Blog from "./components/blog/Blog";
 import Aviator from "./components/aviator/Aviator";
-import ChangePassword from "./components/auth/ChangePassword";
+import ChangePassword from "./components/account-security/ChangePassword";
 import OtpLoginVerify from "./components/auth/OtpLoginVerify";
+import LoginActivity from "./components/account-security/LoginActivity";
+import CloseAccount from "./components/account-security/CloseAccount";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
            <Route element={ <Blog /> } path="/blog" />
            <Route element={ <Aviator /> } path="/aviator" />
            <Route element={ <ChangePassword /> } path="/change-password" />
+           <Route element={ <LoginActivity /> } path="/login-activity" />
+           <Route element={ <CloseAccount /> } path="/close-account" />
           </Routes>
           <AppBar />
         </Suspense>
