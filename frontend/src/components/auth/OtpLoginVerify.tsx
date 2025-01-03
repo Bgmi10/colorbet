@@ -1,24 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { baseurl } from "../../utils/constants";
 
-export default function OtpSigninverify() {
+export default function OtpLoginVerify() {
   const [userInput, setUserInput] = useState(new Array(6).fill(""));
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
   const [canEnterOtp, setCanEnterOtp] = useState(false);
   const [canResend, setCanResend] = useState(false);
+  const [redirectCounter] = useState(15);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const controls = useAnimation();
   const timerIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const user = JSON.parse(localStorage.getItem("user-forget-password-form") || "{}");
+  const user = JSON.parse(localStorage.getItem("user-form") || "{}");
 
   const startTimer = () => {
     // Clear any existing timer
@@ -107,16 +105,16 @@ export default function OtpSigninverify() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post(baseurl + "/api/auth/forgetpassword", {
+      const res = await axios.post(baseurl + "/api/auth/login", {
         email: user.email,
-        newpassword: user.newpassword,
+        password: user.password,
         otp,
-      });
+      }, { withCredentials: true });
 
       if (res.status === 200) {
-        navigate("/login", { replace: true });
-        localStorage.removeItem('user-forget-password-form');
         localStorage.removeItem('otpTimestamp');
+        localStorage.removeItem('user-form');
+        window.location.href = ('/A-vs-B');
       } else {
         throw new Error(res.data?.message || "Invalid OTP");
       }
@@ -136,12 +134,12 @@ export default function OtpSigninverify() {
   const handleResendOtp = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${baseurl}/api/auth/generate-forget-otp`, {
-        email: user?.email,
+      const res = await axios.post(`${baseurl}/api/auth/generate-login-otp`, {
+        email: user?.email
       });
       setError(res.data?.message || "OTP resent successfully");
-      startTimer();
       localStorage.setItem("otpTimestamp", Date.now().toString());
+      startTimer();
     } catch (e: any) {
       setError(e.response?.data?.message || "Failed to resend OTP");
     } finally {
@@ -166,20 +164,25 @@ export default function OtpSigninverify() {
               value={digit}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className="w-12 h-12 text-center text-2xl dark:bg-gray-700 bg-gray-100 dark:text-white text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
+              className="w-12 h-12 text-center text-2xl dark:bg-gray-700 dark:text-white bg-gray-100 text-gray-700 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-yellow-500"
               aria-label={`Digit ${index + 1}`}
               disabled={!canEnterOtp}
             />
           ))}
         </motion.div>
-        {error && error !== "otp sent sucessfully check your email" && (
+        {error && error !== "otp sent to your email. please check it" && (
           <p className="text-red-500 text-sm text-center mb-4" role="alert">
             {error}
           </p>
         )}
-        {error === "otp sent sucessfully check your email" && (
+        {error === "otp sent to your email. please check it" && (
           <p className="text-green-500 text-sm text-center mb-4" role="alert">
             {error}
+          </p>
+        )}
+        {error === "user with this email is already exist try to login" && (
+          <p className="text-yellow-500 text-sm text-center mb-4" role="alert">
+            Redirecting to login page in {redirectCounter} seconds
           </p>
         )}
         <div className="text-center">
@@ -187,7 +190,7 @@ export default function OtpSigninverify() {
             <button
               onClick={handleResendOtp}
               className="px-4 py-2 rounded-md bg-amber-500 hover:bg-amber-600 text-white transition-colors duration-200"
-              disabled={loading}
+              disabled={loading || user === "{}"}
             >
               {loading ? <FontAwesomeIcon icon={faSpinner} spin /> : "Send OTP"}
             </button>
@@ -199,11 +202,10 @@ export default function OtpSigninverify() {
         </div>
         {loading && !canResend && (
           <div className="text-center mt-4">
-            <FontAwesomeIcon icon={faSpinner} spin className="text-amber-500 text-2xl" />
+            <FontAwesomeIcon icon={faSpinner} spin className="text-yellow-500 text-2xl" />
           </div>
         )}
       </div>
     </div>
   );
 }
-

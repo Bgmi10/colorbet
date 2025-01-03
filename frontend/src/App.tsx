@@ -21,6 +21,7 @@ import ColorGame from "./components/color/ColorGame";
 import Blog from "./components/blog/Blog";
 import Aviator from "./components/aviator/Aviator";
 import ChangePassword from "./components/auth/ChangePassword";
+import OtpLoginVerify from "./components/auth/OtpLoginVerify";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
            <Route element={<ProtectOtpPage children={ <Outlet /> } /> }>
              <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
              <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
+             <Route element={ <OtpLoginVerify />} path="/otp-login-verify" />
            </Route>
            <Route element={ <RechargeChip /> } path="/recharge-chip" />
            <Route element={ <Profile /> } path="/profile" />

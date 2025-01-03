@@ -10,13 +10,15 @@ import forgetotp from "../middlewares/forgetotp";
 import verifyforgetotp from "../middlewares/verifyforgetotp";
 import Authmiddleware from "../middlewares/Authmiddleware";
 import LoginActivity from "../middlewares/LoginActivity";
+import loginotp from "../middlewares/loginotp";
+import verifyloginotp from "../middlewares/verifyloginotp";
 
 const AuthRouter = express.Router();
 const isProd = false;
 
 AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
 
-    res.status(200).json({ message : "otp sent to your email. please verify it" });
+    res.status(200).json({ message : "otp sent to your email. please check it" });
     
 });
 
@@ -91,7 +93,9 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
                 isp,
                 os,
                 sessionToken: token,
-                loginStatus: 'true'
+                loginTime: new Date(),
+                logoutTime: null,
+                authMethod: 'emailandpassword'
             }
         });
     
@@ -104,7 +108,11 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
     }
 });
 
-AuthRouter.post('/login' , async (req: express.Request, res: express.Response) => {
+AuthRouter.post('/generate-login-otp', loginotp, (req: express.Request, res: express.Response) => {
+      res.status(200).json({ message: "otp sent to your email. please check it" });
+})
+
+AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: express.Response) => {
 
     const isvalidreq = loginSchema.safeParse(req.body);
 
@@ -135,7 +143,7 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
         });
 
         if(!user){
-          res.status(404).json({ message: "User not found!" });
+          res.status(404).json({ message: "User not found!. try to signin." });
           return;
         }
 
@@ -147,7 +155,15 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
         }
         
         const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
-        
+
+        await prisma.loginActivity.updateMany({
+            where: { userId: user?.id, logoutTime: null },
+            data: {
+                logoutTime: new Date(),
+                sessionToken: ''
+            }
+        });
+
         await prisma.loginActivity.create({
             data: {
                 userId: user?.id,
@@ -159,7 +175,8 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
                 isp,
                 os,
                 sessionToken: token,
-                loginStatus: 'true'
+                loginTime: new Date(),
+                logoutTime: null
             }
         });
 
@@ -173,17 +190,52 @@ AuthRouter.post('/login' , async (req: express.Request, res: express.Response) =
 });
 
 
-AuthRouter.post('/logout', Authmiddleware, (req : express.Request, res : express.Response) => {
+AuthRouter.post(
+    '/logout',
+    Authmiddleware,
+    async (req: express.Request, res: express.Response) => {
       //@ts-ignore
-      const { token } = req.user;
-      
-     res.cookie('token', '', { expires : new Date(0), path: '/', httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
-     secure: process.env.NODE_ENV === 'production'});
-     res.status(200).json({ message : 'logged out successfully' });
-     
+      const { userId } = req.user;
+      //@ts-ignore
+      const token = req.token;
 
-});
-
+      try {
+        // const login = await prisma.loginActivity.findFirst({
+        //     where: {
+        //         userId: userId,
+        //         sessionToken: token,
+        //         logoutTime: null
+        //     }
+        // });
+    
+        // if(!login){
+        //     res.status(404).json({ message: "no active sessions found" });
+        //     return;
+        // }
+        
+        // await prisma.loginActivity.update({
+        //     where: {id: login.id},
+        //     data: {
+        //         logoutTime: new Date(),
+        //         sessionToken: ''
+        //     }
+        // })
+        
+        res.cookie('token', '', {
+          expires: new Date(0),
+          path: '/',
+          httpOnly: true,
+          sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+          secure: process.env.NODE_ENV === 'production',
+        });
+  
+        res.status(200).json({ message: 'Logged out successfully' });
+      } catch (err: any) {
+        res.status(500).json({ message: 'Error logging out', error: err.message });
+      }
+    }
+  );
+  
 
 AuthRouter.post('/generate-forget-otp', forgetotp, (req: express.Request, res: express.Response) => {
      

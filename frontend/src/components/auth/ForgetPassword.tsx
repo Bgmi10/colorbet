@@ -15,6 +15,7 @@ export default function ForgetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
+  
 
   useEffect(() => { 
     localStorage.setItem('user-forget-password-form', JSON.stringify(form));
@@ -40,16 +41,12 @@ export default function ForgetPassword() {
       return;
     }
     if (!validEmail(form?.email)) {
-      setErr('Email is not valid')
-      setLoading(false)
+      setErr('Email is not valid');
+      setLoading(false);
       return
     }
-
-    // Simulating API call
-    setTimeout(() => {
-      setLoading(false)
-      navigate('/otp-forget-verify')
-    }, 1000)
+      setLoading(false);
+      navigate('/otp-forget-verify');
   }
 
   return (

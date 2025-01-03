@@ -17,7 +17,34 @@ export default function OtpSigninverify() {
   const navigate = useNavigate();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const controls = useAnimation();
+  const timerIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const user = JSON.parse(localStorage.getItem("user-form") || "{}");
+
+  const startTimer = () => {
+    // Clear any existing timer
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+
+    setTimer(60);
+    setCanEnterOtp(true);
+    setCanResend(false);
+
+    timerIntervalRef.current = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer <= 1) {
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+          }
+          setCanResend(true);
+          setCanEnterOtp(false);
+          localStorage.removeItem('otpTimestamp');
+          return 0;
+        }
+        return prevTimer - 1;
+      });
+    }, 1000);
+  };
 
   useEffect(() => {
     const storedTimestamp = localStorage.getItem("otpTimestamp");
@@ -27,10 +54,12 @@ export default function OtpSigninverify() {
       const elapsedTime = currentTime - parseInt(storedTimestamp);
       if (elapsedTime < 60000) {
         setTimer(60 - Math.floor(elapsedTime / 1000));
-        setCanEnterOtp(true);
+        setCanEnterOtp(true);   
         setCanResend(false);
+        startTimer();
       } else {
         setCanResend(true);
+        localStorage.removeItem('otpTimestamp');
         setCanEnterOtp(false);
       }
     } else {
@@ -38,40 +67,12 @@ export default function OtpSigninverify() {
       setCanEnterOtp(false);
     }
 
-    const interval = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer <= 1) {
-          setCanResend(true);
-          setCanEnterOtp(false);
-          clearInterval(interval);
-          return 0;
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
   }, []);
-//@ts-ignore
-  const checkTimerStatus = () => {
-    const storedTimestamp = localStorage.getItem("otpTimestamp");
-    if (storedTimestamp) {
-      const elapsedSeconds = Math.floor(
-        (Date.now() - parseInt(storedTimestamp)) / 1000
-      );
-      if (elapsedSeconds < 60) {
-        setTimer(60 - elapsedSeconds);
-        setCanEnterOtp(true);
-        setCanResend(false);
-      } else {
-        setCanResend(true);
-        setCanEnterOtp(false);
-      }
-    } else {
-      setCanResend(true);
-      setCanEnterOtp(false);
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const { value } = e.target;
@@ -140,10 +141,8 @@ export default function OtpSigninverify() {
         email: user?.email
       });
       setError(res.data?.message || "OTP resent successfully");
-      setTimer(60);
-      setCanResend(false);
-      setCanEnterOtp(true);
       localStorage.setItem("otpTimestamp", Date.now().toString());
+      startTimer();
     } catch (e: any) {
       setError(e.response?.data?.message || "Failed to resend OTP");
     } finally {
@@ -191,12 +190,12 @@ export default function OtpSigninverify() {
             />
           ))}
         </motion.div>
-        {error && error !== "otp sent to your email. please verify it" && (
+        {error && error !== "otp sent to your email. please check it" && (
           <p className="text-red-500 text-sm text-center mb-4" role="alert">
             {error}
           </p>
         )}
-        {error === "otp sent to your email. please verify it" && (
+        {error === "otp sent to your email. please check it" && (
           <p className="text-green-500 text-sm text-center mb-4" role="alert">
             {error}
           </p>

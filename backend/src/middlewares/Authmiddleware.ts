@@ -1,7 +1,18 @@
-import jwt from 'jsonwebtoken';
-import express from 'express';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 
-const Authmiddleware = (req: express.Request , res: express.Response , next: express.NextFunction ) => {
+interface CustomReq  extends Request{
+    user?: string | JwtPayload;
+    token?: string
+}
+
+interface Token extends JwtPayload{
+    email: string;
+    iat: number;
+    exp: number;
+    userId: string
+}
+const Authmiddleware = (req: CustomReq , res: Response , next: NextFunction ) => {
 
     const { token } = req.cookies;
 
@@ -10,13 +21,11 @@ const Authmiddleware = (req: express.Request , res: express.Response , next: exp
         return;
     }
     
-    const istoken: any = jwt.verify(token, process.env.JWT_SECRET as string);
+    const istoken: Token = jwt.verify(token, process.env.JWT_SECRET as string) as Token;
 
     if(istoken){
-        //@ts-ignore
        req.user = istoken;
-       //@ts-ignore
-       req.token = istoken;
+       req.token = token;
        next();
     }
 }

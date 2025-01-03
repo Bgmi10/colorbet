@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
-import axios from "axios";
-import { baseurl, validEmail } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import { validEmail } from "../../utils/constants";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,6 +11,7 @@ export default function Login() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>();
+  const navigate = useNavigate();
 
   const handlechange = (e : React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,7 +21,11 @@ export default function Login() {
 
   useEffect(() => {
       ref?.current?.focus();
-  },[ref])
+  },[ref]);
+
+  useEffect(() => {
+    localStorage.setItem("user-form", JSON.stringify(form));
+  }, [form]);
 
   const handleSubmit = async () => {
     if (!form.email || !form.password) {
@@ -31,26 +35,9 @@ export default function Login() {
     if (!validEmail(form?.email)) {
       return setErr("Please enter a valid email address.");
     }
-
-    try {
       setLoading(true);
-
-      const res = await axios.post(baseurl + "/api/auth/login", {
-        email: form?.email,
-        password: form?.password,
-      }, {
-        withCredentials: true
-      });
-
-      if(res.status === 200){
-        window.location.href = ('/A-vs-B');
-      }
+      navigate('/otp-login-verify');
       setLoading(false);
-    } catch (e: any){
-      console.error(e);
-      setLoading(false);
-      setErr(e.response.data.message);
-    }
   };
 
 

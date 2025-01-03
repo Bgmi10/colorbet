@@ -8,7 +8,7 @@ interface User{
   memberId: string;
   balance: number
 }
-// bug balance return in string instead of number
+
 export const AuthContext = createContext<{
   user: User | null,
   isAuthenticated: boolean | null,
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children } : {children : any}) => {
        });
  
        localStorage.clear();
-       window.location.href = "/login"
+       window.location.href = "/login";
       }
       catch(e){
         console.log(e);
