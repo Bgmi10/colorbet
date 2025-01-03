@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ComingSoon from "../ComingSoon";
-import { faGlassCheers, faWineBottle } from "@fortawesome/free-solid-svg-icons";
+import { faGlassCheers } from "@fortawesome/free-solid-svg-icons";
 
 export default function ColorGame (){
     return(

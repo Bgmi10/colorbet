@@ -67,7 +67,7 @@ export default function CloseAccount (){
   return(
    <>
      <div className="h-screen dark:bg-gray-900 flex items-center justify-center flex-col">
-      <div className="dark:bg-gray-800 bg-slate-200 flex flex-col items-center rounded-md gap-3 p-5 w-full max-w-md">
+      <div className="dark:bg-gray-800 bg-slate-00 shadow-md flex flex-col items-center rounded-md gap-3 p-5 w-full max-w-md">
         <div className="p-5 rounded-md text-center">
           <span className="text-yellow-500 font-semibold text-3xl">Delete Account</span>
         </div>
@@ -76,8 +76,8 @@ export default function CloseAccount (){
             type={"text"}
             value={user?.email}
             name="oldPassword"
-            placeholder="Old Password"
-            className="w-full dark:bg-gray-700 opacity-40 p-3 rounded-md outline-none dark:text-white text-gray-700"
+            placeholder="email"
+            className="w-full dark:bg-gray-700 bg-gray-100 border border-gray-600 opacity-40 p-3 rounded-md outline-none dark:text-white text-gray-700"
             disabled
           />
         </div>
@@ -86,8 +86,8 @@ export default function CloseAccount (){
           <input
             type={isshowNewPassword ? "text" : "password"}
             name="newPassword"
-            placeholder="New Password"
-            className="w-full dark:bg-gray-700 p-3 rounded-md outline-none dark:text-white text-gray-700"
+            placeholder="Password"
+            className="w-full dark:bg-gray-700  bg-gray-100 border-gray-600 border p-3 rounded-md outline-none  dark:text-white text-gray-700"
             onChange={(e) => setUserInput(e.target.value) }
           />
           <FontAwesomeIcon

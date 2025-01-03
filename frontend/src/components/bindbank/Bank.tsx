@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faExclamationCircle, faAngleDown, faBank, faEdit, faTrash, faPlus, faCheckCircle, faTimesCircle, faInfoCircle, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faExclamationCircle, faAngleDown, faBank, faEdit, faTrash, faPlus, faCheckCircle, faTimesCircle, faInfoCircle, faClose } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
 import Fuse from "fuse.js";
 import BankList from "./BankList";
@@ -261,7 +260,7 @@ function BankForm({ form, handleFormChange, handleSubmit, error, setIsShowBankSe
     <motion.form
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4 max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+      className="space-y-4 max-w-md mx-auto dark:bg-gray-800 p-6 rounded-lg shadow-lg"
       onSubmit={handleSubmit}
     >
       <input 

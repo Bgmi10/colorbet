@@ -2,7 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { baseurl } from "../../utils/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import ButtonLoader from "../bindbank/ButtonLoader";
 
 export default function ChangePassword() {
   const [form, setForm] = useState({ oldPassword: "", newPassword: "" });
@@ -55,12 +56,12 @@ export default function ChangePassword() {
             type={isshowOldPassword ? "text" : "password"}
             name="oldPassword"
             placeholder="Old Password"
-            className="w-full dark:bg-gray-700 p-3 rounded-md outline-none dark:text-black text-gray-700"
+            className="w-full dark:bg-gray-700 p-3 rounded-md outline-none dark:text-white text-gray-700"
             onChange={handleChange}
           />
           <FontAwesomeIcon
             icon={isshowOldPassword ? faEye : faEyeSlash}
-            className="absolute right-3 top-3 dark:text-black text-gray-700 cursor-pointer"
+            className="absolute right-3 top-3 dark:text-gray-900 text-gray-700 cursor-pointer"
             onClick={() => setIsShowOldPassword(!isshowOldPassword)}
           />
         </div>
@@ -70,12 +71,12 @@ export default function ChangePassword() {
             type={isshowNewPassword ? "text" : "password"}
             name="newPassword"
             placeholder="New Password"
-            className="w-full dark:bg-gray-700 p-3 rounded-md outline-none dark:text-black text-gray-700"
+            className="w-full dark:bg-gray-700 p-3 rounded-md outline-none dark:text-white text-gray-700"
             onChange={handleChange}
           />
           <FontAwesomeIcon
             icon={isshowNewPassword ? faEye : faEyeSlash}
-            className="absolute right-3 top-3 dark:text-black text-gray-700 cursor-pointer"
+            className="absolute right-3 top-3 dark:text-gray-900 text-gray-700 cursor-pointer"
             onClick={() => setIsShowNewPassword(!isshowNewPassword)}
           />
         </div>
@@ -90,11 +91,7 @@ export default function ChangePassword() {
           aria-busy={loading}
           aria-live="polite"
         >
-          {loading ? (
-            <FontAwesomeIcon icon={faSpinner} spin aria-hidden="true" />
-          ) : (
-            "Change Password"
-          )}
+          <ButtonLoader value="submit" loader={loading}/>
         </button>
       </div>
     </div>

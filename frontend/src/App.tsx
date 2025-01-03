@@ -24,10 +24,12 @@ import ChangePassword from "./components/account-security/ChangePassword";
 import OtpLoginVerify from "./components/auth/OtpLoginVerify";
 import LoginActivity from "./components/account-security/LoginActivity";
 import CloseAccount from "./components/account-security/CloseAccount";
+import LiveChat from "./components/livechat/LiveChat";
 
 function App() {
   return (
     <>
+    <LiveChat />
        <Router>
         <Suspense fallback={ <><Loader /></> }>
           <Routes>
@@ -55,6 +57,7 @@ function App() {
            <Route element={ <LoginActivity /> } path="/login-activity" />
            <Route element={ <CloseAccount /> } path="/close-account" />
           </Routes>
+          
           <AppBar />
         </Suspense>
        </Router>
