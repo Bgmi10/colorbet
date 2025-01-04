@@ -17,11 +17,15 @@
     "@lottiefiles/react-lottie-player": "^3.5.4",
     "@mui/icons-material": "^6.3.1",
     "@mui/material": "^6.3.1",
+    "@types/aws-sdk": "^0.0.42",
     "@types/crypto-js": "^4.2.2",
     "@types/firebase": "^2.4.32",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.20",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
     "firebase": "^11.1.0",
     "framer-motion": "^11.11.11",
     "fuse.js": "^7.0.0",
@@ -32,7 +36,8 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.4.0",
     "react-lottie": "^1.2.10",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

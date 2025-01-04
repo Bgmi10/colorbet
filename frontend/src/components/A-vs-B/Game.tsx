@@ -111,7 +111,7 @@ const GameComponent = () => {
     return () => {
       ws.close();
     };
-  }, []);
+  },[]);
 
   useMemo(() => game, [game])
 
@@ -162,7 +162,7 @@ const GameComponent = () => {
             </div>
             </div>
              <div className="justify-center flex">
-               <img src={vsImg} alt="VS"/>
+               <img src={vsImg} alt="VS" />
              </div>
             <div className="flex items-center">
               <div className='flex flex-col text-center'>
