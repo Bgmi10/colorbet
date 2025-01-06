@@ -11,7 +11,6 @@ import SendIcon from '@mui/icons-material/Send';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import CloseIcon from '@mui/icons-material/Close';
 import { format } from "date-fns";
 import { AuthContext } from "../../context/AuthContext";
 import { appName } from "../../utils/constants";
@@ -19,6 +18,10 @@ import PoweredBy from "../recharge/PoweredBy";
 import { uploadToS3 } from "../../utils/uploadToS3";
 import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
+import "./custom-scroll.css"
+import LiveChatMenuBar from "./LiveChatMenuBar";
+import ImagePreview from "./ImagePreview";
+import ButtonLoader from "../bindbank/ButtonLoader";
 
 interface Time {
   seconds: number;
@@ -33,13 +36,14 @@ interface Message {
   seen: boolean;
   email: string;
   timeStamp: Time;
-  imageUrl?: string;
+  imageUrl?: any;
 }
 
 export default function LiveChat() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [ischattabopen, setChatTabOpen] = useState(false);
   const [usermessage, setUserMessage] = useState('');
+  //@ts-ignore
   const { user } = useContext(AuthContext);
   const [isactivechat, setIsActiveChat] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
@@ -48,11 +52,13 @@ export default function LiveChat() {
   const [agentStatus, setAgentStatus] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
+  const [loader, setLoader] = useState(false);
   const chatContentRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef(null);
   const { scrollY } = useScroll({ container: chatContentRef });
-  const logoY = useTransform(scrollY, [0, -50], [0, -50]);
-  const logoScale = useTransform(scrollY, [0, 50], [1, 0.8]);
+  const logoY = useTransform(scrollY, [0, 50], [0, -70]); // Move to center (50vw - half of the image width)
+  const logoScale = useTransform(scrollY, [0, 50], [1, 0.7]);
+
 
   const handlFilesClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,12 +78,12 @@ export default function LiveChat() {
     }
 
     try {
-      let imageUrl: string = '';
 
+      let imageUrl: any = '';
+      setLoader(true);
       if (image) {
         imageUrl = await uploadToS3(image, 'live-chat');
       }
-
       const ref = doc(db, 'chats', `${user?.memberId}`);
       const messageId = `${new Date().getTime()}-${Math.floor(Math.random() * 10000)}`;
       const messageData: any = {
@@ -93,11 +99,14 @@ export default function LiveChat() {
       if (imageUrl) {
         messageData.imageUrl = imageUrl;
       }
+ 
       await setDoc(doc(ref, 'messages', messageId), messageData);
       setImage(null);
       setUserMessage('');
+      setLoader(false);
     } catch (e) {
       console.log(e);
+      setLoader(false);
     }
   }
 
@@ -129,8 +138,9 @@ export default function LiveChat() {
   }, [user]);
 
   useEffect(() => {
-    if (chatContentRef.current) {
-      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+    if (lastMessageRef.current) {
+      //@ts-ignore
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
@@ -144,26 +154,7 @@ export default function LiveChat() {
 
   return (
     <>
-      <AnimatePresence>
-        {!isChatOpen && (
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            exit={{ scale: 0, rotate: 180 }}
-            transition={{ duration: 0.5, type: "spring", stiffness: 260, damping: 20 }}
-            className="fixed bottom-20 right-2 z-50 sm:bottom-10 sm:right-10"
-          >
-            <img
-              src="/assets/colorbet.png"
-              alt="live-chat-image"
-              width={64}
-              height={64}
-              className="cursor-pointer rounded-full"
-              onClick={() => setIsChatOpen(true)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <LiveChatMenuBar isChatOpen={ischattabopen} setIsChatOpen={setIsChatOpen}/>
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -177,7 +168,7 @@ export default function LiveChat() {
             }}
             exit={{ opacity: 0, scale: 0.8, y: 100 }}
             transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-            className={`fixed ${isExpanded ? 'inset-0' : 'right-2 bottom-24 sm:right-10 sm:bottom-10'} z-50 from-white via-yellow-50 to-yellow-200 bg-transparent bg-gradient-to-t rounded-2xl border-none outline-none overflow-hidden shadow-lg`}
+            className={`fixed ${isExpanded ? 'inset-0' : 'right-2 bottom-24 sm:right-2 sm:bottom-2'} z-50 from-white via-yellow-50 to-yellow-200 bg-transparent bg-gradient-to-t rounded-2xl border-none outline-none overflow-hidden shadow-lg`}
           >
             {!ischattabopen ? (
               <>
@@ -189,9 +180,9 @@ export default function LiveChat() {
                   />
                   <FaMinus onClick={() => setIsChatOpen(false)} className="text-3xl text-gray-700 hover:bg-white rounded-md p-1 cursor-pointer" />
                 </div>
-                <div className="h-[400px] flex flex-col">
+                <div className={`h-[400px] flex flex-col`}>
                   <motion.div
-                    className="flex p-4"
+                    className="flex p-4 mt-[-15px]"
                     style={{ y: logoY, scale: logoScale }}
                   >
                     <img
@@ -199,16 +190,16 @@ export default function LiveChat() {
                       alt="live-chat-image"
                       width={56}
                       height={56}
-                      className="cursor-pointer rounded-full z-50"
+                      className="cursor-pointer rounded-full"
                     />
                   </motion.div>
-                  <div
-                    ref={chatContentRef}
-                    className="flex-grow overflow-y-auto px-6 py-4"
-                    style={{ scrollBehavior: 'smooth' }}
-                  >
+                    <div
+                      ref={chatContentRef}
+                      className="flex-grow overflow-y-auto px-6 custom-scrollbar" 
+                      style={{ scrollBehavior: 'smooth' }}
+                    >
                     <motion.div
-                      className="flex flex-col gap-2 mb-8"
+                      className="flex flex-col gap-2"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2, duration: 0.5 }}
@@ -217,7 +208,7 @@ export default function LiveChat() {
                       <span className="text-4xl font-bold">{appName} Club!</span>
                     </motion.div>
                     <motion.div
-                      className="bg-gray-100 p-4 rounded-2xl mb-[-6px]"
+                      className="bg-gray-100 p-4 rounded-2xl mb-[3px] mt-2"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4, duration: 0.5 }}
@@ -350,7 +341,7 @@ export default function LiveChat() {
                       </div>
                     </motion.div>
                   )}
-                  <div className="m-4 overflow-y-auto mb-20" ref={chatContentRef}>
+                  <div className="m-4 mb-2" ref={chatContentRef}>
                     {isactivechat && (
                       <>
                         <div>
@@ -388,6 +379,7 @@ export default function LiveChat() {
                         </div>
                       </>
                     )}
+                    <div ref={lastMessageRef}/>
                   </div>
                 </div>
                 <motion.div 
@@ -396,56 +388,37 @@ export default function LiveChat() {
                   animate={{ y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="flex items-center">
-                    <input
-                      type="text"
-                      className="flex-grow bg-gray-100 rounded-full py-2 px-4 mr-2 focus:outline-none"
-                      placeholder="Type a message"
-                      value={usermessage}
-                      onChange={(e) => setUserMessage(e.target.value)}
-                    />
+                {isactivechat &&  <div className="flex items-center" >
+                  <div className="flex flex-col w-full">
+                       <input
+                         type="text" 
+                         className="flex-grow bg-gray-100 rounded-full py-2 px-4 mr-2 focus:outline-none"
+                         placeholder="Type a message"
+                         value={usermessage}
+                         onChange={(e) => setUserMessage(e.target.value)}
+                       />
+                       { error && <span className="text-red-500 text-xs ml-2">{error}</span> }
+                       { image && <span className="text-xs ml-2">{image.name}</span> }
+                    </div>
                     <label htmlFor="file-upload" className="cursor-pointer mr-2">
-                      <AttachFileIcon className="text-gray-600" />
+                      <AttachFileIcon className="text-gray-600" /> 
                     </label>
                     <input type="file" id="file-upload" onChange={handlFilesClick} className="hidden" />
                     <button 
-                      className="bg-yellow-500 text-white rounded-full p-2 hover:bg-yellow-600 transition-colors duration-300"
+                      className={`${usermessage.length === 0 ? "bg-gray-500 hover:bg-grau" : "bg-yellow-500 hover:bg-yellow-600 " } text-white rounded-full p-2 transition-colors duration-300`}
                       onClick={handleSubmit}
+                      disabled={usermessage.length === 0 }
                     >
-                      <SendIcon />
+                      <ButtonLoader loader={loader} value={<SendIcon />} /> 
                     </button>
-                  </div>
+                  </div>}
                 </motion.div>
               </>
             )}
           </motion.div>
         )}
       </AnimatePresence>
-      <AnimatePresence>
-        {previewImage && (
-          <motion.div 
-            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div 
-              className="relative"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
-              <img src={previewImage} alt="Preview" className="max-w-full max-h-[90vh] rounded-lg" />
-              <button 
-                className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
-                onClick={() => setPreviewImage(null)}
-              >
-                <CloseIcon />
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ImagePreview previewImage={previewImage} setPreviewImage={setPreviewImage} />
     </>
   );
 }
