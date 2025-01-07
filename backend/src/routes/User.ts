@@ -16,6 +16,7 @@ User.get("/userprofile", async(req: express.Request, res: express.Response) => {
                 balance: true,
                 userName: true,
                 memberId: true,
+                role: true,
                 loginActivities: {
                     select: {
                         id: true,

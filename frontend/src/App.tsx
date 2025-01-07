@@ -1,5 +1,4 @@
-import { BrowserRouter as Router , Routes , Route, Outlet } from "react-router-dom"
-import GameComponent from "./components/A-vs-B/Game";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom"
 import Login from "./components/auth/Login";
 import Notfound from "./Notfound";
 import SignIn from "./components/auth/SignIn";
@@ -11,7 +10,7 @@ import Profile from "./components/profile/Profile";
 import ProtectOtpPage from "./components/auth/ProtectOtpPage";
 import RechargeChip from "./components/recharge/RechargeChip";
 import ImpsService from "./components/recharge/ImpsService";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import Loader from "./components/Loader";
 import Bank from "./components/bindbank/Bank";
 import Withdraw from "./components/withdrawal/Withdraw";
@@ -25,6 +24,10 @@ import OtpLoginVerify from "./components/auth/OtpLoginVerify";
 import LoginActivity from "./components/account-security/LoginActivity";
 import CloseAccount from "./components/account-security/CloseAccount";
 import LiveChat from "./components/livechat/LiveChat";
+import AdminProtected from "./admin/AdminProtected";
+import Admin from "./admin/Admin";
+
+const GameComponent = lazy(() => import("./components/A-vs-B/Game"));
 
 function App() {
   return (
@@ -38,7 +41,7 @@ function App() {
            <Route element={ <SignIn /> } path="/signin" />
            <Route element={ <Notfound /> } path="*" />
            <Route element={ <ForgetPassword /> } path="/forget-password" />
-           <Route element={<ProtectOtpPage children={ <Outlet /> } /> }>
+           <Route element={ <ProtectOtpPage children={ <Outlet /> } /> }>
              <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
              <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
              <Route element={ <OtpLoginVerify />} path="/otp-login-verify" />
@@ -56,8 +59,10 @@ function App() {
            <Route element={ <ChangePassword /> } path="/change-password" />
            <Route element={ <LoginActivity /> } path="/login-activity" />
            <Route element={ <CloseAccount /> } path="/close-account" />
+           <Route element={<AdminProtected /> }>  
+             <Route element={ <Admin /> } path="/admin" />
+           </Route>
           </Routes>
-          
           <AppBar />
         </Suspense>
        </Router>

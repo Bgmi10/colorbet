@@ -60,7 +60,7 @@ export default function AppBar() {
             onMouseLeave={() => setHoveredId(null)}
           >
             <motion.button
-              className="focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-full p-3 dark:bg-gray-800 bg-slate-200 relative z-10"
+              className={`focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-full p-3 dark:bg-gray-800 bg-slate-200 relative z-10`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >

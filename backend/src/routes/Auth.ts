@@ -62,6 +62,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
        const hashedpassword = await bcrypt.hash(password, 10);
 
     try {
+        const checkAdmin = email === "subashchandraboseravi45@gmail.com";
        const { browser, location, connectionType, deviceType, ip, isp, os } = await LoginActivity(req);
 
        const user = await prisma.user.create({
@@ -71,7 +72,8 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
               password: hashedpassword,
               email,
               balance: 0.00,
-              avatarUrl: ""
+              avatarUrl: "",
+              role: checkAdmin ? "ADMIN" : "USER"
             },
         });
 

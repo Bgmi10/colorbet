@@ -10,16 +10,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-// const clientS3 = new S3Client({
-//     region: region,
-//     credentials: {
-//         accessKeyId: import.meta.env.VITE_APP_AWS_ACCESS_KEY_ID,
-//         secretAccessKey: import.meta.env.VITE_APP_AWS_SECRET_ACCESS_KEY
-//     }
-// });
-
-
-export const uploadToS3 = async (file, folderName ) => {
+export const uploadToS3 = async (file: any, folderName: string ) => {
     if(!file || !folderName)return;
 
     const params: AWS.S3.PutObjectRequest = {

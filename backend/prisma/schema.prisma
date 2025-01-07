@@ -15,6 +15,7 @@ model User {
   email         String        @unique
   password      String   
   memberId      String        @unique
+  role          Role
   avatarUrl     String   
   payments       Payment[]
   bankAccounts   BankAccount[]
@@ -22,6 +23,10 @@ model User {
   loginActivities LoginActivity[]
 }
 
+enum Role {
+  USER
+  ADMIN
+}
 model LoginActivity {
   id              Int         @id   @default(autoincrement())
   userId          Int  

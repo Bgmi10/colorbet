@@ -278,7 +278,7 @@ export default function LiveChat() {
                     <FaMinus onClick={() => setIsChatOpen(false)} className="text-2xl cursor-pointer" />
                   </div>
                 </div>
-                <div className={`overflow-y-auto ${isExpanded ? 'h-[calc(100vh-120px)]' : 'h-[calc(100%-120px)]'} bg-gray-100`}>
+                <div className={`overflow-y-auto custom-scrollbar ${isExpanded ? 'h-[calc(100vh-120px)]' : 'h-[calc(100%-120px)]'} bg-gray-100`}>
                   {!isactivechat && (
                     <motion.div 
                       className="flex justify-center mt-10 mb-5"
@@ -353,7 +353,7 @@ export default function LiveChat() {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.5 }}
                             >
-                              <div className={`p-3 rounded-lg max-w-[70%] ${i.role === "user" ? "bg-yellow-100 text-black" : "bg-white text-black"}`}>
+                              <div className={`p-2 rounded-lg max-w-[70%] ${i.role === "user" ? "bg-yellow-100 text-black" : "bg-white text-black"}`}>
                                 {i.imageUrl && (
                                   <div className="mb-2">
                                     <img 
@@ -365,11 +365,11 @@ export default function LiveChat() {
                                   </div>
                                 )}
                                 <p className="mb-1">{i.message}</p>
-                                <div className="flex justify-end items-center text-xs text-gray-500">
+                                <div className="flex justify-end items-center text-[8px] text-gray-500">
                                   <span>{i.timeStamp && format(cal(i?.timeStamp?.seconds, i?.timeStamp?.nanoseconds), 'HH:mm')}</span>
                                   {i.role === "user" && (
                                     <span className="ml-1">
-                                      {!i.seen ? <DoneIcon className="text-gray-500" fontSize="small" /> : <DoneAllIcon fontSize="small" className="text-blue-500" />}
+                                      {!i.seen ? <DoneIcon className="text-gray-500" style={{fontSize: "15px" }} /> : <DoneAllIcon fontSize="small" className="text-blue-500" style={{fontSize: "15px" }}/>}
                                     </span>
                                   )}
                                 </div>
