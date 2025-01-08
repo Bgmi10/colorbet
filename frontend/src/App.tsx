@@ -24,8 +24,8 @@ import OtpLoginVerify from "./components/auth/OtpLoginVerify";
 import LoginActivity from "./components/account-security/LoginActivity";
 import CloseAccount from "./components/account-security/CloseAccount";
 import LiveChat from "./components/livechat/LiveChat";
-import AdminProtected from "./admin/AdminProtected";
-import Admin from "./admin/Admin";
+import AdminProtected from "./components/admin/AdminProtected";
+import Admin from "./components/admin/Admin";
 
 const GameComponent = lazy(() => import("./components/A-vs-B/Game"));
 

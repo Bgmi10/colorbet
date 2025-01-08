@@ -13,7 +13,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { format } from "date-fns";
 import { AuthContext } from "../../context/AuthContext";
-import { appName } from "../../utils/constants";
+import { appName, cal } from "../../utils/constants";
 import PoweredBy from "../recharge/PoweredBy";
 import { uploadToS3 } from "../../utils/uploadToS3";
 import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
@@ -78,7 +78,6 @@ export default function LiveChat() {
     }
 
     try {
-
       let imageUrl: any = '';
       setLoader(true);
       if (image) {
@@ -144,9 +143,7 @@ export default function LiveChat() {
     }
   }, [messages]);
 
-  const cal = (second: number, nanoSec: number) => {
-    return second * 1000 + nanoSec / 1000;
-  }
+
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);

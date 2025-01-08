@@ -187,7 +187,7 @@ export default function Withdraw() {
                 >
                     <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Bank Account</h3>
                     <div 
-                        className="bg-white dark:bg-gray-800 p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-700"
+                        className="bg-white dark:bg-gray-800 p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-300 dark:border-gray-700"
                         onClick={() => setIsBankOpen(!isBankOpen)}
                     >
                         <div className='flex gap-2 items-center'>
@@ -237,7 +237,7 @@ export default function Withdraw() {
                                     </motion.div>
                                 ))}
                                 <motion.div
-                                    className="p-4 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    className="p-4 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
                                     onClick={() => navigate('/bank-account')}
                                 >
                                     <FontAwesomeIcon icon={faPlus} className="text-yellow-500" />
@@ -258,7 +258,7 @@ export default function Withdraw() {
                     {payoutMethods.map((method) => (
                         <div 
                             key={method.id}
-                            className="bg-white dark:bg-gray-800 p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-700"
+                            className="bg-white dark:bg-gray-800 p-4 rounded-md flex justify-between items-center cursor-pointer mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-300 dark:border-gray-700"
                             onClick={() => setSelectedPayoutMethod(method.id)}
                         >  
                             <div className='flex gap-2 items-center'>

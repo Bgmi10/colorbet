@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi"; // Icons for menu toggle
 import AdminWelcome from "./AdminWelcome";
 import AdminLiveChat from "./AdminLiveChat";
 
@@ -8,7 +6,6 @@ export default function Admin() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectednav, setSelectedNav] = useState("");
   
-  // Toggle sidebar for mobile
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -35,7 +32,6 @@ export default function Admin() {
   return (
     <>
       <div className="h-screen flex flex-col sm:flex-row">
-        {/* Sidebar */}
         <aside
           className={`bg-gray-800 text-white sm:w-64 w-full sm:relative fixed inset-y-0 sm:block transform ${
             isOpen ? "translate-x-0" : "-translate-x-full"
@@ -63,7 +59,7 @@ export default function Admin() {
         </aside>
         
        { selectednav  === "" &&  <AdminWelcome isOpen={isOpen} toggleSidebar={toggleSidebar} /> }
-       { selectednav  === "Live Chat" &&  <AdminLiveChat /> }
+       { selectednav  === "Live Chat" &&  <AdminLiveChat setIsOpen={toggleSidebar} /> }
       </div>
     </>
   );
