@@ -6,7 +6,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { collectionGroup, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import { cal } from "../../utils/constants";
@@ -51,6 +51,9 @@ export default function AdminLiveChat({ setIsOpen }: { setIsOpen: any }) {
   const [previewImage, setPreviewImage] = useState(null);
   const chatContentRef = useRef(null);
   const lastMessageRef = useRef(null);
+  const [selectedchat, setSelectedChat] = useState(false);
+  const [playerid, setPlayerId] = useState(null);
+  const [email, setEmail] = useState(null);
 
   const fetchAllUsersWithChats = () => {
     try {
@@ -62,7 +65,8 @@ export default function AdminLiveChat({ setIsOpen }: { setIsOpen: any }) {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const { email, message, imageUrl, seen, role, timeStamp, playerId } = data;
-          
+          setPlayerId(playerId);
+          setEmail(email);
           if (groupedChats[email]) {
             groupedChats[email].push({ id: doc.id, message, imageUrl, seen, role, timeStamp, email, playerId });
           } else {
@@ -82,10 +86,12 @@ export default function AdminLiveChat({ setIsOpen }: { setIsOpen: any }) {
   }, []);
   
   useEffect(() => {
+    
     if (selectedUser && chats[selectedUser]) {
       const sortedMessages = [...chats[selectedUser]].sort((a: Message, b: Message) => 
         (a.timeStamp?.seconds || 0) - (b.timeStamp?.seconds || 0)
       );
+
       setMessages(sortedMessages);
 
       sortedMessages.forEach(async (message: Message) => {
@@ -108,7 +114,7 @@ export default function AdminLiveChat({ setIsOpen }: { setIsOpen: any }) {
     return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   };
 
-const handleSubmit = async () => {
+ const handleSubmit = async () => {
   if (!usermessage && !image) return;
 
   setLoader(true);
@@ -160,9 +166,19 @@ const handleSubmit = async () => {
     }
   };
 
+  let lastDate: any = null;
+
+  const getDateFromTimestamp = (timestamp: any) => {
+    if (!timestamp || !timestamp.seconds || !timestamp.nanoseconds) {
+      return null; 
+    }
+  
+    return cal(timestamp?.seconds, timestamp?.nanoseconds); 
+  };
+
   return (
-    <div className="flex  w-full">
-      <div className=" bg-white border-r border-gray-200 overflow-y-auto w-full">
+   <div  className="flex flex-col lg:flex-row lg:w-full w-full">
+     {!selectedchat && <div className=" bg-white border-r border-gray-200 overflow-y-auto lg:w-1/2 w-full">
         <div className="border-b border-gray-200 p-4 flex items-center gap-3">
           <FontAwesomeIcon icon={faArrowLeft} className="text-gray-500" onClick={() => setIsOpen()}/>
           <h1 className="text-xl font-bold text-gray-800">Active Chats</h1>
@@ -178,7 +194,11 @@ const handleSubmit = async () => {
                 className={`p-4 cursor-pointer hover:bg-gray-50 ${
                   selectedUser === email ? "bg-yellow-100" : ""
                 }`}
-                onClick={() => setSelectedUser(email)}
+                onClick={() =>{
+                   setSelectedUser(email)
+                   setSelectedChat(true)
+                  }
+                }
               >
                 <div className="flex justify-between items-center">
                   <span className="font-medium text-gray-900">{email}</span>
@@ -197,16 +217,19 @@ const handleSubmit = async () => {
             );
           })}
         </div>
-      </div>
+      </div>}
 
-      <div className="flex flex-col lg:w-full sm: w-auto">
+      <div className="flex flex-col lg:w-1/2 w-full">
         {selectedUser &&(
           <>
             <div className="bg-white border-b border-gray-200 p-4 flex items-center">
               <FontAwesomeIcon
                 icon={faArrowLeft}
                 className="text-gray-600 cursor-pointer mr-4"
-                onClick={() => setSelectedUser(null)}
+                onClick={() => {
+                  setSelectedUser(null)
+                  setSelectedChat(false)
+                }}
               />
               <div className="flex items-center">
                 <SentimentSatisfiedAltIcon className="text-yellow-500 mr-2" />
@@ -215,44 +238,68 @@ const handleSubmit = async () => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 mb-32 bg-gray-50" ref={chatContentRef}>
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  className={`flex ${message.role === "admin" ? "justify-end" : "justify-start"} mb-4`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <div className={`max-w-[70%] ${
-                    message.role === "admin" ? "bg-yellow-200 text-black" : "bg-white"
-                  } rounded-lg p-3 shadow`}>
-                    {message.imageUrl && (
-                      <div className="mb-2">
-                        <img
-                          src={message.imageUrl}
-                          alt=""
-                          className="max-w-full rounded-md cursor-pointer"
-                          onClick={() => setPreviewImage(message.imageUrl)}
-                        />
-                      </div>
-                    )}
-                    <p className="mb-1">{message.message}</p>
-                    <div className="flex items-center justify-end text-xs">
-                      <span className={message.role === "admin" ? "text-black" : "text-gray-500"}>
-                        {message.timeStamp && format(cal(message.timeStamp.seconds, message.timeStamp.nanoseconds), 'HH:mm')}
-                      </span>
-                      {message.role === "admin" && (
-                        <span className="ml-1">
-                          {message.seen ? <DoneAllIcon style={{ fontSize: 12 }} className="text-blue-500" /> : <DoneIcon style={{ fontSize: 12 }} className="text-gray-500"/>}
-                        </span>
-                      )}
-                    </div>
+              <div className="justify-start flex bg-white shadow-md m-2 rounded-md">
+                  <div className="flex flex-col m-3 gap-1">
+                     <span className="text-blue-500">Player Id: <span className="text-black">{playerid}</span></span>
+                     <span className="text-blue-500">Email: <span className="text-black">{email}</span></span>
                   </div>
-                </motion.div>
-              ))}
+              </div>
+              {messages.map((message) => {
+               
+                const messageDate: any = getDateFromTimestamp(message.timeStamp);
+                const showDate = !lastDate || !isSameDay(messageDate, lastDate);
+                lastDate = messageDate;
+
+                return(
+                   <div key={message.id}>
+                       {
+                      showDate && 
+                       <div className="text-center m-3">
+                         <span className="bg-gray-200 text-blue-500 rounded-md p-1 text-sm">{format(messageDate, 'dd/MM/yyyy')}</span>
+                       </div>
+                      }
+                     <motion.div
+                       key={message.id}
+                       className={`flex ${message.role === "admin" ? "justify-end" : "justify-start"} mb-4`}
+                       initial={{ opacity: 0, y: 20 }}
+                       animate={{ opacity: 1, y: 0 }}
+                     >
+                      
+                       <div className={`max-w-[70%] ${
+                         message.role === "admin" ? "bg-yellow-200 text-black" : "bg-white"
+                       } rounded-lg p-2 shadow`}>
+                         {message.imageUrl && (
+                           <div className="mb-2">
+                             <img
+                               src={message.imageUrl}
+                               alt=""
+                               className="max-w-full rounded-md cursor-pointer"
+                               onClick={() => setPreviewImage(message.imageUrl)}
+                             />
+                           </div>
+                         )}
+                         <p className="mb-1">{message.message}</p>
+                         <div className="flex items-center justify-end text-xs">
+                           <span className={message.role === "admin" ? "text-black text-xs" : "text-gray-500 text-xs"}>
+                             {message.timeStamp &&
+                             //@ts-ignore
+                              format(cal(message.timeStamp.seconds, message.timeStamp.nanoseconds), 'HH:mm')}
+                           </span>
+                           {message.role === "admin" && (
+                             <span className="ml-1">
+                               {message.seen ? <DoneAllIcon style={{ fontSize: 12 }} className="text-blue-500" /> : <DoneIcon style={{ fontSize: 12 }} className="text-gray-500"/>}
+                             </span>
+                           )}
+                         </div>
+                       </div>
+                     </motion.div>
+                  </div>
+                )
+              })}
               <div ref={lastMessageRef} />
             </div>
 
-            <div className="bg-white border-t border-gray-200 p-[14px] z-50 fixed bottom-[70px] lg:w-[650px]">
+            <div className="bg-white border-t border-gray-200 p-[14px] z-50 fixed bottom-[70px] lg:w-[650px] w-full">
               <div className="flex items-center">
                 <input
                   type="text"

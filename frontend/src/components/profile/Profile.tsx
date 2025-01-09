@@ -182,7 +182,7 @@ export default function Profile() {
                             transition={{ delay: 0.6, duration: 0.5 }}
                         >
                             <FontAwesomeIcon icon={faTrophy} className="text-yellow-500 text-2xl mb-2" />
-                            <p className="dark:text-gray-400 text-gray-900 text-sm">Vip-1</p>
+                            <p className="dark:text-white text-gray-700 text-lg font-bold">Vip1</p>
                         </motion.div>
                     </div>
                 </div>

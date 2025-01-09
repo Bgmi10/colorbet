@@ -7,6 +7,7 @@
     import { baseurl, chips } from "../../utils/constants";
     import axios from "axios";
     import Header from '../Header';
+import BalanceCard from '../BalanceCard';
 
     export default function RechargeChip() {
         // @ts-ignore
@@ -99,18 +100,9 @@
 
         return (
             <div className="min-h-screen dark:bg-gray-900 text-white mb-14">
-            <Header title='Recharge Wallet' link='/profile'/> 
+            <Header title='Recharge Wallet' link='/profile' /> 
                 <main className="container mx-auto px-4 py-8">
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="dark:bg-gray-800 bg-slate-100 rounded-lg p-6 mb-8"
-                    >
-                        <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-white">Available Balance</h2>
-                        <p className="text-2xl font-bold dark:text-white text-gray-700">₹ {(user?.balance / 100).toFixed(2)}</p>
-                    </motion.div>
-
+                   <BalanceCard />
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

@@ -11,12 +11,12 @@ import SendIcon from '@mui/icons-material/Send';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { AuthContext } from "../../context/AuthContext";
 import { appName, cal } from "../../utils/constants";
 import PoweredBy from "../recharge/PoweredBy";
 import { uploadToS3 } from "../../utils/uploadToS3";
-import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import "./custom-scroll.css"
 import LiveChatMenuBar from "./LiveChatMenuBar";
@@ -27,7 +27,6 @@ interface Time {
   seconds: number;
   nanoseconds: number;
 }
-
 interface Message {
   id: string;
   role: string;
@@ -56,9 +55,8 @@ export default function LiveChat() {
   const chatContentRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef(null);
   const { scrollY } = useScroll({ container: chatContentRef });
-  const logoY = useTransform(scrollY, [0, 50], [0, -70]); // Move to center (50vw - half of the image width)
+  const logoY = useTransform(scrollY, [0, 50], [0, -70]);
   const logoScale = useTransform(scrollY, [0, 50], [1, 0.7]);
-
 
   const handlFilesClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,6 +69,17 @@ export default function LiveChat() {
       setError('only .png, .jpeg, .jpg files are allowed');
     }
   }
+
+  useEffect(() => {
+      messages?.map(async (i) => {
+         if(i.role === "admin" && !i.seen){
+            const messageRef = doc(db, 'chats', i.playerId, 'messages', i.id);
+            await updateDoc(messageRef, {
+              seen: true
+            })
+         }
+      })
+  },[messages])
 
   const handleSubmit = async () => {
     if (!usermessage && !image) {
@@ -134,16 +143,16 @@ export default function LiveChat() {
     }
 
     fetch_messages();
-  }, [user]);
+  }, [isChatOpen]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
       //@ts-ignore
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, isactivechat]);
 
-
+  let time: any = null;
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -151,7 +160,7 @@ export default function LiveChat() {
 
   return (
     <>
-      <LiveChatMenuBar isChatOpen={ischattabopen} setIsChatOpen={setIsChatOpen}/>
+      <LiveChatMenuBar isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -165,7 +174,7 @@ export default function LiveChat() {
             }}
             exit={{ opacity: 0, scale: 0.8, y: 100 }}
             transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-            className={`fixed ${isExpanded ? 'inset-0' : 'right-2 bottom-24 sm:right-2 sm:bottom-2'} z-50 from-white via-yellow-50 to-yellow-200 bg-transparent bg-gradient-to-t rounded-2xl border-none outline-none overflow-hidden shadow-lg`}
+            className={`fixed ${isExpanded ? 'inset-0' : 'right-2 bottom-20 sm:right-6 sm:bottom-24'} z-50 from-white via-yellow-50 to-yellow-200 bg-transparent bg-gradient-to-t rounded-2xl border-none outline-none overflow-hidden shadow-lg`}
           >
             {!ischattabopen ? (
               <>
@@ -175,7 +184,10 @@ export default function LiveChat() {
                     className="text-2xl text-gray-700 hover:bg-white rounded-md p-1 cursor-pointer"
                     onClick={toggleExpand}
                   />
-                  <FaMinus onClick={() => setIsChatOpen(false)} className="text-3xl text-gray-700 hover:bg-white rounded-md p-1 cursor-pointer" />
+                  <FaMinus onClick={() =>{
+                   setIsChatOpen(false);
+                   setMessages(null);
+                    }} className="text-3xl text-gray-700 hover:bg-white rounded-md p-1 cursor-pointer" />
                 </div>
                 <div className={`h-[400px] flex flex-col`}>
                   <motion.div
@@ -229,8 +241,8 @@ export default function LiveChat() {
                   >
                     <div className="flex justify-center mb-4">
                       <div className="bg-white shadow-lg flex justify-between gap-3 px-16 py-4 w-[330px] rounded-full">
-                        <div className="flex flex-col items-center cursor-pointer hover:text-blue-500 transition-colors duration-300">
-                          <HomeIcon fontSize="medium" />
+                        <div className="flex flex-col items-center cursor-pointer hover:text-yellow-500 transition-colors duration-300">
+                          <HomeIcon fontSize="medium" className=""/>
                           <span>Home</span>
                         </div>
                         <div className="text-gray-500 flex flex-col items-center cursor-pointer hover:text-blue-500 transition-colors duration-300">
@@ -272,7 +284,12 @@ export default function LiveChat() {
                       className="text-2xl mr-3 cursor-pointer"
                       onClick={toggleExpand}
                     />
-                    <FaMinus onClick={() => setIsChatOpen(false)} className="text-2xl cursor-pointer" />
+                    <FaMinus onClick={() => {
+                      setIsChatOpen(false);
+                      setIsActiveChat(false);
+                      setChatTabOpen(false);
+                      setMessages(null);
+                      }} className="text-2xl cursor-pointer" />
                   </div>
                 </div>
                 <div className={`overflow-y-auto custom-scrollbar ${isExpanded ? 'h-[calc(100vh-120px)]' : 'h-[calc(100%-120px)]'} bg-gray-100`}>
@@ -342,9 +359,19 @@ export default function LiveChat() {
                     {isactivechat && (
                       <>
                         <div>
-                          {messages?.map((i: Message) => (
+                          {messages?.map((i: Message) => {
+                            const messageDate: any = cal(i?.timeStamp?.seconds, i?.timeStamp?.nanoseconds);
+                            const showDate = !time || !isSameDay(messageDate, time);
+                            time = messageDate;
+                            return(
+                            <div key={i.id}>
+                             {
+                              i.timeStamp && showDate && 
+                               <div className="text-center m-3">
+                                 <span className="bg-gray-200 text-blue-500 rounded-md p-1 text-sm">{format(messageDate, 'dd/MM/yyyy')}</span>
+                               </div>
+                              }
                             <motion.div 
-                              key={i.id} 
                               className={`flex ${i.role === "user" ? "justify-end" : "justify-start"} m-2`}
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -362,8 +389,11 @@ export default function LiveChat() {
                                   </div>
                                 )}
                                 <p className="mb-1">{i.message}</p>
-                                <div className="flex justify-end items-center text-[8px] text-gray-500">
-                                  <span>{i.timeStamp && format(cal(i?.timeStamp?.seconds, i?.timeStamp?.nanoseconds), 'HH:mm')}</span>
+                                <div className="flex justify-end items-center text-[10px] text-gray-500">
+                                  <span>{
+                                   //@ts-ignore
+                                  i.timeStamp && format(cal(i?.timeStamp?.seconds, i?.timeStamp?.nanoseconds), 'HH:mm')
+                                  }</span>
                                   {i.role === "user" && (
                                     <span className="ml-1">
                                       {!i.seen ? <DoneIcon className="text-gray-500" style={{fontSize: "15px" }} /> : <DoneAllIcon fontSize="small" className="text-blue-500" style={{fontSize: "15px" }}/>}
@@ -372,12 +402,14 @@ export default function LiveChat() {
                                 </div>
                               </div>
                             </motion.div>
-                          ))}
+                            </div>
+                          )})}
                         </div>
                       </>
                     )}
-                    <div ref={lastMessageRef}/>
+                    <div ref={lastMessageRef} />
                   </div>
+                
                 </div>
                 <motion.div 
                   className={`${isExpanded ? 'fixed bottom-0 left-0 right-0' : 'absolute bottom-0 left-0 right-0'} bg-white p-2 shadow-md`}

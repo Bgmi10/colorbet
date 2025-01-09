@@ -517,5 +517,6 @@ export const payoutMethods = [
 export const newGif = "https://www.iob.in/new-icon.gif";
 
 export const cal = (second: number, nanoSec: number) => {
+  if(!second || !nanoSec)return;
   return second * 1000 + nanoSec / 1000;
 }

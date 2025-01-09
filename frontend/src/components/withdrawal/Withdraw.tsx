@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { baseurl, payoutMethods } from "../../utils/constants";
 import axios from "axios";
 import Header from '../Header';
+import BalanceCard from '../BalanceCard';
 
 interface Withdrawal{
     id: string;
@@ -108,16 +109,7 @@ export default function Withdraw() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white mb-14">
             <Header title='Withdraw' link='/profile'/> 
             <main className="container mx-auto px-4 py-8">
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-slate-100 dark:bg-gray-800 rounded-lg p-6 mb-8"
-                >
-                    <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-white">Available Balance</h2>
-                    <p className="text-2xl font-bold text-gray-700 dark:text-white">₹ {(user?.balance / 100).toFixed(2)}</p>
-                </motion.div>
-
+                <BalanceCard />
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -142,7 +134,7 @@ export default function Withdraw() {
                                Fee: ₹{commission.toFixed(2)} (2%)
                            </p>
                            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                               Total amount: ₹{totalAmount.toFixed(2)}
+                               To account: ₹{totalAmount.toFixed(2)}
                            </p>
                        </div>
 

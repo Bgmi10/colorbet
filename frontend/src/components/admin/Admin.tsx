@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminWelcome from "./AdminWelcome";
 import AdminLiveChat from "./AdminLiveChat";
+import GoOnline from "./GoOnline";
 
 export default function Admin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,10 @@ export default function Admin() {
     {
       id: 4,
       name: "Settings"
+    },
+    {
+      id: 5,
+      name: "Go Online"
     }
   ]
 
@@ -60,6 +65,7 @@ export default function Admin() {
         
        { selectednav  === "" &&  <AdminWelcome isOpen={isOpen} toggleSidebar={toggleSidebar} /> }
        { selectednav  === "Live Chat" &&  <AdminLiveChat setIsOpen={toggleSidebar} /> }
+       { selectednav === "Go Online" && <GoOnline /> }
       </div>
     </>
   );
