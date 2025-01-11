@@ -110,7 +110,7 @@ export default function OtpLoginVerify() {
         password: user.password,
         otp,
       }, { withCredentials: true });
-
+      
       if (res.status === 200) {
         localStorage.removeItem('otpTimestamp');
         localStorage.removeItem('user-form');
@@ -135,7 +135,8 @@ export default function OtpLoginVerify() {
     setLoading(true);
     try {
       const res = await axios.post(`${baseurl}/api/auth/generate-login-otp`, {
-        email: user?.email
+        email: user?.email,
+        password: user?.password
       });
       setError(res.data?.message || "OTP resent successfully");
       localStorage.setItem("otpTimestamp", Date.now().toString());

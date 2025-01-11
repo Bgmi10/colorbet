@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  userName      String   
-  balance       Int           @default(0)
-  bets          Bet[]    
-  email         String        @unique
-  password      String   
-  memberId      String        @unique
-  role          Role
-  avatarUrl     String   
-  payments       Payment[]
-  bankAccounts   BankAccount[]
-  withdrawals    Withdrawal[]
+  id              Int              @id @default(autoincrement())
+  userName        String      
+  balance         Int              @default(0)
+  bets            Bet[]       
+  email           String           @unique
+  password        String      
+  memberId        String           @unique
+  role            Role
+  avatarUrl       String   
+  payments        Payment[]
+  bankAccounts    BankAccount[]
+  withdrawals     Withdrawal[]
   loginActivities LoginActivity[]
 }
 
@@ -28,22 +28,22 @@ enum Role {
   ADMIN
 }
 model LoginActivity {
-  id              Int         @id   @default(autoincrement())
-  userId          Int  
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  browser         String
-  os              String
-  deviceType      String
-  deviceModel     String?
-  ip              String
-  location        String?
-  sessionToken    String
-  loginTime       DateTime    @default(now())
-  logoutTime      DateTime?
-  isp             String?
-  connectionType  String
-  authMethod      String      @default("emailandpassword")
-  platform        String?
+  id                       Int         @id   @default(autoincrement())
+  userId                   Int  
+  user                     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  browser                  String
+  os                       String
+  deviceType               String
+  deviceModel              String?
+  ip                       String
+  location                 String?
+  sessionToken             String
+  loginTime                DateTime    @default(now())
+  logoutTime               DateTime?
+  isp                      String?
+  connectionType           String
+  authMethod               String      @default("emailandpassword")
+  platform                 String?
   @@index([userId])
   @@index([sessionToken])
 }

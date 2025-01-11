@@ -12,14 +12,13 @@ import Authmiddleware from "../middlewares/Authmiddleware";
 import LoginActivity from "../middlewares/LoginActivity";
 import loginotp from "../middlewares/loginotp";
 import verifyloginotp from "../middlewares/verifyloginotp";
+import { handleResponse } from "../utils/helper";
 
 const AuthRouter = express.Router();
 const isProd = false;
 
 AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
-
-    res.status(200).json({ message : "otp sent to your email. please check it" });
-    
+  res.status(200).json({ message : "otp sent to your email. please check it" });    
 });
 
 AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: express.Response) => {
@@ -139,27 +138,22 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
     }
 
     try {
-        
-       const user =  await prisma.user.findUnique({
-            where: { email }
+        const user = await prisma.user.findUnique({
+            where: { email },
+            select: {
+                id: true
+            }
         });
 
         if(!user){
-          res.status(404).json({ message: "User not found!. try to signin." });
-          return;
-        }
-
-        const hashpass = await bcrypt.compare(password, user.password);
-
-        if(!hashpass) {
-          res.status(401).json({ message: 'invalid credentials' }); 
-          return;
+            handleResponse(res, 404, "user not found");
+            return;
         }
         
         const token = jwt.sign({ email: email, userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '10h' });
 
         await prisma.loginActivity.updateMany({
-            where: { userId: user?.id, logoutTime: null, NOT: {
+            where: { userId: user.id, logoutTime: null, NOT: {
                 ip: ip,
                 deviceType: deviceType
             } },
@@ -171,7 +165,7 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
 
         await prisma.loginActivity.create({
             data: {
-                userId: user?.id,
+                userId: user.id,
                 browser,
                 location,
                 connectionType,

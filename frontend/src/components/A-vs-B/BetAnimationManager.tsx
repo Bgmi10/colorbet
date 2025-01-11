@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-//@ts-ignore
-import chaalSound from "../../../public/assets/chaal.mp3";
 import { chips } from '../../utils/constants';
 
 const chipImages = chips.reduce((acc: any, chip) => {
   acc[chip.value] = chip.url;
   return acc;
 }, {});
-
 
 const bettingAreas = {
   A: {
@@ -46,7 +43,7 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
   const [activeBets, setActiveBets] = useState<any>([]);
   const [positions, setPositions] = useState({});
 
-  const audio = new Audio(chaalSound);
+  const audio = new Audio("/assets/chaal.mp3");
 
   useEffect(() => {
     if (newBet) {

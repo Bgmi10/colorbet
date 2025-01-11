@@ -6,6 +6,7 @@ import ButtonLoader from "../bindbank/ButtonLoader";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { baseurl } from "../../utils/constants";
+import Header from "../Header";
 
 export default function CloseAccount (){
 
@@ -33,13 +34,11 @@ export default function CloseAccount (){
     }
   }
 
-
   useEffect(() => {
        setTimeout(() => {
          checkPassword();
        }, 400);
   },[userinput]);
-
 
   const handleSubmit = () => {
     setIsShowConfirmCard(true);
@@ -66,11 +65,9 @@ export default function CloseAccount (){
 
   return(
    <>
+     <Header link="/profile" title="Delete Account" />
      <div className="h-screen dark:bg-gray-900 flex items-center justify-center flex-col">
       <div className="dark:bg-gray-800 bg-slate-00 shadow-md flex flex-col items-center rounded-md gap-3 p-5 w-full max-w-md">
-        <div className="p-5 rounded-md text-center">
-          <span className="text-yellow-500 font-semibold text-3xl">Delete Account</span>
-        </div>
         <div className="w-full relative">
           <input
             type={"text"}

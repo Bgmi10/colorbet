@@ -1,8 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { baseurl } from "../utils/constants";
-
-
 interface LoginActivity{
  id: number,
  browser: string,

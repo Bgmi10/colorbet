@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { useState } from 'react';
 
 export default function AppBar() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const iconClass = "text-3xl transition-all duration-300";
 
   const data = [

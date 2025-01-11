@@ -1,14 +1,11 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { GameCard } from './GameCard';
 import { UserBetRecords } from './UserBetRecords';
 import { GameRecord } from './GameRecord';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
-//@ts-ignore
-import vsImg from "../../../public/assets/vs.png";
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
 
@@ -28,8 +25,6 @@ const GameComponent = () => {
   const [timer, setTimer] = useState(0);
   const [pockerbackimageurl, setPockerBackImageUrl] = useState('');
   const [gamerecord, setGamerecord] = useState(null);
-  //@ts-ignore
-  const navigate = useNavigate();
   //@ts-ignore
   const [betplaced, setBetplaced] = useState(false);
   const [updatedBalance, setUpdatedBalance] = useState(0);
@@ -162,7 +157,7 @@ const GameComponent = () => {
             </div>
             </div>
              <div className="justify-center flex">
-               <img src={vsImg} alt="VS" />
+               <img src={"/assets/vs.png"} alt="VS" />
              </div>
             <div className="flex items-center">
               <div className='flex flex-col text-center'>

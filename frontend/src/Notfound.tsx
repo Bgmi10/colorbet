@@ -1,9 +1,7 @@
-export default function Notfound (){
-    return (
-    <>  
-      <div className="justify-center flex align-middle">
-        <span>Not Found</span> 
-      </div>
-    </>
-    )
+export default function Notfound() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <span>Not Found</span>
+    </div>
+  );
 }

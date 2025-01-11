@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-//@ts-ignore
-import vip1Frame from "../../../public/assets/headFrame/vip1.png";
 import { baseurl, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
 import TopNavDropdown from './TopNavDropdown';
@@ -16,8 +14,7 @@ export default function Profile() {
     //@ts-ignore
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
-    //@ts-ignore
-    const [selectedAvatar, setSelectedAvatar] = useState(profileAvatar[0]);
+    const [selectedAvatar] = useState(profileAvatar[0]);
     const [openMenus, setOpenMenus] = useState<number[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isEditUserName, setIsEditName] = useState(false);
@@ -112,7 +109,7 @@ export default function Profile() {
                     className="relative h-[140px] w-[140px]"
                     >
                     <img src={user?.avatarUrl !== "" ? user?.avatarUrl : selectedAvatar} alt="avatar" className="rounded-full relative"/>
-                   {/* { <img src={vip1Frame} alt="frame" className="top-[-4px] left-[-7px] absolute"/> } */}
+                   {/* { <img src={"/assets/headFrame/vip1.png"} alt="frame" className="top-[-4px] left-[-7px] absolute"/> } */}
                 </motion.div>
                 <motion.button
                     onClick={handleShowAvatar}
@@ -150,7 +147,6 @@ export default function Profile() {
                         > 
                              <div> 
                                   <FontAwesomeIcon icon={faUser} className="text-yellow-500 text-2xl mb-2" />
-                                 
                                   <p className="text-gray-400 text-sm">Username</p>
                                   <div className='flex gap-3 items-center'>
                                   <input className={`dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white  p-1 ${ !isEditUserName ? "dark:bg-gray-800" : "dark:bg-gray-200  bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
@@ -188,10 +184,10 @@ export default function Profile() {
                 </div>
             </motion.div>
             <motion.div 
-                className="mt-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+             className="mt-8"
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.4 }}
             >
                 {ProfileSetttingsData.map((item: any) => (
                     <motion.div 

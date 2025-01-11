@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
-
 interface LoginActivity{
     id: string;
     os: string;
@@ -24,7 +23,7 @@ export default function LoginActivity (){
     return(
         <>
           <div className="dark:bg-gray-900 min-h-screen mb-16">
-            <Header title="Withdrawal Records" link="/profile"/>
+            <Header title="Login Activity" link="/profile"/>
             <div className="container mx-auto py-8 px-4 lg:px-0">
                 {user?.loginActivities.length === 0 ? (
                     <motion.div

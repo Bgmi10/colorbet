@@ -9,7 +9,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import { BetDetailsPopup } from './BetDetailsPopup';
-
 interface BetRecord {
   id: number;
   gameId: string;

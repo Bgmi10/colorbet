@@ -1,8 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-//@ts-ignore
-import pokerBack from  "../../../public/assets/poker_back.png";
-
 interface GameCardProps {
   frontImage: string;
   backImage: string;
@@ -33,7 +30,7 @@ export const GameCard: React.FC<GameCardProps> = ({ frontImage, backImage, isRev
          
         >
           <motion.img
-            src={isFlipped ? frontImage : backImage || pokerBack}
+            src={isFlipped ? frontImage : backImage || "/assets/poker_back.png"}
             alt={isFlipped ? "Card Front" : "Card Back"}
             className="w-52 rounded-xl"
             style={{ zIndex: 10, filter: `drop-shadow(0 0 12px ${isWinner &&  isFlipped && outlineShade}` }}

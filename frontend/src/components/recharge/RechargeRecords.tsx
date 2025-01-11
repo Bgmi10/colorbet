@@ -6,17 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function RechargeRecords() {
-
     interface Payment {
-        id: string;
-        upiRef: string;
-        amount: number;
-        createdAt: string;
-        senderMobile: string;
-        remarks: string;
-        senderName: string;
-        status: string;
-    }
+       id: string;
+       upiRef: string;
+       amount: number;
+       createdAt: string;
+       senderMobile: string;
+       remarks: string;
+       senderName: string;
+       status: string;
+    };
+
     //@ts-ignore
     const { user } = useContext(AuthContext);
 

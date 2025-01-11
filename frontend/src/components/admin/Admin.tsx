@@ -2,6 +2,7 @@ import { useState } from "react";
 import AdminWelcome from "./AdminWelcome";
 import AdminLiveChat from "./AdminLiveChat";
 import GoOnline from "./GoOnline";
+import ManageUsers from "./ManageUsers";
 
 export default function Admin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Admin() {
     },
     {
       id: 2,
-      name: "Manage User"
+      name: "Manage Users"
     },
     {
       id: 3,
@@ -62,10 +63,10 @@ export default function Admin() {
           }
           </nav>
         </aside>
-        
        { selectednav  === "" &&  <AdminWelcome isOpen={isOpen} toggleSidebar={toggleSidebar} /> }
        { selectednav  === "Live Chat" &&  <AdminLiveChat setIsOpen={toggleSidebar} /> }
        { selectednav === "Go Online" && <GoOnline /> }
+       { selectednav === "Manage Users" && <ManageUsers /> }       
       </div>
     </>
   );

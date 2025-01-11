@@ -34,13 +34,13 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ avatars, onSelect, onCl
                     <div className="grid grid-cols-3 gap-4">
                         {avatars.map((avatar, index) => (
                             <motion.button
-                                key={index}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => onSelect(avatar)}
-                                className="focus:outline-none"
+                             key={index}
+                             whileHover={{ scale: 1.05 }}
+                             whileTap={{ scale: 0.95 }}
+                             onClick={() => onSelect(avatar)}
+                             className="focus:outline-none"
                             >
-                                <img src={avatar} alt={`Avatar ${index + 1}`} className="w-full h-auto rounded-full border-2 border-yellow-500 hover:border-yellow-600 transition-colors duration-200" />
+                                <img src={avatar} alt={`Avatar ${index + 1}`} className="w-full h-auto rounded-full transition-colors duration-200" />
                             </motion.button>
                         ))}
                     </div>

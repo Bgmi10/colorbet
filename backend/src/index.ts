@@ -15,6 +15,8 @@ import razorPayment from './routes/razorPayment';
 import impsRouter from './routes/imps';
 import BankAccountRoute from './routes/BankAccountRoute';
 import WithdrawalRoute from './routes/WithdrawalRoute';
+import user from './routes/admin/user';
+import adminAuthMiddleware from './middlewares/admin/adminAuthMiddleware';
 
 const app = express();
 const port = 3005;
@@ -30,8 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  limit: 250,
+  windowMs: 5 * 60 * 1000,
+  limit: 50,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   message: "Too many requests, better luck next time..."
@@ -54,6 +56,7 @@ app.use('/api/payment', limiter, razorPayment);
 app.use('/api/payment', limiter, Authmiddleware, impsRouter);
 app.use('/api', limiter, Authmiddleware, BankAccountRoute);
 app.use('/api', limiter, Authmiddleware, WithdrawalRoute);
+app.use('/api/admin', adminAuthMiddleware, user);
 
 const broadcast = (message: any) => {
   clients.forEach(client => {

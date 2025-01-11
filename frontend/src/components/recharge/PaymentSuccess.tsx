@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Confetti } from './Confetti';
-//@ts-ignore
-import verifiedImg from "../../../public/assets/verified.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBank, faIndianRupee, faUser, faMobile, faFileLines, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { kotakPng } from '../../utils/constants';
 import PoweredBy from './PoweredBy';
 
 export default function PaymentSuccess({ data, onComplete }: { data: any, onComplete: any }) {
+  
   const [redirectCountdown, setRedirectCountdown] = useState(15);
 
   useEffect(() => {
@@ -50,7 +49,7 @@ export default function PaymentSuccess({ data, onComplete }: { data: any, onComp
               className="inline-block mb-3"
             >
               <div className="bg-green-100 p-3 rounded-full inline-block">
-                <img src={verifiedImg} alt="verified" className="h-8 w-8" />
+                <img src={"/assets/verified.png"} alt="verified" className="h-8 w-8" />
               </div>
             </motion.div>
             

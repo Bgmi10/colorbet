@@ -8,12 +8,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PaymentSuccess from "./PaymentSuccess";
 import PoweredBy from "./PoweredBy";
 import { AuthContext } from "../../context/AuthContext";
-//@ts-ignore
-import profile from "../../../public/assets/profile.png";
 
 const TIMER_DURATION = 5 * 60;
 const STORAGE_KEY = 'payment_session';
-
 interface PaymentSession {
   amount: string;
   endTime: number;
@@ -191,7 +188,7 @@ export default function ImpsService() {
               <div className="flex justify-between">
                 <span>Account Name:</span>
                 <div className="flex gap-2 items-center">
-                   <img src={profile} alt="subash-profile" className="h-5 w-5"/>
+                   <img src={"/assets/profile.png"} alt="subash-profile" className="h-5 w-5"/>
                    <span className="font-medium">Subash Chandra Bose R</span>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Notfound from "./Notfound";
 import SignIn from "./components/auth/SignIn";
@@ -32,43 +32,42 @@ const GameComponent = lazy(() => import("./components/A-vs-B/Game"));
 function App() {
   return (
     <>
-    <LiveChat />
-       <Router>
-        <Suspense fallback={ <><Loader /></> }>
+      <LiveChat />
+      <Router>
+        <Suspense fallback={<Loader />}>
           <Routes>
-           <Route element={ <GameComponent /> } path="/A-vs-B" />
-           <Route element={ <Login /> } path="/login" />
-           <Route element={ <SignIn /> } path="/signin" />
-           <Route element={ <Notfound /> } path="*" />
-           <Route element={ <ForgetPassword /> } path="/forget-password" />
-           <Route element={ <ProtectOtpPage children={ <Outlet /> } /> }>
-             <Route element={ <OtpSigninverify /> } path="/otp-signin-verify" />
-             <Route element={ <OtpForgetVerify /> } path="/otp-forget-verify" />
-             <Route element={ <OtpLoginVerify />} path="/otp-login-verify" />
-           </Route>
-           <Route element={ <RechargeChip /> } path="/recharge-chip" />
-           <Route element={ <Profile /> } path="/profile" />
-           <Route element={ <ImpsService /> } path="/payment-imps" />
-           <Route element={ <Bank /> } path="/bank-account" />
-           <Route element={ <Withdraw /> } path="/withdrawal-chip" />
-           <Route element={ <WithdrawalRecords /> } path="withdrawal-records" />
-           <Route element={ <RechargeRecords /> } path="/transaction-history" />
-           <Route element={ <ColorGame /> } path="/color" />
-           <Route element={ <Blog /> } path="/blog" />
-           <Route element={ <Aviator /> } path="/aviator" />
-           <Route element={ <ChangePassword /> } path="/change-password" />
-           <Route element={ <LoginActivity /> } path="/login-activity" />
-           <Route element={ <CloseAccount /> } path="/close-account" />
-           <Route element={<AdminProtected /> }>  
-             <Route element={ <Admin /> } path="/admin" />
-           </Route>
+            <Route element={<GameComponent />} path="/A-vs-B" />
+            <Route element={<Login />} path="/login" />
+            <Route element={<SignIn />} path="/signin" />
+            <Route element={<Notfound />} path="*" />
+            <Route element={<ForgetPassword />} path="/forget-password" />
+            <Route element={<ProtectOtpPage children={<Outlet />} />}>
+              <Route element={<OtpSigninverify />} path="/otp-signin-verify" />
+              <Route element={<OtpForgetVerify />} path="/otp-forget-verify" />
+              <Route element={<OtpLoginVerify />} path="/otp-login-verify" />
+            </Route>
+            <Route element={<RechargeChip />} path="/recharge-chip" />
+            <Route element={<Profile />} path="/profile" />
+            <Route element={<ImpsService />} path="/payment-imps" />
+            <Route element={<Bank />} path="/bank-account" />
+            <Route element={<Withdraw />} path="/withdrawal-chip" />
+            <Route element={<WithdrawalRecords />} path="/withdrawal-records" />
+            <Route element={<RechargeRecords />} path="/transaction-history" />
+            <Route element={<ColorGame />} path="/color" />
+            <Route element={<Blog />} path="/blog" />
+            <Route element={<Aviator />} path="/aviator" />
+            <Route element={<ChangePassword />} path="/change-password" />
+            <Route element={<LoginActivity />} path="/login-activity" />
+            <Route element={<CloseAccount />} path="/close-account" />
+            <Route element={<AdminProtected />}>
+              <Route element={<Admin />} path="/admin" />
+            </Route>
           </Routes>
           <AppBar />
         </Suspense>
-       </Router>
-      
+      </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

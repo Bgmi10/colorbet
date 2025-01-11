@@ -29,7 +29,6 @@ export default function ThemeProvider ({ children }: { children: any }){
 
     return (
         <>
-        
           <ThemeContext.Provider
           value={{theme, toggleTheme}} >
             {children}

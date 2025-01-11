@@ -1,10 +1,8 @@
 import { motion } from 'framer-motion';
-
 interface GameRecordData {
   id: string;
   winner: 'A' | 'B';
 }
-
 interface GameRecordProps {
   data: GameRecordData[];
 }
