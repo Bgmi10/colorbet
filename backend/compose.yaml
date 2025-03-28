@@ -7,13 +7,10 @@ services:
       dockerfile: Dockerfile
     environment:
       - NODE_ENV=production
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=your_database_name
-      - DB_USER=postgres
-      - DB_PASSWORD=randompassword 
+      - DATABASE_URL= # Ensure this matches the db service
     ports:
       - "3005:3005"
+      - "5050:5050"  # WebSocket port exposed
     depends_on:
       - db
     networks:
@@ -22,9 +19,9 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=randompassword
-      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=your_database_name
+      - POSTGRES_USER=postgres  # Corrected username
+      - POSTGRES_PASSWORD=postgres_password  # Ensure this matches `DB_PASSWORD`
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:

@@ -1,23 +1,30 @@
-# syntax=docker/dockerfile:1
-
+# Use official Node.js image
 ARG NODE_VERSION=20.12.2
-
 FROM node:${NODE_VERSION}-alpine
 
+# Set production environment
 ENV NODE_ENV production
 
-
+# Set working directory
 WORKDIR /usr/src/app
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+# Copy package.json and package-lock.json first to leverage Docker caching
+COPY package.json package-lock.json ./
 
-USER node
+# Install production dependencies
+RUN npm ci --omit=dev
 
+# Install ts-node and nodemon globally
+RUN npm install -g ts-node nodemon
+
+# Copy the entire project
 COPY . .
 
-EXPOSE 3005
+# Use non-root user
+USER node
 
-CMD npm start
+# Expose ports for Node.js (3005) and WebSocket (5050)
+EXPOSE 3005 5050
+
+# Start the application
+CMD ["npm", "start"]
