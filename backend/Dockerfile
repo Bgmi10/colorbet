@@ -8,11 +8,11 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install --omit=dev && npm install -g ts-node
 
-# Copy the entire application code
+# Copy the entire project
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Specify the correct path for Prisma schema
+RUN npx prisma generate --schema=src/prisma/schema.prisma
 
 # Expose ports for Express and WebSocket
 EXPOSE 3005 5050
