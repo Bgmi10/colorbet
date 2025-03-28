@@ -32,6 +32,10 @@ export default function Admin() {
     {
       id: 5,
       name: "Go Online"
+    },
+    {
+      id: 6, 
+      name: "General Support"
     }
   ]
 

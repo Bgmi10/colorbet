@@ -6,21 +6,23 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 model User {
-  id              Int              @id @default(autoincrement())
-  userName        String      
-  balance         Int              @default(0)
-  bets            Bet[]       
-  email           String           @unique
-  password        String      
-  memberId        String           @unique
-  role            Role
-  avatarUrl       String   
-  payments        Payment[]
-  bankAccounts    BankAccount[]
-  withdrawals     Withdrawal[]
-  loginActivities LoginActivity[]
+  id                     Int              @id @default(autoincrement())
+  userName               String      
+  balance                Int              @default(0)
+  bets                   Bet[]       
+  email                  String           @unique
+  password               String      
+  memberId               String           @unique
+  role                   Role
+  avatarUrl              String   
+  payments               Payment[]
+  bankAccounts           BankAccount[]
+  withdrawals            Withdrawal[]
+  loginActivities        LoginActivity[]
+  isSuspended            Boolean           @default(false)
+  suspensionTime         DateTime?
+  suspensionEndTime      DateTime?
 }
 
 enum Role {

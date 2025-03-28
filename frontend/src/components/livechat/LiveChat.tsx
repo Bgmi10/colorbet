@@ -18,6 +18,7 @@ import PoweredBy from "../recharge/PoweredBy";
 import { uploadToS3 } from "../../utils/uploadToS3";
 import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
+//@ts-ignore
 import "../../index.css";
 import LiveChatMenuBar from "./LiveChatMenuBar";
 import ImagePreview from "./ImagePreview";

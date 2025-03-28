@@ -1,4 +1,4 @@
-import { prisma } from "../../prisma/prisma";
+import { prisma } from "../prisma/prisma";
 import jwt from 'jsonwebtoken';
 import  bcrypt  from 'bcrypt';
 import express from 'express';

@@ -96,7 +96,7 @@ export default function ManageUsers() {
                       Delete
                     </button>
                     <button className="bg-yellow-500 ml-2 text-white py-1 px-2 rounded-md hover:bg-yellow-600">
-                      suspend   
+                      Suspend   
                     </button>
                   </td>
                 </tr>
@@ -119,6 +119,9 @@ export default function ManageUsers() {
                 </button>
                 <button className="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">
                   Delete
+                </button>
+                <button className="bg-yellow-500 ml-2 text-white py-1 px-2 rounded-md hover:bg-yellow-600">
+                  Suspend   
                 </button>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import express from 'express';
-import { prisma } from '../../prisma/prisma';
+import { prisma } from '../prisma/prisma';
 import bcypt from 'bcrypt';
 
 const User = express.Router();
@@ -17,6 +17,7 @@ User.get("/userprofile", async(req: express.Request, res: express.Response) => {
                 userName: true,
                 memberId: true,
                 role: true,
+                isSuspended: true,
                 loginActivities: {
                     select: {
                         id: true,

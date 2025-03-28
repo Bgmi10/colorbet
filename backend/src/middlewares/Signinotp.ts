@@ -1,5 +1,5 @@
 import express from 'express';
-import { prisma } from '../../prisma/prisma';
+import { prisma } from '../prisma/prisma';
 import bcrypt from 'bcrypt'
 import sendOtp from '../config/awsSes';
 import { emailSchema } from '../utils/zod';

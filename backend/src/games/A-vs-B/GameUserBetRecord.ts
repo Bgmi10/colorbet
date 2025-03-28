@@ -1,6 +1,6 @@
 import express  from "express";
 import Authmiddleware from "../../middlewares/Authmiddleware";
-import { prisma } from "../../../prisma/prisma";
+import { prisma } from "../../prisma/prisma";
 import { game_user_bet_record } from "../../utils/zod";
 
 const GameUserBetRecord = express.Router();

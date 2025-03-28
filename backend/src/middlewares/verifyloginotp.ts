@@ -1,5 +1,5 @@
 import express from 'express';
-import { prisma } from '../../prisma/prisma';
+import { prisma } from '../prisma/prisma';
 import bcrypt from 'bcrypt'
 import { email_and_otp_schema } from '../utils/zod';
 

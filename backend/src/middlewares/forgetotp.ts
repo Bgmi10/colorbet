@@ -1,4 +1,4 @@
-import { prisma } from "../../prisma/prisma";
+import { prisma } from "../prisma/prisma";
 import sendOtp from "../config/awsSes";
 import { validEmail } from "../utils/constants";
 import  bcrypt  from 'bcrypt';

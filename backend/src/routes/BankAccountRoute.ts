@@ -1,6 +1,6 @@
 import express from "express";
 import { addBankAccount, withdrawal } from "../utils/zod";
-import { prisma } from "../../prisma/prisma";
+import { prisma } from "../prisma/prisma";
 import { generateTransactionId } from "../utils/constants";
 
 const BankAccountRoute = express.Router(); 

@@ -6,5 +6,13 @@ export default defineConfig({
   plugins: [react()],
   define: {
     "global": {}
+  },
+  base: "./",
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined // Disable splitting
+      }
+    },
   }
 })
