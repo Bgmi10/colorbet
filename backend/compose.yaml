@@ -12,7 +12,7 @@ services:
       - "5050:5050"  # WebSocket port exposed
     networks:
       - app-network
-    command: ["/bin/sh", "-c", "npx prisma migrate deploy && npm run start"]
+    command: ["/bin/sh", "-c", "npx prisma migrate deploy --schema=./src/prisma/schema.prisma && npm run start"]
 
 networks:
   app-network:
