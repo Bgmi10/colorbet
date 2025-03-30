@@ -102,7 +102,7 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
         });
     
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), 
-         httpOnly: true,  
+         httpOnly: false,  
          sameSite: "lax",
          path: "/",
          secure: process.env.NODE_ENV === 'production'
@@ -186,7 +186,7 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
         });
 
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), 
-          httpOnly: true, 
+          httpOnly: false, 
           sameSite: "lax",
           path: "/",
           secure: process.env.NODE_ENV === 'production'
@@ -202,7 +202,7 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
 AuthRouter.post('/logout', Authmiddleware, async (req: express.Request, res: express.Response) => {
       //@ts-ignore
       const { userId } = req.user;
-      //@ts-ignore
+      //@ts-ignore  
       const token = req.token;
 
       try {

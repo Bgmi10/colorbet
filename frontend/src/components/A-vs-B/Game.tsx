@@ -10,7 +10,7 @@ import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
-const ws = new WebSocket(`ws://localhost:5050?token=${token}`);
+const ws = new WebSocket(`wss://api.casinobharat.space/ws/?token=${token}`);
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);
