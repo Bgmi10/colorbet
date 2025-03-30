@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBank, faCoins, faCreditCard, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faMailBulk, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 
-const isprod = false;
-export const baseurl = isprod ? 'http://54.165.116.40:3005' : 'http://localhost:3005';
+const isprod = true;
+export const baseurl = isprod ? 'https://api.casinobharat.space' : 'http://localhost:3005';
 
 export const validEmail = (email : string) => {
     const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
@@ -189,7 +189,7 @@ export const ProfileSetttingsData = [
 
 export const kotakPng = "/assets/kotak.ico";
 
-export const appName = "Colorwiz";
+export const appName = "Casino Bharat";
 
 export const bankDatas = [
   {

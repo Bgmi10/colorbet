@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [err, setErr] = useState("");
