@@ -13,9 +13,10 @@ import LoginActivity from "../middlewares/LoginActivity";
 import loginotp from "../middlewares/loginotp";
 import verifyloginotp from "../middlewares/verifyloginotp";
 import { handleResponse } from "../utils/helper";
+import dotenv from "dotenv";
 
+dotenv.config({ path: ".env" });
 const AuthRouter = express.Router();
-const isProd = false;
 
 AuthRouter.post('/generate-signin-otp', Signinotp, (req : express.Request, res: express.Response, next : express.NextFunction) => {
   res.status(200).json({ message : "otp sent to your email. please check it" });    
@@ -100,8 +101,13 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
             }
         });
     
-        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false,  sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
-        secure: process.env.NODE_ENV === 'production' });
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), 
+         httpOnly: true,  
+         sameSite: "lax",
+         path: "/",
+         secure: process.env.NODE_ENV === 'production'
+        });
+        
         res.status(200).json({ message: "Signed up sucessfully"});
     }
     catch(e){
@@ -179,8 +185,12 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
             }
         });
 
-        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), httpOnly: false, sameSite: process.env.NODE_ENV === 'production' ? "strict" : "lax",
-        secure: process.env.NODE_ENV === 'production' });
+        res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), 
+          httpOnly: true, 
+          sameSite: "lax",
+          path: "/",
+          secure: process.env.NODE_ENV === 'production'
+        });
         res.status(200).json({ message: "logged In successfully"});
     }
     catch(e){
