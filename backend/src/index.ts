@@ -22,7 +22,7 @@ const app = express();
 const port = 3005;
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://casinobharat.space", "https://casinobharat.web.app"],
+  origin: ["http://localhost:5173", "https://casinobharat.space", "https://www.casinobharat.space"],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
