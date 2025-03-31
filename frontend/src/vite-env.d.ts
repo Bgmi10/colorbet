@@ -10,7 +10,9 @@
     VITE_APP_FIREBASE_STORAGE_BUCKET: string,
     VITE_APP_FIREBASE_MESSAGE_SENDER_ID: string,
     VITE_APP_FIREBASE_APP_ID: string
-    VITE_APP_FIREBASE_MEASUREMENT_ID: string
+    VITE_APP_FIREBASE_MEASUREMENT_ID: string,
+    VITE_APP_URL_PROD: string,
+    VITE_APP_URL_LOCAL: string
   }
   interface ImportMeta {
     readonly env: ImportMetaEnv

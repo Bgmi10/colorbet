@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { baseurl, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
+import { baseurl, isprod, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
 import TopNavDropdown from './TopNavDropdown';
 import axios from 'axios';
@@ -48,7 +48,7 @@ export default function Profile() {
     const handleAvatarSelect = async (avatar: string) => {
         
         try{
-            const url = import.meta.env.VITE_APP_URL as string
+            const url = isprod ? import.meta.env.VITE_APP_URL_PROD as string : import.meta.env.VITE_APP_URL_LOCAL as string
             const user =  await axios.put(`${baseurl}/api/auth/userprofile`,{
                 avatarUrl: url+avatar
             }, { withCredentials: true });

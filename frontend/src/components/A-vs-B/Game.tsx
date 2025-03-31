@@ -8,9 +8,10 @@ import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
+import { isprod } from '../../utils/constants';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
-const ws = new WebSocket(`wss://api.casinobharat.space/ws/?token=${token}`);
+const ws = new WebSocket(isprod ? `wss://api.casinobharat.space/ws/?token=${token}` : `ws://localhost:5050?token=${token}`);
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);
@@ -116,6 +117,9 @@ const GameComponent = () => {
       window.alert("insufficient balance");
       return;
     }
+
+    console.log("check place bet")
+
     setShowAnimatedChip(true);
     ws.send(
       JSON.stringify({
@@ -136,7 +140,7 @@ const GameComponent = () => {
 
   return (
     <div className=" bg-gradient-to-b dark:from-gray-900 dark:to-gray-900 text-white">
-      <div className='flex justify-end right-0 absolute mt-10 mr-10 text-gray-700'>Available balance: ₹ {updatedBalance || updatedBalance === 0 && user?.balance/100}</div>
+      <div className='flex justify-end right-0 absolute mt-10 mr-10 text-gray-300'>Available balance: ₹ {updatedBalance || updatedBalance === 0 && user?.balance/100}</div>
          <div className="flex justify-center sm: gap-2 lg:gap-8 md:gap-12 items-center">    
          
             <div className="flex items-center">   
