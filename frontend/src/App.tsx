@@ -26,6 +26,8 @@ import CloseAccount from "./components/account-security/CloseAccount";
 import LiveChat from "./components/livechat/LiveChat";
 import AdminProtected from "./components/admin/AdminProtected";
 import Admin from "./components/admin/Admin";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import AuthProtectedRoutes from "./components/AuthProtectedRoutes";
 
 const GameComponent = lazy(() => import("./components/A-vs-B/Game"));
 
@@ -36,32 +38,40 @@ function App() {
       <Router>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route element={<GameComponent />} path="/A-vs-B" />
-            <Route element={<Login />} path="/login" />
-            <Route element={<SignIn />} path="/signin" />
-            <Route element={<Notfound />} path="*" />
-            <Route element={<ForgetPassword />} path="/forget-password" />
+            <Route element={<AuthProtectedRoutes />}>
+              <Route element={<Login />} path="/login" />
+              <Route element={<SignIn />} path="/signin" />
+              <Route element={<ForgetPassword />} path="/forget-password" />
+            </Route>
+
             <Route element={<ProtectOtpPage children={<Outlet />} />}>
               <Route element={<OtpSigninverify />} path="/otp-signin-verify" />
               <Route element={<OtpForgetVerify />} path="/otp-forget-verify" />
               <Route element={<OtpLoginVerify />} path="/otp-login-verify" />
             </Route>
-            <Route element={<RechargeChip />} path="/recharge-chip" />
-            <Route element={<Profile />} path="/profile" />
-            <Route element={<ImpsService />} path="/payment-imps" />
-            <Route element={<Bank />} path="/bank-account" />
-            <Route element={<Withdraw />} path="/withdrawal-chip" />
-            <Route element={<WithdrawalRecords />} path="/withdrawal-records" />
-            <Route element={<RechargeRecords />} path="/transaction-history" />
-            <Route element={<ColorGame />} path="/color" />
-            <Route element={<Blog />} path="/blog" />
-            <Route element={<Aviator />} path="/aviator" />
-            <Route element={<ChangePassword />} path="/change-password" />
-            <Route element={<LoginActivity />} path="/login-activity" />
-            <Route element={<CloseAccount />} path="/close-account" />
+
+            <Route element={<ProtectedRoutes />}>
+              <Route element={<GameComponent />} path="/A-vs-B" />
+              <Route element={<Blog />} path="/blog" />
+              <Route element={<Profile />} path="/profile" />
+              <Route element={<RechargeChip />} path="/recharge-chip" />
+              <Route element={<ImpsService />} path="/payment-imps" />
+              <Route element={<Bank />} path="/bank-account" />
+              <Route element={<Withdraw />} path="/withdrawal-chip" />
+              <Route element={<WithdrawalRecords />} path="/withdrawal-records" />
+              <Route element={<RechargeRecords />} path="/transaction-history" />
+              <Route element={<ColorGame />} path="/color" />
+              <Route element={<Aviator />} path="/aviator" />
+              <Route element={<ChangePassword />} path="/change-password" />
+              <Route element={<LoginActivity />} path="/login-activity" />
+              <Route element={<CloseAccount />} path="/close-account" />
+            </Route>
+            
             <Route element={<AdminProtected />}>
               <Route element={<Admin />} path="/admin" />
             </Route>
+
+            <Route element={<Notfound />} path="*" />
           </Routes>
           <AppBar />
         </Suspense>
