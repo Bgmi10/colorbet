@@ -1,7 +1,7 @@
 import express from 'express';
 import { prisma } from '../prisma/prisma';
 import bcrypt from 'bcrypt'
-import sendOtp from '../config/awsSes';
+import sendOtp from '../config/mailerSend';
 import { emailSchema } from '../utils/zod';
 
 const Signinotp = async (req : express.Request, res : express.Response, next: express.NextFunction) => {

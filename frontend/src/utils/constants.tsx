@@ -426,11 +426,6 @@ export const bankDatas = [
 
 export const payoutMethods = [
   {
-      id: "1",
-      name: "UPI Transfer",
-      logo: () => <FontAwesomeIcon icon={faWallet} className="text-xl text-yellow-500" />
-  },
-  {
       id: "2",
       name: "IMPS Transfer",
       logo: () => <FontAwesomeIcon icon={faBank} className="text-xl text-yellow-500" />
