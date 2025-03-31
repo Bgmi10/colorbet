@@ -15,7 +15,7 @@ export default function Profile() {
     //@ts-ignore
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
-    const [selectedAvatar] = useState(url + profileAvatar[0]);
+    const [selectedAvatar] = useState(url +profileAvatar[0]);
     const [openMenus, setOpenMenus] = useState<number[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isEditUserName, setIsEditName] = useState(false);
@@ -122,7 +122,7 @@ export default function Profile() {
                 </motion.button>
             </div>
             <motion.div 
-                className="mt-2 px-6"
+                className="mt-2 "
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -145,21 +145,26 @@ export default function Profile() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.4, duration: 0.5 }}
                         > 
-                             <div> 
+                             <div className="w-full"> 
                                   <FontAwesomeIcon icon={faUser} className="text-yellow-500 text-2xl mb-2" />
                                   <p className="text-gray-400 text-sm">Username</p>
-                                  <div className='flex gap-3 items-center'>
-                                  <input className={`dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white  p-1 ${ !isEditUserName ? "dark:bg-gray-800" : "dark:bg-gray-200  bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} value={userName} disabled={!isEditUserName} onChange={(e) => setUserName(e.target.value)} placeholder={!isEditUserName ?  user?.userName : "enter a name"}/>
-                                  { 
-                                    isEditUserName &&
-                                     <div className='flex gap-4'>
-                                        <FontAwesomeIcon icon={faClose} className='text-red-500 cursor-pointer' onClick={() => setIsEditName(false)}/>
-                                         <FontAwesomeIcon icon={isLoad ? faSpinner : faCheck}className={`text-yellow-500 cursor-pointer ${isLoad ? 'animate-spin' : ''}`}  onClick={handleEditName} />
-                                     </div>
-                                  }
+                                  <div className='flex gap-3 items-center flex-wrap sm:flex-nowrap'>
+                                      <input className={`w-full sm:w-auto min-w-0 dark:placeholder:text-white placeholder:text-gray-900 font-bold outline-none border-none text-lg text-gray-700 dark:text-white p-1 ${ !isEditUserName ? "dark:bg-gray-800 bg-slate-100" : "dark:bg-gray-700 bg-gray-300 rounded-md dark:text-gray-700 font-serif text-gray-900 dark:placeholder:text-gray-400 placeholder:text-gray-700"} `} 
+                                          value={userName} 
+                                          disabled={!isEditUserName} 
+                                          onChange={(e) => setUserName(e.target.value)} 
+                                          placeholder={!isEditUserName ? user?.userName : "enter a name"}
+                                      />
+                                      { 
+                                        isEditUserName &&
+                                         <div className='flex gap-4 mt-2 sm:mt-0'>
+                                            <FontAwesomeIcon icon={faClose} className='text-red-500 cursor-pointer' onClick={() => setIsEditName(false)}/>
+                                             <FontAwesomeIcon icon={isLoad ? faSpinner : faCheck} className={`text-yellow-500 cursor-pointer ${isLoad ? 'animate-spin' : ''}`} onClick={handleEditName} />
+                                         </div>
+                                      }
                                   </div>
                              </div>
-                             <div><FontAwesomeIcon icon={faEdit}  onClick={()=> setIsEditName(p => !p)} className='cursor-pointer hover:text-gray-500 text-gray-400'/></div>
+                             <div><FontAwesomeIcon icon={faEdit} onClick={()=> setIsEditName(p => !p)} className='cursor-pointer hover:text-gray-500 text-gray-400'/></div>
                         </motion.div>
                         <motion.div 
                             className="dark:bg-gray-800 bg-slate-100 p-4 rounded-md"
@@ -247,4 +252,3 @@ export default function Profile() {
         </div>
     );
 }
-
