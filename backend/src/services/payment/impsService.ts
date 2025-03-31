@@ -22,7 +22,7 @@
     constructor() {
         this.imap = new Imap({
         user: 'subashchandraboseravi45@gmail.com',
-        password: 'hqps svxl nbxy rtgx',
+        password: 'yhqm lfla ymbr glun',
         host: 'imap.gmail.com',
         port: 993,
         tls: true,
@@ -140,7 +140,6 @@
           const searchCriteria = [
             ['FROM', config.fromEmail],
             ['SUBJECT', config.subjectPartial],
-            ['SINCE', past24Hours]
           ];
           
           const results = await this.searchEmails(searchCriteria);
