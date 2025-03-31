@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-
 const s3 = new S3Client({
   region: "us-east-1",
   credentials: {
@@ -12,10 +11,12 @@ const s3 = new S3Client({
 export const uploadToS3 = async (file: File, folderName: string) => {
   if (!file || !folderName) return;
 
+  const arrayBuffer = await file.arrayBuffer(); // Convert file to ArrayBuffer
+
   const params = {
     Bucket: import.meta.env.VITE_APP_BUCKET_NAME,
     Key: `${folderName}/${file.name}`,
-    Body: file,
+    Body: new Uint8Array(arrayBuffer), // Convert to Uint8Array
     ContentType: file.type,
   };
 
@@ -27,3 +28,4 @@ export const uploadToS3 = async (file: File, folderName: string) => {
     console.error("S3 Upload Error:", e);
   }
 };
+
