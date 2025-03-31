@@ -11,8 +11,7 @@
     VITE_APP_FIREBASE_MESSAGE_SENDER_ID: string,
     VITE_APP_FIREBASE_APP_ID: string
     VITE_APP_FIREBASE_MEASUREMENT_ID: string,
-    VITE_APP_URL_PROD: string,
-    VITE_APP_URL_LOCAL: string
+    VITE_APP_NODE_ENV: string
   }
   interface ImportMeta {
     readonly env: ImportMetaEnv

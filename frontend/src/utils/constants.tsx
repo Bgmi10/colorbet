@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBank, faCoins, faCreditCard, faExchangeAlt, faExclamationTriangle, faGift, faHeadset, faHistory, faInfoCircle, faMailBulk, faShield, faThunderstorm, faTimesCircle, faUndoAlt, faUserSecret, faWallet } from "@fortawesome/free-solid-svg-icons";
 
-export const isprod = false;
-export const baseurl = isprod ? 'https://api.casinobharat.space' : 'http://localhost:3005';
+export const baseurl = import.meta.env.VITE_APP_NODE_ENV as string === "production" ? 'https://api.casinobharat.space' : 'http://localhost:3005';
 
 export const validEmail = (email : string) => {
     const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);

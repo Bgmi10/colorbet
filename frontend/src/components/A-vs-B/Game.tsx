@@ -8,10 +8,11 @@ import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/AuthContext';
 import ChipSlider from './ChipSlider';
 import BetAnimationManager from './BetAnimationManager';
-import { isprod } from '../../utils/constants';
 
 const token = document.cookie.split(';').map((i) => i.trim()).find((i) => i.startsWith('token='))?.split('=')[1];
-const ws = new WebSocket(isprod ? `wss://api.casinobharat.space/ws/?token=${token}` : `ws://localhost:5050?token=${token}`);
+
+console.log(token, document.cookie);
+const ws = new WebSocket(import.meta.env.VITE_APP_NODE_ENV === "production" ? `wss://api.casinobharat.space/ws/?token=${token}` : `ws://localhost:5050?token=${token}`);
 
 const GameComponent = () => {
   const [game, setGame] = useState(null);

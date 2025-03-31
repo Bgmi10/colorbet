@@ -4,17 +4,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faCoins, faCreditCard, faEdit, faEllipsisV, faUser, faIdCard, faTrophy, faClose, faCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { baseurl, isprod, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
+import { baseurl, profileAvatar, ProfileSetttingsData} from "../../utils/constants";
 import AvatarSelector from './AvatarSelector';
 import TopNavDropdown from './TopNavDropdown';
 import axios from 'axios';
 import { ThemeContext } from '../../context/ThemeContext';
 
 export default function Profile() {
+    const url = import.meta.env.VITE_APP_URL as string;
     //@ts-ignore
     const { user, Logout, setUser } = useContext(AuthContext);
     const [isShowAvatar, setIsShowAvatar] = useState(false);
-    const [selectedAvatar] = useState(profileAvatar[0]);
+    const [selectedAvatar] = useState(url + profileAvatar[0]);
     const [openMenus, setOpenMenus] = useState<number[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isEditUserName, setIsEditName] = useState(false);
@@ -48,8 +49,7 @@ export default function Profile() {
     const handleAvatarSelect = async (avatar: string) => {
         
         try{
-            const url = isprod ? import.meta.env.VITE_APP_URL_PROD as string : import.meta.env.VITE_APP_URL_LOCAL as string
-            const user =  await axios.put(`${baseurl}/api/auth/userprofile`,{
+            const user = await axios.put(`${baseurl}/api/auth/userprofile`,{
                 avatarUrl: url+avatar
             }, { withCredentials: true });
             setUser((prev: any) => ({...prev, avatarUrl: user.data.user.avatarUrl}));
