@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWallet, faCheck, faBank } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { baseurl, chips } from "../../utils/constants";
-import axios from "axios";
+import { chips } from "../../utils/constants";
 import Header from '../Header';
 import BalanceCard from '../BalanceCard';
 
@@ -42,57 +41,62 @@ export default function RechargeChip() {
             navigate(`/payment-imps?amount=${amount}`);
             return;
         }
-        try {
-            const orderResult = await axios.post(`${baseurl}/api/payment/razorpay`, { amount: amount * 100, memberId: user?.memberId }, { withCredentials: true });
-        
-            const { order } = orderResult.data;
-        
-            const options = {
-                key: import.meta.env.VITE_APP_RAZORPAY_KEY_ID,
-                amount: order.amount * 100,
-                currency: order.currency,
-                name: "Gambling App",
-                description: "Recharge your wallet",
-                order_id: order.id,
-                handler: async (response: any) => {
-                    const paymentData = {
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_order_id: response.razorpay_order_id,
-                        razorpay_signature: response.razorpay_signature,
-                        memberId: user?.memberId,
-                        amount: amount * 100,
-                    };
-            
-                    const successResponse = await axios.post(
-                        `${baseurl}/api/payment/razorpay/success`,
-                        paymentData,
-                        { withCredentials: true }
-                    );
 
-                    if(successResponse.data.success){
-                        window.alert('payment success');
-                        setUser((prev: any) => ({...prev, balance: prev.balance + paymentData.amount}) )
-                    } 
-                    else{
-                        window.alert('payment failed try again..')
-                    }
-                },
-                prefill: {
-                    name: user?.userName,
-                    email: user?.email,
-                    contact: "7845442450",
-                },
-                theme: {
-                    color: "#FFD700",
-                },
-            };
-            //@ts-ignore
-            const paymentObject = new window.Razorpay(options);
-            paymentObject.open();
-        } catch (error) {
-            console.error("Error initiating payment:", error);
-            alert("Failed to initiate payment. Please try again.");
+        if (selectedPaymentMode === "1") {
+            alert("razor pay service not available");
+            return;
         }
+        // try {
+        //     const orderResult = await axios.post(`${baseurl}/api/payment/razorpay`, { amount: amount * 100, memberId: user?.memberId }, { withCredentials: true });
+        
+        //     const { order } = orderResult.data;
+        
+        //     const options = {
+        //         key: import.meta.env.VITE_APP_RAZORPAY_KEY_ID,
+        //         amount: order.amount * 100,
+        //         currency: order.currency,
+        //         name: "Gambling App",
+        //         description: "Recharge your wallet",
+        //         order_id: order.id,
+        //         handler: async (response: any) => {
+        //             const paymentData = {
+        //                 razorpay_payment_id: response.razorpay_payment_id,
+        //                 razorpay_order_id: response.razorpay_order_id,
+        //                 razorpay_signature: response.razorpay_signature,
+        //                 memberId: user?.memberId,
+        //                 amount: amount * 100,
+        //             };
+            
+        //             const successResponse = await axios.post(
+        //                 `${baseurl}/api/payment/razorpay/success`,
+        //                 paymentData,
+        //                 { withCredentials: true }
+        //             );
+
+        //             if(successResponse.data.success){
+        //                 window.alert('payment success');
+        //                 setUser((prev: any) => ({...prev, balance: prev.balance + paymentData.amount}) )
+        //             } 
+        //             else{
+        //                 window.alert('payment failed try again..')
+        //             }
+        //         },
+        //         prefill: {
+        //             name: user?.userName,
+        //             email: user?.email,
+        //             contact: "7845442450",
+        //         },
+        //         theme: {
+        //             color: "#FFD700",
+        //         },
+        //     };
+        //     //@ts-ignore
+        //     const paymentObject = new window.Razorpay(options);
+        //     paymentObject.open();
+        // } catch (error) {
+        //     console.error("Error initiating payment:", error);
+        //     alert("Failed to initiate payment. Please try again.");
+        // }
     };
     return (
         <div className="min-h-screen dark:bg-gray-900 text-white mb-14">

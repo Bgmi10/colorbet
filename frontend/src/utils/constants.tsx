@@ -425,9 +425,9 @@ export const bankDatas = [
 
 export const payoutMethods = [
   {
-      id: "2",
-      name: "IMPS Transfer",
-      logo: () => <FontAwesomeIcon icon={faBank} className="text-xl text-yellow-500" />
+    id: "2",
+    name: "IMPS Transfer",
+    logo: () => <FontAwesomeIcon icon={faBank} className="text-xl text-yellow-500" />
   }
 ];
 

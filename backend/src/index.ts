@@ -50,7 +50,7 @@ let isGameInProgress = false;
 let isBettingOpen = true;
 let currentGameId: number | null = null;
 
-app.use('/api/auth', limiter, AuthRouter);
+app.use('/api/auth', AuthRouter);
 app.use('/api/auth', limiter, Authmiddleware, User);
 app.use('/api/game', limiter, GameUserBetRecord);
 app.use('/api/payment', limiter, razorPayment);

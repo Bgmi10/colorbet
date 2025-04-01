@@ -104,7 +104,6 @@ AuthRouter.post('/signin', verifysigninotp, async (req: express.Request, res: ex
         res.cookie('token', token, { expires: new Date(Date.now() + 10 * 60 * 60 * 1000), 
          httpOnly: false,  
          sameSite: "lax",
-         domain: "casinobharat.space",
          path: "/",
          secure: process.env.NODE_ENV === 'production'
         });
@@ -190,7 +189,6 @@ AuthRouter.post('/login', verifyloginotp, async (req: express.Request, res: expr
           httpOnly: false, 
           sameSite: "lax",
           path: "/",
-          domain: "casinobharat.space",
           secure: process.env.NODE_ENV === 'production'
         });
         res.status(200).json({ message: "logged In successfully"});
@@ -232,7 +230,7 @@ AuthRouter.post('/logout', Authmiddleware, async (req: express.Request, res: exp
         res.cookie('token', '', {
           expires: new Date(0),
           path: '/',
-          domain: "casinobharat.space",
+          domain: process.env.NODE_ENV === 'production' ? "casinobharat.space" : "http://localhost:5173",
           httpOnly: false,
           sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
           secure: process.env.NODE_ENV === 'production',

@@ -188,16 +188,12 @@ export default function ImpsService() {
               <div className="flex justify-between">
                 <span>Account Name:</span>
                 <div className="flex gap-2 items-center">
-                   <img src={"/assets/profile.png"} alt="subash-profile" className="h-5 w-5"/>
                    <span className="font-medium">Subash Chandra Bose R</span>
                 </div>
               </div>
               <div className="flex justify-between">
                 <span>Account Number:</span>
-                <div className="flex gap-2 items-center relative"> 
-                 <div className="absolute left-[-25px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none"><g clip-path="url(#a)"><path fill="#50C878" d="m12 0 2.33 3.307 3.67-1.7.364 4.029L22.392 6l-1.699 3.67L24 12l-3.307 2.33 1.7 3.67-4.029.364L18 22.392l-3.67-1.699L12 24l-2.33-3.307-3.67 1.7-.364-4.029L1.608 18l1.699-3.67L0 12l3.307-2.33L1.607 6l4.029-.364L6 1.608l3.67 1.699L12 0Z" /><path stroke="#fff" stroke-width="3" d="m7 12.243 3.28 3.237L16.84 9"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h24v24H0z" strokeWidth={1}/></clipPath></defs></svg>
-                 </div>
+                <div className="flex gap-2 items-center relative">
                     <span className="font-medium">8947360713</span>
                 </div>
                

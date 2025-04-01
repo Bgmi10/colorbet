@@ -48,7 +48,7 @@ export default function Login() {
        transition = {{ duration : 0.5 }}
        className="dark:bg-gray-800 bg-slate-100 m-20 rounded-xl w-full max-w-md p-10"
       >
-        <h1 id="login-heading" className="text-3xl font-semibold text-yellow-500 text-center">Welcome to Colorwiz</h1>
+        <h1 id="login-heading" className="text-3xl font-semibold text-yellow-500 text-center">Welcome to Casino Bharat</h1>
         <p className="text-gray-300 text-center mt-2">Please log in to continue</p>
 
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} aria-labelledby="login-heading">

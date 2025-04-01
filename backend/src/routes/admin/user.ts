@@ -15,11 +15,12 @@ user.get("/users", async (req: express.Request, res: express.Response) => {
         },
       },
       select: {
-         balance: true,
-         memberId: true,
-         role: true,
-         email: true,
-         userName: true,
+        balance: true,
+        memberId: true,
+        role: true,
+        email: true,
+        isSuspended: true,
+        userName: true,
       }
     });
     
@@ -74,5 +75,56 @@ user.post("/suspend", async (req: express.Request, res: express.Response) => {
   }
 });
 
+user.put("/users", async (req: express.Request, res: express.Response) => {
+  const { balance, memberId, userName } = req.body;
+
+  if (!balance || !memberId) {
+    handleResponse(res, 400, "Invalid request.");
+    return;
+  }
+
+  try {
+    const user = await prisma.user.update({
+        where: { memberId },
+        data: {
+         balance: parseInt(balance),
+         userName,
+        },
+        select: {
+          userName: true,
+          balance: true,
+          memberId: true
+        }
+    });
+     
+    handleResponse(res, 200, "Credits added successfully", user);
+     
+  } catch (e) {
+    console.log(e);
+    handleResponse(res, 500, "error while add credits")
+  }
+
+})
+
+user.delete("/users", async (req: express.Request, res: express.Response) => {
+  const { memberId } = req.body;
+
+  if (!memberId) {
+    handleResponse(res, 400, "Invalid request.");
+    return;
+  }
+
+  try {
+    await prisma.user.delete({
+      where: { memberId }
+    });
+
+    handleResponse(res, 200, "User deleted Sucessfully");
+  } catch (e) {
+    console.log(e);
+    handleResponse(res, 500, "error while deleting user");
+  }
+
+})
 
 export default user;

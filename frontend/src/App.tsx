@@ -31,6 +31,14 @@ import AuthProtectedRoutes from "./components/AuthProtectedRoutes";
 
 const GameComponent = lazy(() => import("./components/A-vs-B/Game"));
 
+function Home () {
+  return(
+    <div>
+
+    </div>
+  )
+}
+
 function App() {
   return (
     <>
@@ -51,6 +59,7 @@ function App() {
             </Route>
 
             <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<Home />} />
               <Route element={<GameComponent />} path="/A-vs-B" />
               <Route element={<Blog />} path="/blog" />
               <Route element={<Profile />} path="/profile" />

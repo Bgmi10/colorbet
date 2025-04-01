@@ -97,7 +97,7 @@ User.get("/userprofile", async(req: express.Request, res: express.Response) => {
 
 User.put("/userprofile", async(req: express.Request, res: express.Response) => {
     
-    const { userName, avatarUrl } = req.body;
+    const { userName, avatarUrl, balance } = req.body;
     //@ts-ignore
     const { email } = req.user;
 
