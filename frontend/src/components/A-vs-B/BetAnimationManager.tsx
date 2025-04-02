@@ -43,14 +43,10 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
   const [activeBets, setActiveBets] = useState<any>([]);
   const [positions, setPositions] = useState({});
 
-  const audio = new Audio("/assets/chaal.mp3");
-
   useEffect(() => {
     if (newBet) {
       const betId = Date.now();
       const position = getRandomPosition(newBet.bet.chosenSide);
-
-     audio.play();
       
       setPositions(prev => ({
         ...prev,
@@ -119,11 +115,8 @@ const BetAnimationManager = ({ newBet, gameEnded }: { newBet: any, gameEnded: bo
                 <img
                   src={getClosestChipImage(bet.amount)}
                   alt={`${bet.amount} chip`}
-                  className="w-8 h-8 drop-shadow-lg"
+                  className="lg:w-6 lg:h-6 drop-shadow-lg"
                 />
-                {/* <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
-                  ₹{bet.amount}
-                </div> */}
               </div>
             </motion.div>
           );
